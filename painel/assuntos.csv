@@ -1,92 +1,119 @@
-assunto,volume,pct_fora,mediana_dias,p90_dias
-Descontos e Consignações,11427,48.6,36.0,83.0
-Saneamento ambiental,1123,32.6,15.0,66.4
-Saúde Animal e Sanidade vegetal,1587,31.1,15.0,55.8
-Proteção e Benefícios ao Trabalhador,61553,29.5,5.0,33.0
-Água,3844,27.1,9.0,41.0
-Vigilância em Saúde,4770,25.1,12.0,46.0
-Crimes Ambientais,2999,23.6,11.0,50.3
-Gestão Pública,29234,22.1,11.0,59.0
-Rejeitos e resíduos,1436,21.3,14.0,61.0
-Corrupção,3738,19.8,11.0,42.0
-Infraestrutura rural e urbana,16832,19.4,16.0,49.0
-Compras públicas,2678,19.1,14.0,46.0
-Benefícios e serviços,440182,19.0,14.0,45.0
-Meio ambiente,8195,18.5,10.0,56.0
-Transparência e acesso à informação,9181,18.1,12.0,39.0
-Regime de trabalho,1356,17.8,11.0,49.8
-Economia e Finanças,2972,15.9,10.0,42.0
-Canais de atendimento,14868,15.8,11.0,36.0
-Dados Pessoais - LGPD,15047,15.1,10.0,46.0
-Cuidado e Acolhimento,1598,14.9,12.0,40.0
-Patrimônio Público,3151,14.8,19.0,62.0
-Assédio moral,13072,14.1,13.0,56.0
-Denúncia Crime,17680,13.9,6.0,34.0
-Acesso à terra,1747,13.2,30.0,60.0
-Trânsito e mobilidade,85933,12.4,19.0,60.0
-Assédio sexual,2333,12.2,10.0,53.6
-Conduta ética e irregularidades de servidores,25022,12.0,11.0,44.0
-Racismo e Discriminação,2796,12.0,15.0,53.0
-Gestão de Pessoas,15380,11.7,14.0,43.0
-"Medicamentos, aparelhos e produtos em saúde",10756,11.5,13.0,38.0
-"Autorização, Regulação e Fiscalização",21226,10.4,4.0,33.0
-Conta Gov.Br,7916,10.1,20.0,39.0
-Atendimento ao público,123623,9.6,6.0,33.0
-Cadastros e Documentação,22165,9.5,8.0,34.0
-Vacinação,1365,9.3,5.0,29.0
-Controle Social,2285,9.1,10.0,35.0
-Esporte,1203,8.9,24.0,41.0
-Transporte Rodoviário,2457,8.8,28.0,62.0
-Ações Afirmativas,4709,8.8,6.0,35.0
-Defesa e vigilância sanitária,20957,8.7,9.0,34.0
-"Metrologia, normalização e qualidade industrial",8838,8.6,17.0,49.0
-Educação Profissional e Tecnológica,2566,8.6,12.0,36.0
-Gestão escolar e administrativa,5809,8.6,14.0,38.0
-"Minha Casa, Minha Vida e outras ações de habitação",2640,8.5,4.0,29.0
-Agricultura Familiar,1063,8.2,21.0,50.0
-Concursos e processos seletivos,18324,8.1,9.0,34.0
-Taxas e cadastros,3125,8.1,10.0,33.0
-Defesa da concorrência e do consumidor; defesa comercial,4409,7.1,2.0,28.0
-Energia,3082,6.8,4.0,25.0
-Assistência Hospitalar e Ambulatorial,47503,6.8,6.0,29.0
-Assistência Estudantil,12151,6.4,30.0,62.0
-Normas e Fiscalização,58403,6.3,4.0,32.0
-Registro e Cadastro de Empresas,1304,6.3,2.0,25.0
-Cultura,2189,6.2,12.0,35.0
-Estudos e Pesquisas,1278,6.2,12.0,41.0
-Turismo,1138,6.2,14.0,31.0
-Regime de Previdência Próprio e Complementar,1056,6.0,13.0,33.0
-Condições Rodovia,2694,5.6,26.0,62.0
-Para o Empresário e Empreendedor,2771,5.3,6.0,31.0
-"Apoio ao empreendedorismo, empresas, ME, EPP e MEI",3664,5.2,2.0,21.0
-Certidões e Declarações,9730,4.9,4.0,30.0
-Educação Básica,30846,4.9,20.0,41.0
-Rede de Assistência e Proteção Social,9663,4.4,2.0,27.0
-Direitos autorais,1081,4.2,4.0,14.0
-Programas e Benefícios Sociais,90109,2.8,6.0,21.0
-Fiscalização do Estado,15817,2.7,3.0,27.0
-Tecnologia da Informação e Sistemas,13406,2.6,6.0,29.0
-Pesca e Aquicultura,1799,2.5,19.0,56.0
-Educação Superior,31644,2.4,10.0,35.0
-Correios,6003,2.4,21.0,33.0
-Informações processuais,29742,2.4,0.0,11.0
-"Petróleo, Gás e Biocombustíveis",1356,2.4,5.0,29.0
-Lavagem de dinheiro,2586,1.9,4.0,12.0
-Sistema Penitenciário,7266,1.8,0.0,27.0
-Biodiversidade,19072,1.6,2.0,25.0
-Transporte passageiros e cargas,16506,1.6,30.0,33.0
-Planos de saúde,8235,1.3,1.0,15.0
-Abastecimento e armazenagem,34645,1.2,0.0,0.0
-Transporte aquaviário,1429,1.2,11.0,31.0
-"Impostos, Dívida Ativa e Receita Federal",90770,0.9,4.0,26.0
-Exército,5398,0.7,16.0,41.0
-Telecomunicações,3254,0.6,1.0,14.0
-Acordo Rio Doce,2810,0.5,21.0,56.0
-Serviços para Estrangeiros,3248,0.5,13.0,29.0
-Defesa Nacional,6332,0.3,11.0,31.0
-Prêmios e Apostas,13073,0.3,2.0,19.0
-Frete,2933,0.2,30.0,50.0
-Relações internacionais,3613,0.2,6.0,25.0
-Marinha,2816,0.2,16.0,32.0
-"Propriedade Industrial,  Intelectual e Transferência de Tecnologia",4440,0.1,4.0,17.0
-Transporte Aéreo,20896,0.0,3.0,13.0
+assunto,volume,pct_no_prazo,pct_fora,mediana_dias,p90_dias
+Descontos e Consignações,11427,51.4,48.6,36.0,83.0
+Combate a endemias e epidemias,431,66.3,33.7,15.0,61.0
+Desinformação/Fake News,468,66.9,33.1,13.0,75.0
+Saneamento ambiental,1123,67.4,32.6,15.0,66.4
+Saúde Animal e Sanidade vegetal,1587,68.9,31.1,15.0,55.8
+Proteção e Benefícios ao Trabalhador,61553,70.5,29.5,5.0,33.0
+Água,3844,72.9,27.1,9.0,41.0
+Vigilância em Saúde,4770,74.9,25.1,12.0,46.0
+Crimes Ambientais,2999,76.4,23.6,11.0,50.3
+Calamidades/Desastres,614,76.5,23.5,14.0,48.5
+Gestão Pública,29234,77.9,22.1,11.0,59.0
+Rejeitos e resíduos,1436,78.7,21.3,14.0,61.0
+Defesa Civil,762,79.2,20.8,15.0,48.0
+Corrupção,3738,80.2,19.8,11.0,42.0
+Infraestrutura rural e urbana,16832,80.6,19.4,16.0,49.0
+Compras públicas,2678,80.9,19.1,14.0,46.0
+Benefícios e serviços,440182,81.0,19.0,14.0,45.0
+Meio ambiente,8195,81.5,18.5,10.0,56.0
+Transparência e acesso à informação,9181,81.9,18.1,12.0,39.0
+Regime de trabalho,1356,82.2,17.8,11.0,49.8
+Fundos,370,82.6,17.4,10.0,32.9
+Economia e Finanças,2972,84.1,15.9,10.0,42.0
+Canais de atendimento,14868,84.2,15.8,11.0,36.0
+Proteção ambiental,606,84.8,15.2,13.0,38.0
+Dados Pessoais - LGPD,15047,84.9,15.1,10.0,46.0
+Cuidado e Acolhimento,1598,85.1,14.9,12.0,40.0
+Patrimônio Público,3151,85.2,14.8,19.0,62.0
+Bibliotecas e Acervos Públicos,670,85.3,14.7,13.0,33.0
+Assédio moral,13072,85.9,14.1,13.0,56.0
+Denúncia Crime,17680,86.1,13.9,6.0,34.0
+"Patrimônio histórico, artístico e cultural",752,86.6,13.4,30.0,62.0
+Publicidade,345,86.6,13.4,11.0,35.6
+Acesso à terra,1747,86.8,13.2,30.0,60.0
+Comércio Exterior,288,87.0,13.0,15.5,38.0
+Trânsito e mobilidade,85933,87.6,12.4,19.0,60.0
+Segurança Alimentar e Nutricional,703,87.7,12.3,14.0,39.0
+Assédio sexual,2333,87.8,12.2,10.0,53.6
+Conduta ética e irregularidades de servidores,25022,88.0,12.0,11.0,44.0
+Racismo e Discriminação,2796,88.0,12.0,15.0,53.0
+Gestão de Pessoas,15380,88.3,11.7,14.0,43.0
+"Medicamentos, aparelhos e produtos em saúde",10756,88.5,11.5,13.0,38.0
+Operações CGU,221,88.8,11.2,11.0,45.1
+"Autorização, Regulação e Fiscalização",21226,89.6,10.4,4.0,33.0
+Documentação e Serviço Militar,329,89.7,10.3,9.0,33.0
+Conta Gov.Br,7916,89.9,10.1,20.0,39.0
+Atendimento ao público,123623,90.4,9.6,6.0,33.0
+Cadastros e Documentação,22165,90.5,9.5,8.0,34.0
+Vacinação,1365,90.7,9.3,5.0,29.0
+Controle Social,2285,90.9,9.1,10.0,35.0
+Esporte,1203,91.1,8.9,24.0,41.0
+Ações Afirmativas,4709,91.2,8.8,6.0,35.0
+Transporte Rodoviário,2457,91.2,8.8,28.0,62.0
+Defesa e vigilância sanitária,20957,91.3,8.7,9.0,34.0
+"Metrologia, normalização e qualidade industrial",8838,91.4,8.6,17.0,49.0
+Gestão escolar e administrativa,5809,91.4,8.6,14.0,38.0
+Educação Profissional e Tecnológica,2566,91.4,8.6,12.0,36.0
+"Minha Casa, Minha Vida e outras ações de habitação",2640,91.5,8.5,4.0,29.0
+Emendas Parlamentares,252,91.7,8.3,14.0,32.7
+Agricultura Familiar,1063,91.8,8.2,21.0,50.0
+Concursos e processos seletivos,18324,91.9,8.1,9.0,34.0
+Taxas e cadastros,3125,91.9,8.1,10.0,33.0
+Redes Sociais,670,92.3,7.7,4.0,29.8
+Defesa da concorrência e do consumidor; defesa comercial,4409,92.9,7.1,2.0,28.0
+Assistência Hospitalar e Ambulatorial,47503,93.2,6.8,6.0,29.0
+Energia,3082,93.2,6.8,4.0,25.0
+"Ciência, tecnologia e inovação",864,93.5,6.5,12.0,39.0
+Assistência Estudantil,12151,93.6,6.4,30.0,62.0
+Normas e Fiscalização,58403,93.7,6.3,4.0,32.0
+Registro e Cadastro de Empresas,1304,93.7,6.3,2.0,25.0
+Cultura,2189,93.8,6.2,12.0,35.0
+Estudos e Pesquisas,1278,93.8,6.2,12.0,41.0
+Turismo,1138,93.8,6.2,14.0,31.0
+Regime de Previdência Próprio e Complementar,1056,94.0,6.0,13.0,33.0
+Condições Rodovia,2694,94.4,5.6,26.0,62.0
+Para o Empresário e Empreendedor,2771,94.7,5.3,6.0,31.0
+"Apoio ao empreendedorismo, empresas, ME, EPP e MEI",3664,94.8,5.2,2.0,21.0
+"Quilombolas, povos originários e comunidades tradicionais de matriz africana, ciganos e outras minorias",813,95.0,5.0,26.0,61.0
+Educação Básica,30846,95.1,4.9,20.0,41.0
+Certidões e Declarações,9730,95.1,4.9,4.0,30.0
+Rede de Assistência e Proteção Social,9663,95.6,4.4,2.0,27.0
+Direitos autorais,1081,95.8,4.2,4.0,14.0
+Pesquisa e Desenvolvimento,605,97.0,3.0,12.0,35.0
+Programas e Benefícios Sociais,90109,97.2,2.8,6.0,21.0
+Transformação digital e desenvolvimento da automação,512,97.2,2.8,16.0,29.0
+Fiscalização do Estado,15817,97.3,2.7,3.0,27.0
+Tecnologia da Informação e Sistemas,13406,97.4,2.6,6.0,29.0
+Pesca e Aquicultura,1799,97.5,2.5,19.0,56.0
+Educação Superior,31644,97.6,2.4,10.0,35.0
+Informações processuais,29742,97.6,2.4,0.0,11.0
+Correios,6003,97.6,2.4,21.0,33.0
+"Petróleo, Gás e Biocombustíveis",1356,97.6,2.4,5.0,29.0
+Transporte Ferroviário,730,97.7,2.3,21.0,61.0
+Lavagem de dinheiro,2586,98.1,1.9,4.0,12.0
+Sistema Penitenciário,7266,98.2,1.8,0.0,27.0
+Pesca Amadora e Esportiva,651,98.3,1.7,13.0,49.1
+Biodiversidade,19072,98.4,1.6,2.0,25.0
+Transporte passageiros e cargas,16506,98.4,1.6,30.0,33.0
+Planos de saúde,8235,98.7,1.3,1.0,15.0
+Abastecimento e armazenagem,34645,98.8,1.2,0.0,0.0
+Transporte aquaviário,1429,98.8,1.2,11.0,31.0
+"Impostos, Dívida Ativa e Receita Federal",90770,99.1,0.9,4.0,26.0
+Exército,5398,99.3,0.7,16.0,41.0
+Telecomunicações,3254,99.4,0.6,1.0,14.0
+Cinema e audiovisual,992,99.4,0.6,9.0,21.0
+Mineração,700,99.4,0.6,5.0,31.6
+TV Radiodifusão e outras mídias,689,99.4,0.6,20.0,27.0
+Serviços para Estrangeiros,3248,99.5,0.5,13.0,29.0
+Acordo Rio Doce,2810,99.5,0.5,21.0,56.0
+Aeronáutica,651,99.5,0.5,17.0,41.2
+Pesagem,264,99.6,0.4,30.0,32.7
+Prêmios e Apostas,13073,99.7,0.3,2.0,19.0
+Defesa Nacional,6332,99.7,0.3,11.0,31.0
+Meteorologia,354,99.7,0.3,6.0,20.0
+Relações internacionais,3613,99.8,0.2,6.0,25.0
+Frete,2933,99.8,0.2,30.0,50.0
+Marinha,2816,99.8,0.2,16.0,32.0
+"Propriedade Industrial,  Intelectual e Transferência de Tecnologia",4440,99.9,0.1,4.0,17.0
+Transporte Aéreo,20896,100.0,0.0,3.0,13.0

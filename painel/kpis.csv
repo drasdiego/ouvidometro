@@ -1,3 +1,3 @@
-janela,volume,pct_fora,mediana_dias,p90_dias,pendentes_vencidas,idade_mediana_pendencias,pct_respondidas
-12m,1721823,11.8,9.0,36.0,59426,84.0,91.6
-ant,1434183,11.0,13.0,42.0,19873,483.0,98.6
+janela,volume,pct_no_prazo,pct_fora,mediana_dias,p90_dias,tempo_medio_dias,pendentes_vencidas,idade_mediana_pendencias,pct_respondidas
+12m,1721823,88.2,11.8,9.0,36.0,16.2,59426,84.0,91.6
+ant,1434183,89.0,11.0,13.0,42.0,20.1,19873,483.0,98.6

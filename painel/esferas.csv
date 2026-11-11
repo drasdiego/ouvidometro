@@ -1,6 +1,6 @@
-esfera,volume,pct_fora
-Federal,1416413,9.7
-Municipal,147409,33.1
-Estadual,107934,12.8
-Judiciário Federal,33457,2.1
-Serviços Autônomos ou Conselhos Profissionais,16610,15.3
+esfera,volume,pct_no_prazo,pct_fora,pendentes_vencidas,volume_ant,pct_no_prazo_ant
+Federal,1416413,90.3,9.7,27102,1177517,91.0
+Municipal,147409,66.9,33.1,26094,124143,69.4
+Estadual,107934,87.2,12.8,4968,85439,87.4
+Judiciário Federal,33457,97.9,2.1,126,36714,99.4
+Serviços Autônomos ou Conselhos Profissionais,16610,84.7,15.3,1136,10370,77.7

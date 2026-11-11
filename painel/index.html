@@ -5,6 +5,23 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Ouvidômetro</title>
 <meta name="description" content="Painel interativo sobre prazo legal, tempo de resposta, pendências e satisfação nas manifestações de ouvidoria registradas no Fala.BR, com dados abertos da CGU.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Ouvidômetro">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:title" content="Ouvidômetro: os órgãos públicos respondem ao cidadão no prazo da lei?">
+<meta property="og:description" content="Painel interativo com 8,7 milhões de manifestações de ouvidoria do Fala.BR, de 2015 a agosto de 2026, confrontadas com o prazo legal de resposta. Dados abertos da CGU. Projeto pessoal de Diego Arruda.">
+<meta property="og:url" content="https://drasdiego.github.io/ouvidometro/painel/">
+<meta property="og:image" content="https://drasdiego.github.io/ouvidometro/painel/previa.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+<meta property="og:image:alt" content="Ouvidômetro: 88,2% das manifestações com prazo vencido foram respondidas no prazo, de janeiro de 2025 a agosto de 2026.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Ouvidômetro: os órgãos públicos respondem ao cidadão no prazo da lei?">
+<meta name="twitter:description" content="Painel interativo com 8,7 milhões de manifestações de ouvidoria do Fala.BR, confrontadas com o prazo legal de resposta. Dados abertos da CGU.">
+<meta name="twitter:image" content="https://drasdiego.github.io/ouvidometro/painel/previa.png">
+<meta name="author" content="Diego Arruda">
+<link rel="canonical" href="https://drasdiego.github.io/ouvidometro/painel/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
 <style>
@@ -378,7 +395,7 @@ footer { border-top: 1px solid var(--line); padding-top: 18px; }
 </div>
 
 <footer>
-  <p class="credit">Projeto de Diego Arruda · @drasdiegotech · <a href="https://github.com/drasdiego" rel="noopener">github.com/drasdiego</a> · Dados: <a href="https://www.gov.br/cgu/pt-br/acesso-a-informacao/dados-abertos/arquivos/ouvidoria" rel="noopener">CGU, dados abertos de ouvidoria</a> · Este painel não é um produto oficial da CGU.</p>
+  <p class="credit">Projeto pessoal de Diego Arruda · @drasdiegotech · <a href="https://github.com/drasdiego" rel="noopener">github.com/drasdiego</a> · Dados: <a href="https://www.gov.br/cgu/pt-br/acesso-a-informacao/dados-abertos/arquivos/ouvidoria" rel="noopener">CGU, dados abertos de ouvidoria</a> · Este painel não é um produto oficial da CGU nem de qualquer órgão público.</p>
 </footer>
 
 </main>
@@ -409,6 +426,7 @@ footer { border-top: 1px solid var(--line); padding-top: 18px; }
   const mesAno = meses.map((m) => +m.slice(0, 4));
   const mesValido = meses.map((m) => m <= '2026-06');
   const ULT = anos[anos.length - 1];
+  const MIN_ORGAO = D.cortes.orgaos, MIN_ASSUNTO = D.cortes.assuntos;
   const S = { ini: 2025, fim: ULT, esfera: null, tipo: null, uf: null, metrica: 'prazo', assunto: 'atraso', orgao: '', todos: false, sort: 'prazo', dir: 1 };
 
   const ix = (dim, v) => PD[dim].indexOf(v);
@@ -720,7 +738,7 @@ footer { border-top: 1px solid var(--line); padding-top: 18px; }
     }
     const porAtraso = S.assunto === 'atraso';
     const tg = taxaPrazo(tot);
-    const rows = Array.from(acc, ([k, s]) => ({ label: A.dims.assunto[k], s })).filter((r) => !/^n[aã]o informado$/i.test(r.label) && r.s.n >= 200).map((r) => ({
+    const rows = Array.from(acc, ([k, s]) => ({ label: A.dims.assunto[k], s })).filter((r) => !/^n[aã]o informado$/i.test(r.label) && r.s.n >= MIN_ASSUNTO).map((r) => ({
       label: r.label, nome: r.label, v: porAtraso ? taxaPrazo(r.s) : r.s.n,
       cor: porAtraso && tg != null && taxaPrazo(r.s) < tg - 10 ? 'var(--crit)' : null,
       tip: tipPadrao(r.s),
@@ -750,7 +768,7 @@ footer { border-top: 1px solid var(--line); padding-top: 18px; }
       acc.set(C.o[i], s);
     }
     const geral = taxaPrazo(tot);
-    const todosOrg = Array.from(acc, ([k, s]) => ({ ...L[k], n: s.n, prazo: taxaPrazo(s), tm: tm(s), pe: s.pe })).filter((r) => r.n >= 300 && r.prazo != null);
+    const todosOrg = Array.from(acc, ([k, s]) => ({ ...L[k], n: s.n, prazo: taxaPrazo(s), tm: tm(s), pe: s.pe })).filter((r) => r.n >= MIN_ORGAO && r.prazo != null);
     const nomes = todosOrg.map((r) => r.nome).sort((a, b) => a.localeCompare(b, 'pt-BR'));
     if (S.orgao && !nomes.includes(S.orgao)) S.orgao = '';
     const sel = $('f-orgao');
