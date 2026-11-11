@@ -40,7 +40,7 @@ open painel/index.html
 - `ouvidometro.py` concentra as regras de cálculo: o que conta como no prazo, pendência, prorrogação e os cortes mínimos de volume.
 - `gerar_painel.py` agrega a base com DuckDB por mês, esfera, tipo, UF, órgão e assunto e grava `painel/dados.js`, que alimenta os filtros do painel.
 - `gerar_indicadores.py` grava um resumo dos últimos 12 meses em `painel/indicadores.json` e em CSVs.
-- `pytest -v` roda os 14 testes. Como a base foi baixada no passo anterior, os 2 que conferem a base real também rodam; sem ela, eles são pulados (veja "Testes").
+- `pytest -v` roda os 15 testes. Como a base foi baixada no passo anterior, os 2 que conferem a base real também rodam; sem ela, eles são pulados (veja "Testes").
 - `open` é o comando do macOS. No Linux use `xdg-open` e no Windows, `start`.
 
 Os dados brutos e tratados não vão para o repositório (veja `.gitignore`), só os agregados. A CGU atualiza o arquivo todo mês: quem baixar depois terá registros mais novos, e os números do recorte mudam se a data de corte em `analise/ouvidometro.py` for alterada.
@@ -107,9 +107,9 @@ painel/
 pytest -v
 ```
 
-São 14 testes em pytest:
+São 15 testes em pytest:
 
-- 12 usam uma base sintética de 607 linhas, criada dentro do próprio teste, e rodam no GitHub Actions a cada push. Conferem o total contra a base bruta, o percentual no prazo de um mês contra um cálculo independente em Python puro, os cortes de 300 manifestações para órgãos e 200 para assuntos, o tratamento de campos vazios, as pendências vencidas, o prazo ainda não vencido e os dados que o painel carrega.
+- 13 usam uma base sintética de 607 linhas, criada dentro do próprio teste, e rodam no GitHub Actions a cada push. Conferem o total contra a base bruta, o percentual no prazo de um mês contra um cálculo independente em Python puro, os cortes de 300 manifestações para órgãos e 200 para assuntos, o tratamento de campos vazios, as pendências vencidas, o prazo ainda não vencido e os dados que o painel carrega, inclusive se os assuntos respeitam os filtros de esfera, tipo e UF.
 - 2 conferem a base real da CGU: o total do painel contra a contagem dos CSVs brutos e o percentual no prazo de março de 2025 contra um cálculo independente. Como a base não vai para o repositório, eles são pulados no GitHub Actions e rodam só em quem baixou os dados.
 
 ## Definições

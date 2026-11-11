@@ -210,6 +210,10 @@ footer { border-top: 1px solid var(--line); padding-top: 18px; }
     <filter id="brilho-suave" x="-10%" y="-60%" width="120%" height="220%"><feGaussianBlur stdDeviation="2.4" result="b"/><feComponentTransfer in="b" result="c"><feFuncA type="linear" slope=".55"/></feComponentTransfer><feMerge><feMergeNode in="c"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
     <linearGradient id="grad-h" x1="0" x2="1" y1="0" y2="0"><stop offset="0" style="stop-color: var(--c1)"/><stop offset="1" style="stop-color: var(--c2)"/></linearGradient>
     <linearGradient id="grad-v" x1="0" x2="0" y1="1" y2="0"><stop offset="0" style="stop-color: var(--c1)"/><stop offset="1" style="stop-color: var(--c2)"/></linearGradient>
+    <linearGradient id="grad-roxo" x1="0" x2="1" y1="0" y2="0"><stop offset="0" style="stop-color: var(--acao)"/><stop offset="1" style="stop-color: var(--c1)"/></linearGradient>
+    <linearGradient id="grad-roxo-v" x1="0" x2="0" y1="1" y2="0"><stop offset="0" style="stop-color: var(--acao)"/><stop offset="1" style="stop-color: var(--c1)"/></linearGradient>
+    <linearGradient id="grad-rosa" x1="0" x2="1" y1="0" y2="0"><stop offset="0" style="stop-color: var(--c1)"/><stop offset="1" style="stop-color: var(--crit)"/></linearGradient>
+    <linearGradient id="grad-rosa-v" x1="0" x2="0" y1="1" y2="0"><stop offset="0" style="stop-color: var(--acao)"/><stop offset=".55" style="stop-color: var(--c1)"/><stop offset="1" style="stop-color: var(--crit)"/></linearGradient>
     <linearGradient id="grad-area" x1="0" x2="0" y1="0" y2="1"><stop offset="0" style="stop-color: var(--c1); stop-opacity: .38"/><stop offset="1" style="stop-color: var(--c1); stop-opacity: 0"/></linearGradient>
   </defs>
 </svg>
@@ -359,8 +363,14 @@ footer { border-top: 1px solid var(--line); padding-top: 18px; }
 </section>
 
 <section class="sec" id="evolucao">
-  <h2>Evolução mês a mês</h2>
-  <p>A série mostra toda a história com os filtros de esfera, tipo e UF. A faixa destacada é o período selecionado. As marcas indicam quando a Lei 13.460/2017 passou a valer para União, estados e grandes municípios (2018) e para os municípios menores (2019). Julho e agosto de 2026 ficam sem proporção porque o prazo da maior parte ainda não tinha vencido em 31/08/2026.</p>
+  <div class="head-row">
+    <h2>Evolução mês a mês</h2>
+    <div class="seg" role="group" aria-label="Alcance dos gráficos de evolução">
+      <button class="btn" type="button" data-hist="0" aria-pressed="true">Período escolhido</button>
+      <button class="btn" type="button" data-hist="1" aria-pressed="false">História completa</button>
+    </div>
+  </div>
+  <p>Os gráficos seguem todos os filtros. Em "Período escolhido", mostram só os meses do período. Em "História completa", mostram desde 2015, com os demais filtros aplicados e o período escolhido em destaque. As marcas indicam quando a Lei 13.460/2017 passou a valer para União, estados e grandes municípios (2018) e para os municípios menores (2019), quando essas datas aparecem no gráfico. Julho e agosto de 2026 ficam sem proporção porque o prazo da maior parte ainda não tinha vencido em 31/08/2026.</p>
   <div class="grid2">
     <div class="painel-g"><p class="note">Manifestações registradas por mês</p><div class="chart" id="g-volume"></div></div>
     <div class="painel-g"><p class="note">Respondidas no prazo, em %. A linha tracejada marca 90%, meta usada como referência por ouvidorias públicas.</p><div class="chart" id="g-prazo"></div></div>
@@ -460,7 +470,7 @@ footer { border-top: 1px solid var(--line); padding-top: 18px; }
   const mesValido = meses.map((m) => m <= '2026-06');
   const ULT = anos[anos.length - 1];
   const MIN_ORGAO = D.cortes.orgaos, MIN_ASSUNTO = D.cortes.assuntos;
-  const S = { ini: 2025, fim: ULT, esfera: null, tipo: null, uf: null, metrica: 'prazo', assunto: 'atraso', orgao: '', todos: false, sort: 'prazo', dir: 1 };
+  const S = { ini: 2025, fim: ULT, esfera: null, tipo: null, uf: null, metrica: 'prazo', assunto: 'atraso', orgao: '', todos: false, sort: 'prazo', dir: 1, hist: false };
 
   const ix = (dim, v) => PD[dim].indexOf(v);
   function passa(i, ignorar) {
@@ -556,6 +566,7 @@ footer { border-top: 1px solid var(--line); padding-top: 18px; }
     $('limpar').onclick = () => { Object.assign(S, { ini: 2025, fim: ULT, esfera: null, tipo: null, uf: null, orgao: '' }); render(); };
     document.querySelectorAll('[data-metrica]').forEach((b) => b.onclick = () => { S.metrica = b.dataset.metrica; renderRecortes(); });
     document.querySelectorAll('[data-assunto]').forEach((b) => b.onclick = () => { S.assunto = b.dataset.assunto; renderAssuntos(); });
+    document.querySelectorAll('[data-hist]').forEach((b) => b.onclick = () => { S.hist = b.dataset.hist === '1'; renderSerie(); });
     $('f-orgao').onchange = (e) => { S.orgao = e.target.value; renderOrgaos(); };
     $('todos').onclick = () => { S.todos = !S.todos; renderOrgaos(); };
     document.querySelectorAll('#t-orgaos th').forEach((th) => th.querySelector('button').onclick = () => {
@@ -623,9 +634,9 @@ footer { border-top: 1px solid var(--line); padding-top: 18px; }
     el.replaceChildren();
     if (!s.re) return;
     const partes = [
-      { label: 'Até 30 dias (prazo inicial)', n: s.r30, cor: 'var(--c1)' },
-      { label: '31 a 60 dias (com prorrogação)', n: s.r60 - s.r30, cor: 'var(--c2)' },
-      { label: 'Mais de 60 dias (acima do teto)', n: s.re - s.r60, cor: 'var(--crit)' },
+      { label: 'Até 30 dias (prazo inicial)', n: s.r30, cor: 'url(#grad-roxo)', css: 'linear-gradient(135deg, var(--acao), var(--c1))' },
+      { label: '31 a 60 dias (com prorrogação)', n: s.r60 - s.r30, cor: 'url(#grad-h)', css: 'linear-gradient(135deg, var(--c1), var(--c2))' },
+      { label: 'Mais de 60 dias (acima do teto)', n: s.re - s.r60, cor: 'url(#grad-rosa)', css: 'linear-gradient(135deg, var(--c1), var(--crit))' },
     ].map((p) => ({ ...p, v: 100 * p.n / s.re }));
     const D = 200, R = D / 2;
     const box = d3.select(el).append('div').attr('class', 'faixas-g');
@@ -647,7 +658,7 @@ footer { border-top: 1px solid var(--line); padding-top: 18px; }
     const leg = box.append('ul').attr('class', 'leg-faixas');
     partes.forEach((p) => {
       const li = leg.append('li');
-      li.append('i').style('background', p.cor);
+      li.append('i').style('background', p.css);
       li.append('span').text(p.label);
       li.append('b').text(F.pct(p.v));
       li.append('small').text(F.int(p.n) + ' manifestações');
@@ -659,8 +670,13 @@ footer { border-top: 1px solid var(--line); padding-top: 18px; }
     const por = meses.map(() => zero());
     for (let i = 0; i < P.linhas; i++) { if (passa(i)) add(por[PC.mes[i]], i); }
     const parse = d3.utcParse('%Y-%m');
-    const rows = meses.map((m, i) => ({ m, d: parse(m), n: por[i].n, p: mesValido[i] ? taxaPrazo(por[i]) : null, tm: tm(por[i]) }));
-    sparks(rows, j);
+    const todas = meses.map((m, i) => ({ m, d: parse(m), n: por[i].n, p: mesValido[i] ? taxaPrazo(por[i]) : null, tm: tm(por[i]) }));
+    sparks(todas, j);
+    document.querySelectorAll('[data-hist]').forEach((b) => b.setAttribute('aria-pressed', String((b.dataset.hist === '1') === S.hist)));
+    const rows = S.hist ? todas : todas.slice(j.a, j.b + 1);
+    const dIni = todas[j.a].d, dFim = todas[j.b].d;
+    const dentro = (r) => r.d >= dIni && r.d <= dFim;
+    const curto = rows.length <= 24;
     const marcos = [{ d: parse('2018-06'), t: 'lei: 1ª etapa' }, { d: parse('2019-06'), t: 'lei: todos' }];
     [['g-volume', 'n'], ['g-prazo', 'p']].forEach(([id, key]) => {
       const el = $(id), H = 250;
@@ -672,39 +688,45 @@ footer { border-top: 1px solid var(--line); padding-top: 18px; }
       const y = d3.scaleLinear().domain([yMin, yMax]).nice().range([H - 24, top]);
       const yf = key === 'n' ? (v) => (v >= 1000 ? F.int(v / 1000) + ' mil' : F.int(v)) : (v) => F.int(v) + '%';
       const L = margemEsq(svg, yf(y.domain()[1]));
-      const x = d3.scaleUtc().domain(d3.extent(rows, (r) => r.d)).range([L, W - 8]);
-      const x0 = x(rows[j.a].d) - 3, x1 = x(rows[j.b].d) + 3;
-      svg.append('rect').attr('x', x0).attr('y', top).attr('width', Math.max(2, x1 - x0)).attr('height', H - 24 - top).style('fill', 'var(--c1-soft)').style('opacity', .55);
+      const x = d3.scaleUtc().domain([rows[0].d, d3.utcMonth.offset(rows[rows.length - 1].d, 1)]).range([L, W - 8]);
+      const cx = (r) => x(d3.utcDay.offset(r.d, 15));
+      if (S.hist) {
+        const x0 = x(dIni), x1 = x(d3.utcMonth.offset(dFim, 1));
+        svg.append('rect').attr('x', x0).attr('y', top).attr('width', Math.max(2, x1 - x0)).attr('height', H - 24 - top).style('fill', 'var(--c1-soft)').style('opacity', .55);
+      }
       svg.append('g').attr('class', 'grid').attr('transform', `translate(${L},0)`).call(d3.axisLeft(y).ticks(4).tickSize(-(W - L - 8)).tickFormat(''));
       svg.append('g').attr('transform', `translate(${L},0)`).call(d3.axisLeft(y).ticks(4).tickFormat(yf)).call((g) => g.select('.domain').remove());
-      svg.append('g').attr('transform', `translate(0,${H - 24})`).call(d3.axisBottom(x).ticks(Math.max(2, Math.floor((W - L) / 70))).tickFormat(d3.utcFormat('%Y')));
-      marcos.forEach((mk, k) => {
+      const fx = curto ? (d) => rotMes(d3.utcFormat('%Y-%m')(d)) : d3.utcFormat('%Y');
+      const nt = curto ? Math.max(2, Math.min(rows.length, Math.floor((W - L) / 80))) : Math.max(2, Math.floor((W - L) / 70));
+      const base = curto ? rows : rows.filter((r) => r.m.endsWith('-01'));
+      const passo = Math.max(1, Math.ceil(base.length / nt));
+      svg.append('g').attr('transform', `translate(0,${H - 24})`).call(d3.axisBottom(x).tickValues(base.filter((r, i) => i % passo === 0).map((r) => r.d)).tickFormat(fx));
+      marcos.filter((mk) => mk.d >= rows[0].d && mk.d <= rows[rows.length - 1].d).forEach((mk, k) => {
         svg.append('line').attr('x1', x(mk.d)).attr('x2', x(mk.d)).attr('y1', top - 6).attr('y2', H - 24).style('stroke', 'var(--ref)').attr('stroke-dasharray', '2 3');
         svg.append('text').attr('x', x(mk.d) + (k ? 3 : -3)).attr('y', top - 10).attr('text-anchor', k ? 'start' : 'end').text(mk.t);
       });
       if (key === 'n') {
-        const bw = Math.max(1, (W - L - 8) / rows.length - .5);
-        const dentro = (i) => i >= j.a && i <= j.b;
-        const bv = svg.append('g').selectAll('rect').data(rows).join('rect').attr('x', (r) => x(r.d) - bw / 2).attr('width', bw).attr('rx', Math.min(2, bw / 2))
-          .style('fill', (r, i) => (dentro(i) ? 'url(#grad-v)' : 'var(--c1)')).style('opacity', (r, i) => (dentro(i) ? 1 : .45))
-          .attr('y', y(0)).attr('height', 0);
-        tr(bv, (r, i) => i * 3).attr('y', (r) => y(r.n)).attr('height', (r) => y(0) - y(r.n));
+        const bw = (W - L - 8) / rows.length;
+        const gap = Math.min(3, bw * .15);
+        const bv = svg.append('g').selectAll('rect').data(rows).join('rect').attr('x', (r) => x(r.d) + gap).attr('width', Math.max(1, bw - 2 * gap)).attr('rx', Math.min(4, bw / 3))
+          .style('fill', (r) => (dentro(r) ? 'url(#grad-rosa-v)' : 'url(#grad-roxo-v)')).style('opacity', (r) => (dentro(r) ? 1 : .45)).attr('y', y(0)).attr('height', 0);
+        tr(bv, (r, i) => i * Math.min(12, 420 / rows.length)).attr('y', (r) => y(r.n)).attr('height', (r) => y(0) - y(r.n));
       } else {
         if (90 >= y.domain()[0]) {
           svg.append('line').attr('x1', L).attr('x2', W - 8).attr('y1', y(90)).attr('y2', y(90)).style('stroke', 'var(--ref)').attr('stroke-dasharray', '5 3');
           svg.append('text').attr('x', W - 8).attr('y', H - 30).attr('text-anchor', 'end').text('tracejado: referência de 90%');
         }
-        const area = svg.append('path').datum(rows).attr('fill', 'url(#grad-area)').attr('d', d3.area().defined((r) => r.p != null).x((r) => x(r.d)).y0(H - 24).y1((r) => y(r.p)));
+        const area = svg.append('path').datum(rows).attr('fill', 'url(#grad-area)').attr('d', d3.area().defined((r) => r.p != null).x(cx).y0(H - 24).y1((r) => y(r.p)));
         tr(area.style('opacity', dur() ? 0 : 1), dur() * .8).style('opacity', 1);
-        const linha = svg.append('path').datum(rows).attr('class', 'linha').attr('fill', 'none').style('stroke', 'url(#grad-h)').attr('stroke-width', 2).attr('stroke-linejoin', 'round').attr('d', d3.line().defined((r) => r.p != null).x((r) => x(r.d)).y((r) => y(r.p)));
+        const linha = svg.append('path').datum(rows).attr('class', 'linha').attr('fill', 'none').style('stroke', 'url(#grad-h)').attr('stroke-width', 2).attr('stroke-linejoin', 'round').attr('d', d3.line().defined((r) => r.p != null).x(cx).y((r) => y(r.p)));
         desenhar(linha);
       }
       const guia = svg.append('line').attr('y1', top).attr('y2', H - 24).style('stroke', 'var(--ref)').attr('hidden', '');
       svg.append('rect').attr('x', L).attr('y', 0).attr('width', W - L - 8).attr('height', H - 24).attr('fill', 'transparent')
         .on('pointermove', (ev) => {
-          const r = rows[d3.bisector((r) => r.d).center(rows, x.invert(d3.pointer(ev)[0]))];
+          const r = rows[d3.bisector((r) => r.d).center(rows, d3.utcDay.offset(x.invert(d3.pointer(ev)[0]), -15))];
           if (!r) return;
-          guia.attr('hidden', null).attr('x1', x(r.d)).attr('x2', x(r.d));
+          guia.attr('hidden', null).attr('x1', cx(r)).attr('x2', cx(r));
           showTip(tip, el, ev, rotMes(r.m), [`${F.int(r.n)} manifestações`, r.p == null ? 'prazo ainda em aberto' : `${F.pct(r.p)} no prazo`, `tempo médio ${F.d1(r.tm)} dias`]);
         })
         .on('pointerleave', () => { tip.attr('hidden', ''); guia.attr('hidden', ''); });
@@ -712,7 +734,7 @@ footer { border-top: 1px solid var(--line); padding-top: 18px; }
   }
 
   function sparks(rows, j) {
-    const a = Math.max(0, j.b - 35);
+    const a = j.a;
     [['sp-n', 'n'], ['sp-prazo', 'p'], ['sp-tm', 'tm']].forEach(([id, k]) => {
       const el = $(id);
       const pts = rows.slice(a, j.b + 1).filter((r) => r[k] != null && isFinite(r[k]) && (k === 'n' || r.m <= '2026-06'));
@@ -722,10 +744,10 @@ footer { border-top: 1px solid var(--line); padding-top: 18px; }
       const x = d3.scaleLinear().domain([0, pts.length - 1]).range([2, W - 5]);
       const y = d3.scaleLinear().domain(d3.extent(pts, (r) => r[k])).range([H - 4, 4]);
       const svg = d3.select(el).append('svg').attr('width', W).attr('height', H).attr('aria-hidden', 'true');
-      const linha = svg.append('path').datum(pts).attr('class', 'linha').attr('fill', 'none').style('stroke', 'var(--c1)').attr('stroke-width', 2).attr('stroke-linejoin', 'round').attr('d', d3.line().x((r, i) => x(i)).y((r) => y(r[k])));
+      const linha = svg.append('path').datum(pts).attr('class', 'linha').attr('fill', 'none').style('stroke', 'url(#grad-rosa)').attr('stroke-width', 2).attr('stroke-linejoin', 'round').attr('d', d3.line().x((r, i) => x(i)).y((r) => y(r[k])));
       desenhar(linha);
       const u = pts[pts.length - 1];
-      const ponto = svg.append('circle').attr('cx', x(pts.length - 1)).attr('cy', y(u[k])).attr('r', 3.5).style('fill', 'var(--c2)');
+      const ponto = svg.append('circle').attr('cx', x(pts.length - 1)).attr('cy', y(u[k])).attr('r', 3.5).style('fill', 'var(--crit)');
       tr(ponto.style('opacity', dur() ? 0 : 1), dur() * 1.4).style('opacity', 1);
     });
   }
@@ -755,7 +777,7 @@ footer { border-top: 1px solid var(--line); padding-top: 18px; }
       .style('font-weight', (r) => (r.sel ? 600 : null)).style('fill', (r) => (r.sel ? 'var(--fg)' : null))
       .text((r) => r.label).each(function () { const t = d3.select(this); let s = t.text(); while (this.getComputedTextLength() > labelW - 4 && s.length > 4) { s = s.slice(0, -2); t.text(s + '…'); } });
     const br = g.append('rect').attr('class', 'barra').attr('x', x(0)).attr('y', 5).attr('height', rowH - 10).attr('rx', 5).attr('width', 0)
-      .style('fill', (r) => r.cor || 'url(#grad-h)').style('opacity', (r) => (opts.algumSel && !r.sel ? .4 : 1));
+      .style('fill', (r) => r.cor || 'url(#grad-roxo)').style('opacity', (r) => (opts.algumSel && !r.sel ? .4 : 1));
     tr(br, (r, i) => i * 35).attr('width', (r) => Math.max(1, x(r.v) - x(0)));
     const vt = g.append('text').attr('x', (r) => x(r.v) + 4).attr('y', rowH / 2).attr('dy', '0.35em').text((r) => opts.fmt(r.v)).style('opacity', dur() ? 0 : 1);
     tr(vt, (r, i) => i * 35 + dur() * .6).style('opacity', 1);
@@ -791,7 +813,7 @@ footer { border-top: 1px solid var(--line); padding-top: 18px; }
       const tg = taxaPrazo(geral);
       const rows = PD[dim].map((label, k) => ({ label, s: acc[k] })).filter((r) => r.s.n >= 50 && !NI.has(r.label)).map((r) => ({
         label: r.label, v: M.v(r.s), sel: S[dim] === r.label,
-        cor: S.metrica === 'prazo' && taxaPrazo(r.s) != null && tg != null && taxaPrazo(r.s) < tg - 10 ? 'var(--crit)' : null,
+        cor: S.metrica === 'prazo' && taxaPrazo(r.s) != null && tg != null && taxaPrazo(r.s) < tg - 10 ? 'url(#grad-rosa)' : null,
         tip: [...tipPadrao(r.s), `${F.int(r.s.pe)} pendências vencidas`],
       })).filter((r) => r.v != null && isFinite(r.v)).sort((a, b) => (M.asc ? a.v - b.v : b.v - a.v));
       barras($(id), rows, {
@@ -805,13 +827,14 @@ footer { border-top: 1px solid var(--line); padding-top: 18px; }
   function renderAssuntos() {
     document.querySelectorAll('[data-assunto]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.assunto === S.assunto)));
     const A = D.assuntos, C = A.cols;
-    const ie = S.esfera == null ? -1 : ix('esfera', S.esfera), it = S.tipo == null ? -1 : ix('tipo', S.tipo);
+    const ie = S.esfera == null ? -1 : ix('esfera', S.esfera), it = S.tipo == null ? -1 : ix('tipo', S.tipo), iu = S.uf == null ? -1 : ix('uf', S.uf);
     const acc = new Map();
     const tot = { n: 0, av: 0, fo: 0, re: 0, sd: 0 };
     for (let i = 0; i < A.linhas; i++) {
       if (C.ano[i] < S.ini || C.ano[i] > S.fim) continue;
       if (ie >= 0 && C.esfera[i] !== ie) continue;
       if (it >= 0 && C.tipo[i] !== it) continue;
+      if (iu >= 0 && C.uf[i] !== iu) continue;
       const k = C.assunto[i];
       const s = acc.get(k) || { n: 0, av: 0, fo: 0, re: 0, sd: 0 };
       for (const m of ['n', 'av', 'fo', 're', 'sd']) { s[m] += C[m][i]; tot[m] += C[m][i]; }
@@ -821,11 +844,11 @@ footer { border-top: 1px solid var(--line); padding-top: 18px; }
     const tg = taxaPrazo(tot);
     const rows = Array.from(acc, ([k, s]) => ({ label: A.dims.assunto[k], s })).filter((r) => !/^n[aã]o informado$/i.test(r.label) && r.s.n >= MIN_ASSUNTO).map((r) => ({
       label: r.label, nome: r.label, v: porAtraso ? taxaPrazo(r.s) : r.s.n,
-      cor: porAtraso && tg != null && taxaPrazo(r.s) < tg - 10 ? 'var(--crit)' : null,
+      cor: porAtraso && tg != null && taxaPrazo(r.s) < tg - 10 ? 'url(#grad-rosa)' : null,
       tip: tipPadrao(r.s),
     })).filter((r) => r.v != null && isFinite(r.v)).sort((a, b) => (porAtraso ? a.v - b.v : b.v - a.v)).slice(0, 15);
     $('assuntos-nota').textContent = (porAtraso ? 'Os 15 assuntos com menor proporção respondida no prazo' : 'Os 15 assuntos com mais manifestações')
-      + ', entre os que tiveram pelo menos 200 manifestações no período e nos filtros de esfera e tipo.' + (S.uf ? ' Este gráfico não aplica o filtro de UF.' : '');
+      + ', entre os que tiveram pelo menos 200 manifestações no período e nos filtros escolhidos.';
     barras($('g-assuntos'), rows, { aria: porAtraso ? 'Assuntos com menor proporção no prazo' : 'Assuntos mais demandados', fmt: porAtraso ? F.pct : F.int, ref: porAtraso ? tg : null, labelW: 300 });
   }
 
@@ -891,8 +914,8 @@ footer { border-top: 1px solid var(--line); padding-top: 18px; }
     const s = soma(j.a, j.b);
     const nN = s.sa - s.sf, nP = s.sap - s.sfp;
     const rows = [
-      { label: 'Respondidas no prazo', v: nN ? 100 * nP / nN : null, n: nN, cor: 'var(--c1)' },
-      { label: 'Fora do prazo', v: s.sf ? 100 * s.sfp / s.sf : null, n: s.sf, cor: 'var(--crit)' },
+      { label: 'Respondidas no prazo', v: nN ? 100 * nP / nN : null, n: nN, cor: 'url(#grad-roxo)' },
+      { label: 'Fora do prazo', v: s.sf ? 100 * s.sfp / s.sf : null, n: s.sf, cor: 'url(#grad-rosa)' },
     ].filter((r) => r.v != null).map((r) => ({ ...r, nome: r.label, tip: [`${F.pct(r.v)} satisfeitos ou muito satisfeitos`, `${F.int(r.n)} respostas à pesquisa`] }));
     barras($('g-sat'), rows, { aria: 'Satisfação por resposta no prazo ou fora do prazo', fmt: F.pct, labelW: 180 });
   }

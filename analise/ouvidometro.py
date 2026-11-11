@@ -205,6 +205,7 @@ def cubos(con, corte=CORTE):
     principal = _colunar(con, f"select mes, esfera, tipo, uf, {MEDIDAS} from v group by all", ["mes", "esfera", "tipo", "uf"])
     tipos = principal["dims"]["tipo"]
     esferas = principal["dims"]["esfera"]
+    ufs = principal["dims"]["uf"]
 
     attr = [r for r in con.execute(
       "select cod_orgao, any_value(orgao), any_value(esfera), any_value(uf) from v group by 1").fetchall() if r[0] is not None]
@@ -224,12 +225,13 @@ def cubos(con, corte=CORTE):
     }
 
     assuntos = _colunar(con, """
-      select assunto, ano, esfera, tipo, count(*) as n, sum(aval::int) as av, sum(fora::int) as fo,
+      select assunto, ano, esfera, tipo, uf, count(*) as n, sum(aval::int) as av, sum(fora::int) as fo,
         sum(resp::int) as re, sum(case when resp then dres else 0 end) as sd
       from v group by all
-    """, ["assunto", "ano", "esfera", "tipo"])
+    """, ["assunto", "ano", "esfera", "tipo", "uf"])
     assuntos["cols"]["esfera"] = [esferas.index(assuntos["dims"]["esfera"][i]) for i in assuntos["cols"]["esfera"]]
     assuntos["cols"]["tipo"] = [tipos.index(assuntos["dims"]["tipo"][i]) for i in assuntos["cols"]["tipo"]]
+    assuntos["cols"]["uf"] = [ufs.index(assuntos["dims"]["uf"][i]) for i in assuntos["cols"]["uf"]]
     assuntos["cols"]["ano"] = [assuntos["dims"]["ano"][i] for i in assuntos["cols"]["ano"]]
     assuntos["dims"] = {"assunto": assuntos["dims"]["assunto"]}
 

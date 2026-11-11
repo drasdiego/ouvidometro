@@ -98,6 +98,16 @@ def test_cubo_do_painel_soma_o_total_e_reproduz_a_taxa(con):
     assert sum(dados["assuntos"]["cols"]["n"]) == 607
 
 
+def test_cubo_de_assuntos_respeita_os_filtros_de_esfera_tipo_e_uf(con):
+    dados = ov.cubos(con)
+    p, a = dados["principal"]["cols"], dados["assuntos"]["cols"]
+    for dim in ["esfera", "tipo", "uf"]:
+        for k in set(p[dim]):
+            no_principal = sum(n for n, v in zip(p["n"], p[dim]) if v == k)
+            nos_assuntos = sum(n for n, v in zip(a["n"], a[dim]) if v == k)
+            assert no_principal == nos_assuntos
+
+
 def test_orgaos_com_nome_repetido_recebem_cidade_e_uf(con):
     nomes = {r["cod_orgao"]: r["orgao"] for r in ov.tabela_orgaos(con, "2026-01-01", "2026-08-31", minimo=1)}
     assert nomes["1"] == "Órgão A"
