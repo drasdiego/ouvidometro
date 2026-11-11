@@ -1,0 +1,80 @@
+cod_orgao,orgao,esfera,volume,pct_fora,mediana_dias,p90_dias,pendentes_vencidas,pct_fora_ant
+1364,Prefeitura Municipal (BIGUAÇU/SC),Municipal,2407,78.0,30.0,84.6,1419,
+3927,Prefeitura Municipal (RIBEIRÃO DAS NEVES/MG),Municipal,4128,77.8,51.0,184.0,1263,81.9
+672,Prefeitura (BARRA MANSA/RJ),Municipal,2157,50.3,20.0,100.0,486,
+669,Ouvidoria-Geral (JOÃO PESSOA/PB),Municipal,4412,44.9,22.0,85.0,925,29.5
+3383,PCPI - Polícia Civil do Estado (TERESINA/PI),Estadual,3866,36.3,18.0,71.0,31,43.0
+1635,SESAU-Secretaria de Estado de Saúde de Roraima (BOA VISTA/RR),Estadual,2716,33.1,11.0,67.0,219,
+1027,Prefeitura Municipal (SÃO MATEUS/ES),Municipal,2145,27.3,14.0,72.0,211,
+3453,Ministério do Trabalho e Emprego (BRASÍLIA/DF),Federal,74419,25.5,4.0,33.0,13466,26.6
+228,Instituto Nacional do Seguro Social,Federal,430164,22.1,15.0,50.0,6540,19.8
+481,Prefeitura Municipal (ITAJAÍ/SC),Municipal,5761,17.6,11.0,44.0,566,
+542,Prefeitura Municipal (VITÓRIA DA CONQUISTA/BA),Municipal,2646,10.9,16.0,43.0,19,
+3780,Ouvidoria Geral do SUS/Secretaria Estadual de Saúde (TERESINA/PI),Estadual,2194,9.8,0.0,32.0,25,
+17,Ministério da Saúde,Federal,31134,9.4,11.0,34.0,902,11.0
+331,Instituto Nacional de Colonização e Reforma Agrária,Federal,3797,9.3,23.0,58.0,14,9.2
+3506,Ministério dos Transportes,Federal,122682,7.5,1.0,36.0,4127,2.1
+3940,TJ/ES - Tribunal de Justiça do Estado (VITÓRIA/ES),Estadual,2682,5.1,1.0,15.0,20,
+3495,Ministério da Previdência Social (BRASÍLIA/DF),Federal,42693,4.6,12.0,50.0,295,7.4
+45,Fundação Universidade de Brasília,Federal,2292,4.1,14.0,43.0,2,6.1
+3377,OGE/PI - Ouvidoria-Geral do Estado (TERESINA/PI),Estadual,9080,4.1,0.0,32.0,0,8.1
+3460,Ministério da Gestão e da Inovação em Serviços Públicos,Federal,15042,3.2,18.0,37.0,27,1.7
+3392,SEADPREV - Secretaria de Administração e Previdência (TERESINA/PI),Estadual,2138,2.2,0.0,5.0,2,0.6
+3746,STF - Supremo Tribunal Federal (BRASÍLIA/DF),Judiciário Federal,33457,2.1,0.0,3.0,126,0.6
+293,Empresa Brasileira de Correios e Telégrafos,Federal,7768,1.9,20.0,33.0,5,5.5
+1087,Prefeitura (NITERÓI/RJ),Municipal,3378,1.6,22.0,31.0,0,2.7
+2421,Ministério Público do Estado do Rio de Janeiro (RIO DE JANEIRO/RJ),Estadual,7711,1.6,3.0,18.0,0,0.0
+28,Ministério da Educação,Federal,39345,1.6,16.0,56.0,0,0.3
+40,Instituto Brasileiro do Meio Ambiente e dos Recursos Naturais Renováveis,Federal,23625,1.4,3.0,25.0,42,0.8
+1245,Instituto de Pesos e Medidas do  Estado de São Paulo  IPEM/SP (SÃO PAULO/SP),Estadual,11249,1.0,2.0,30.0,0,19.4
+250,Agência Nacional de Vigilância Sanitária,Federal,14422,0.9,8.0,32.0,1,0.9
+3507,Ministério dos Direitos Humanos e da Cidadania,Federal,2406,0.8,25.0,36.0,0,0.4
+6,Controladoria-Geral da União,Federal,12249,0.7,13.0,40.0,1,0.2
+3466,"Ministério do Desenvolvimento, Indústria, Comércio e Serviços",Federal,3240,0.7,13.0,31.0,0,
+3442,Ministério da Fazenda,Federal,105839,0.7,4.0,25.0,382,0.4
+178,Ministério da Agricultura e Pecuária,Federal,6213,0.6,6.0,25.0,1,0.6
+208,"Agência Nacional do Petróleo, Gás Natural e Biocombustíveis",Federal,8535,0.6,4.0,30.0,0,
+3766,"Ministério do Empreendedorismo, da Microempresa e da Empresa de Pequeno Porte",Federal,2711,0.5,2.0,15.0,0,
+177,Fundo Nacional de Desenvolvimento da Educação,Federal,5612,0.4,14.0,28.0,0,0.1
+723,Comando do Exército,Federal,5547,0.3,15.0,41.0,0,0.3
+328,Hospital de Clínicas de Porto Alegre,Federal,3690,0.3,7.0,28.0,0,0.1
+24,Departamento Nacional de Infraestrutura de Transportes,Federal,4537,0.2,19.0,46.0,1,0.3
+468,Presidência da República,Federal,2863,0.2,2.0,22.0,2,
+233,Empresa de Tecnologia e Informações da Previdência,Federal,11364,0.2,15.0,30.0,1,0.0
+2646,Prefeitura Municipal (UBERLÂNDIA/MG),Municipal,6474,0.2,17.0,37.0,3,0.1
+56,Polícia Rodoviária Federal,Federal,4532,0.2,8.0,30.0,0,0.4
+204,Polícia Federal,Federal,15044,0.1,7.0,28.0,0,0.0
+201,Ministério da Justiça e Segurança Pública,Federal,8166,0.1,9.0,27.0,0,0.1
+510,Prefeitura Municipal (CONTAGEM/MG),Municipal,3471,0.1,7.0,34.0,0,1.1
+373,Hospital Universitário (MACEIÓ/AL),Federal,2389,0.1,10.0,23.0,0,
+2769,Agência Nacional de Proteção de Dados,Federal,2265,0.1,3.0,13.0,0,
+10,Agência Nacional de Energia Elétrica,Federal,2877,0.1,3.0,9.0,0,
+128,"Instituto Nacional de Metrologia, Qualidade e Tecnologia",Federal,4374,0.1,7.0,33.0,0,0.4
+281,Agência Nacional de Transportes Terrestres,Federal,52049,0.1,30.0,33.0,5,0.1
+376,Hospital das Clínicas (BELO HORIZONTE/MG),Federal,2487,0.1,10.0,30.0,0,0.1
+2332,SEFAZ - Secretaria da Fazenda do Estado do Tocantins (PALMAS/TO),Estadual,2991,0.1,0.0,12.0,0,0.3
+260,Hospital Universitário Wálter Cantídio,Federal,2719,0.1,4.0,30.0,0,0.2
+105,Instituto Nacional da Propriedade Industrial,Federal,4958,0.1,4.0,17.0,0,
+3454,Ministério da Pesca e Aquicultura (BRASÍLIA/DF),Federal,4769,0.1,21.0,56.0,0,0.3
+8,Agência Nacional de Aviação Civil,Federal,19567,0.0,3.0,10.0,0,0.0
+236,Ministério das Relações Exteriores,Federal,2247,0.0,8.0,39.0,0,
+132,Banco Nacional de Desenvolvimento Econômico e Social,Federal,2180,0.0,1.0,9.0,0,0.1
+184,Banco Central do Brasil,Federal,27089,0.0,1.0,5.0,0,0.0
+186,Superintendência de Seguros Privados,Federal,3387,0.0,1.0,4.0,0,0.0
+58,Instituto Nacional de Estudos e Pesquisas Educacionais Anísio Teixeira,Federal,18246,0.0,20.0,38.0,0,0.1
+18,Agência Nacional de Saúde Suplementar,Federal,7188,0.0,1.0,13.0,0,0.0
+53,Advocacia-Geral da União,Federal,2144,0.0,9.0,33.0,0,0.1
+3436,Ministério das Cidades (BRASÍLIA/DF),Federal,2798,0.0,4.0,25.0,0,0.0
+1382,Conselho de Controle de Atividades Financeiras,Federal,2625,0.0,3.0,11.0,0,
+427,Hospital Universitário Antônio Pedro,Federal,2489,0.0,0.0,5.0,0,
+365,Hospital Universitário (SÃO LUÍS/MA),Federal,4600,0.0,4.0,12.0,1,0.0
+67,Empresa Brasileira de Serviços Hospitalares,Federal,4177,0.0,7.0,15.0,0,0.1
+55,Hospital das Clínicas (RECIFE/PE),Federal,4179,0.0,2.0,17.0,0,0.0
+206,Secretaria Nacional de Políticas Penais,Federal,6070,0.0,0.0,0.0,0,0.0
+357,Núcleo de Hospital Universitário,Federal,2918,0.0,1.0,10.0,0,0.0
+721,Comando da Marinha,Federal,2867,0.0,16.0,32.0,0,0.0
+3451,"Ministério do Desenvolvimento e Assistência Social, Família e Combate à Fome",Federal,77040,0.0,5.0,13.0,0,0.0
+2850,EBSERH - Filial Complexo Hospitalar de Clínicas da Universidade Federal do Paraná,Federal,4778,0.0,7.0,21.0,0,0.0
+2477,Hospital de Clínicas da Universidade Federal de Uberlândia,Federal,3073,0.0,6.0,21.0,0,0.1
+292,Agência Nacional de Telecomunicações,Federal,2693,0.0,1.0,8.0,0,0.0
+3965,COFFITO - Conselho Federal de Fisioterapia e Terapia Ocupacional (BRASÍLIA/DF),Serviços Autônomos ou Conselhos Profissionais,2973,0.0,7.0,22.0,0,

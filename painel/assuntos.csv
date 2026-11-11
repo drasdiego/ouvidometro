@@ -1,0 +1,92 @@
+assunto,volume,pct_fora,mediana_dias,p90_dias
+Descontos e Consignações,11427,48.6,36.0,83.0
+Saneamento ambiental,1123,32.6,15.0,66.4
+Saúde Animal e Sanidade vegetal,1587,31.1,15.0,55.8
+Proteção e Benefícios ao Trabalhador,61553,29.5,5.0,33.0
+Água,3844,27.1,9.0,41.0
+Vigilância em Saúde,4770,25.1,12.0,46.0
+Crimes Ambientais,2999,23.6,11.0,50.3
+Gestão Pública,29234,22.1,11.0,59.0
+Rejeitos e resíduos,1436,21.3,14.0,61.0
+Corrupção,3738,19.8,11.0,42.0
+Infraestrutura rural e urbana,16832,19.4,16.0,49.0
+Compras públicas,2678,19.1,14.0,46.0
+Benefícios e serviços,440182,19.0,14.0,45.0
+Meio ambiente,8195,18.5,10.0,56.0
+Transparência e acesso à informação,9181,18.1,12.0,39.0
+Regime de trabalho,1356,17.8,11.0,49.8
+Economia e Finanças,2972,15.9,10.0,42.0
+Canais de atendimento,14868,15.8,11.0,36.0
+Dados Pessoais - LGPD,15047,15.1,10.0,46.0
+Cuidado e Acolhimento,1598,14.9,12.0,40.0
+Patrimônio Público,3151,14.8,19.0,62.0
+Assédio moral,13072,14.1,13.0,56.0
+Denúncia Crime,17680,13.9,6.0,34.0
+Acesso à terra,1747,13.2,30.0,60.0
+Trânsito e mobilidade,85933,12.4,19.0,60.0
+Assédio sexual,2333,12.2,10.0,53.6
+Conduta ética e irregularidades de servidores,25022,12.0,11.0,44.0
+Racismo e Discriminação,2796,12.0,15.0,53.0
+Gestão de Pessoas,15380,11.7,14.0,43.0
+"Medicamentos, aparelhos e produtos em saúde",10756,11.5,13.0,38.0
+"Autorização, Regulação e Fiscalização",21226,10.4,4.0,33.0
+Conta Gov.Br,7916,10.1,20.0,39.0
+Atendimento ao público,123623,9.6,6.0,33.0
+Cadastros e Documentação,22165,9.5,8.0,34.0
+Vacinação,1365,9.3,5.0,29.0
+Controle Social,2285,9.1,10.0,35.0
+Esporte,1203,8.9,24.0,41.0
+Transporte Rodoviário,2457,8.8,28.0,62.0
+Ações Afirmativas,4709,8.8,6.0,35.0
+Defesa e vigilância sanitária,20957,8.7,9.0,34.0
+"Metrologia, normalização e qualidade industrial",8838,8.6,17.0,49.0
+Educação Profissional e Tecnológica,2566,8.6,12.0,36.0
+Gestão escolar e administrativa,5809,8.6,14.0,38.0
+"Minha Casa, Minha Vida e outras ações de habitação",2640,8.5,4.0,29.0
+Agricultura Familiar,1063,8.2,21.0,50.0
+Concursos e processos seletivos,18324,8.1,9.0,34.0
+Taxas e cadastros,3125,8.1,10.0,33.0
+Defesa da concorrência e do consumidor; defesa comercial,4409,7.1,2.0,28.0
+Energia,3082,6.8,4.0,25.0
+Assistência Hospitalar e Ambulatorial,47503,6.8,6.0,29.0
+Assistência Estudantil,12151,6.4,30.0,62.0
+Normas e Fiscalização,58403,6.3,4.0,32.0
+Registro e Cadastro de Empresas,1304,6.3,2.0,25.0
+Cultura,2189,6.2,12.0,35.0
+Estudos e Pesquisas,1278,6.2,12.0,41.0
+Turismo,1138,6.2,14.0,31.0
+Regime de Previdência Próprio e Complementar,1056,6.0,13.0,33.0
+Condições Rodovia,2694,5.6,26.0,62.0
+Para o Empresário e Empreendedor,2771,5.3,6.0,31.0
+"Apoio ao empreendedorismo, empresas, ME, EPP e MEI",3664,5.2,2.0,21.0
+Certidões e Declarações,9730,4.9,4.0,30.0
+Educação Básica,30846,4.9,20.0,41.0
+Rede de Assistência e Proteção Social,9663,4.4,2.0,27.0
+Direitos autorais,1081,4.2,4.0,14.0
+Programas e Benefícios Sociais,90109,2.8,6.0,21.0
+Fiscalização do Estado,15817,2.7,3.0,27.0
+Tecnologia da Informação e Sistemas,13406,2.6,6.0,29.0
+Pesca e Aquicultura,1799,2.5,19.0,56.0
+Educação Superior,31644,2.4,10.0,35.0
+Correios,6003,2.4,21.0,33.0
+Informações processuais,29742,2.4,0.0,11.0
+"Petróleo, Gás e Biocombustíveis",1356,2.4,5.0,29.0
+Lavagem de dinheiro,2586,1.9,4.0,12.0
+Sistema Penitenciário,7266,1.8,0.0,27.0
+Biodiversidade,19072,1.6,2.0,25.0
+Transporte passageiros e cargas,16506,1.6,30.0,33.0
+Planos de saúde,8235,1.3,1.0,15.0
+Abastecimento e armazenagem,34645,1.2,0.0,0.0
+Transporte aquaviário,1429,1.2,11.0,31.0
+"Impostos, Dívida Ativa e Receita Federal",90770,0.9,4.0,26.0
+Exército,5398,0.7,16.0,41.0
+Telecomunicações,3254,0.6,1.0,14.0
+Acordo Rio Doce,2810,0.5,21.0,56.0
+Serviços para Estrangeiros,3248,0.5,13.0,29.0
+Defesa Nacional,6332,0.3,11.0,31.0
+Prêmios e Apostas,13073,0.3,2.0,19.0
+Frete,2933,0.2,30.0,50.0
+Relações internacionais,3613,0.2,6.0,25.0
+Marinha,2816,0.2,16.0,32.0
+"Propriedade Industrial,  Intelectual e Transferência de Tecnologia",4440,0.1,4.0,17.0
+Transporte Aéreo,20896,0.0,3.0,13.0

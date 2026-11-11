@@ -1,0 +1,854 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ouvidômetro</title>
+<meta name="description" content="Painel interativo sobre prazo legal, tempo de resposta, pendências e satisfação nas manifestações de ouvidoria registradas no Fala.BR, com dados abertos da CGU.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<style>
+:root {
+  color-scheme: dark;
+  --bg: #090a1b; --bg2: #2b1660; --panel: rgba(255,255,255,.055); --panel-forte: rgba(255,255,255,.1); --solid: #15112f;
+  --fg: #f4f2ff; --muted: #cbc6ec; --line: rgba(255,255,255,.15);
+  --ok: #5fe0a8; --warn: #ffc56b; --bad: #ff8fa0;
+  --c1: #a78bfa; --c1-texto: #c9bcff; --c1-soft: rgba(167,139,250,.2); --c2: #5ee7ff; --crit: #ff5fd2; --acao: #6d4df0;
+  --grid: rgba(255,255,255,.12); --axis: rgba(255,255,255,.28); --ref: #b3add9;
+  --pop: #1d1742; --pop-line: rgba(255,255,255,.2); --shadow: 0 18px 48px rgba(3,2,20,.45);
+  --g1: rgba(109,77,240,.38); --g2: rgba(94,231,255,.14); --g3: rgba(255,95,210,.16);
+  --sans: Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --fs-cap: .8125rem; --fs-body: 1rem; --fs-h: 1.7rem;
+  --r: 20px; --r2: 12px;
+}
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg: #f8f6ff; --bg2: #e4d9ff; --panel: rgba(255,255,255,.72); --panel-forte: rgba(255,255,255,.95); --solid: #ffffff;
+  --fg: #1b1442; --muted: #453f6e; --line: rgba(70,48,150,.2);
+  --ok: #17754a; --warn: #8f5a00; --bad: #b3264a;
+  --c1: #6d4df0; --c1-texto: #5238c9; --c1-soft: rgba(109,77,240,.14); --c2: #006b85; --crit: #b8117f; --acao: #6d4df0;
+  --grid: rgba(70,48,150,.14); --axis: rgba(70,48,150,.35); --ref: #5a5488;
+  --pop: #ffffff; --pop-line: rgba(70,48,150,.25); --shadow: 0 14px 36px rgba(70,48,150,.16);
+  --g1: rgba(109,77,240,.16); --g2: rgba(0,160,200,.1); --g3: rgba(255,95,210,.12);
+}
+* { box-sizing: border-box; }
+html { background-color: var(--bg); scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body { margin: 0; min-height: 100vh; color: var(--fg); font-family: var(--sans); font-size: var(--fs-body); line-height: 1.55; font-variant-numeric: tabular-nums; overflow-x: hidden;
+  background-color: var(--bg);
+  background-image: radial-gradient(900px 520px at 12% -6%, var(--g1), transparent 70%), radial-gradient(760px 480px at 96% 8%, var(--g3), transparent 70%), radial-gradient(900px 600px at 70% 62%, var(--g2), transparent 70%), linear-gradient(165deg, var(--bg) 0%, var(--bg2) 100%);
+  background-repeat: no-repeat; background-attachment: fixed; }
+[hidden] { display: none !important; }
+a { color: var(--c2); text-underline-offset: 3px; }
+:focus-visible { outline: 2px solid var(--c2); outline-offset: 3px; border-radius: 6px; }
+.page { max-width: 1180px; margin: 0 auto; padding-block: 20px 64px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: flex; flex-direction: column; gap: 44px; }
+h1, h2, h3, p { margin: 0; }
+h2 { font-size: clamp(1.35rem, 2.6vw, var(--fs-h)); font-weight: 700; letter-spacing: -.02em; text-wrap: balance; }
+h3 { font-size: .9rem; color: var(--muted); font-weight: 600; }
+.sec { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.sec > p { color: var(--muted); max-width: 74ch; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); padding: 20px; min-width: 0; display: flex; flex-direction: column; gap: 8px; backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); box-shadow: var(--shadow); }
+
+.barra { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; }
+.selo { display: inline-flex; align-items: center; gap: 8px; padding: 7px 14px; border-radius: 999px; border: 1px solid var(--line); background: var(--panel); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); font-size: var(--fs-cap); font-weight: 600; }
+.selo i { width: 8px; height: 8px; border-radius: 50%; background: var(--c2); box-shadow: 0 0 0 4px color-mix(in srgb, var(--c2) 22%, transparent); }
+.btn { font: inherit; font-size: .875rem; font-weight: 600; min-height: 40px; background: var(--panel); color: var(--fg); border: 1px solid var(--line); border-radius: var(--r2); padding: 8px 16px; cursor: pointer; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); transition: background .2s, border-color .2s; }
+.btn:hover { background: var(--panel-forte); border-color: var(--c1); }
+.btn[aria-pressed=true] { background: var(--acao); border-color: transparent; color: #fff; }
+.btn.ir { background: var(--acao); border-color: transparent; color: #fff; }
+.marca-linha { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.marca { font-size: 1.35rem; font-weight: 800; letter-spacing: -.03em; background: linear-gradient(90deg, var(--fg), var(--c1) 70%, var(--c2)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.page.modo-painel { gap: 24px; }
+.hero { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: clamp(24px, 5vw, 64px); align-items: center; padding-block: clamp(12px, 4vw, 40px) 0; }
+.hero > div { min-width: 0; }
+.olho { font-size: .78rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--c1-texto); }
+h1 { font-size: clamp(2.6rem, 8vw, 5rem); line-height: 1.02; font-weight: 800; letter-spacing: -.04em; margin-top: 8px; background: linear-gradient(90deg, var(--fg) 0%, var(--c1) 55%, var(--c2) 100%); -webkit-background-clip: text; background-clip: text; color: transparent; padding-bottom: .08em; }
+.pergunta { font-size: clamp(1.2rem, 2.6vw, 1.65rem); line-height: 1.3; font-weight: 600; letter-spacing: -.01em; margin-top: 18px; text-wrap: balance; }
+.fato { margin-top: 20px; padding: 14px 18px; border-left: 3px solid var(--crit); border-radius: 0 var(--r2) var(--r2) 0; background: var(--panel); }
+.fato b { font-weight: 650; }
+.hero-nota { margin-top: 14px; font-size: .875rem; color: var(--muted); }
+.hero-visual { margin: 0; padding: 22px; border-radius: 24px; border: 1px solid var(--line); background: var(--panel); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); box-shadow: var(--shadow); max-width: 420px; width: 100%; justify-self: end; }
+.pontos { display: grid; grid-template-columns: repeat(10, 1fr); gap: 7px; }
+.pontos i { aspect-ratio: 1; border-radius: 50%; background: color-mix(in srgb, var(--c1) 62%, transparent); }
+.pontos i.f { background: var(--crit); }
+.hero-visual figcaption { margin-top: 14px; font-size: var(--fs-cap); color: var(--muted); }
+
+.tabs { display: inline-flex; gap: 4px; padding: 4px; border: 1px solid var(--line); border-radius: 14px; background: var(--panel); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); align-self: flex-start; }
+.tabbtn { font: inherit; font-size: .9rem; font-weight: 600; color: var(--muted); background: transparent; border: 0; border-radius: 10px; padding: 9px 16px; cursor: pointer; }
+.tabbtn[aria-selected=true] { color: #fff; background: var(--acao); }
+.guia { display: flex; flex-direction: column; gap: 44px; min-width: 0; }
+
+.ctx { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+.qs { margin: 0; padding-left: 1.3rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr)); gap: 4px 24px; }
+.fields { display: flex; flex-wrap: wrap; gap: 6px; }
+.tag { font-size: var(--fs-cap); border: 1px solid var(--line); border-radius: 999px; padding: 1px 9px; color: var(--muted); }
+.tag.on { color: var(--fg); border-color: var(--c1); background: var(--c1-soft); }
+.tbl-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--r); background: var(--panel); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); box-shadow: var(--shadow); }
+.leis { width: 100%; border-collapse: collapse; font-size: .875rem; }
+.leis th, .leis td { text-align: left; vertical-align: top; padding: 11px 14px; border-bottom: 1px solid var(--line); }
+.leis th { color: var(--muted); font-weight: 600; }
+.leis td:first-child { min-width: 11rem; font-weight: 600; }
+.leis tbody tr:last-child td { border-bottom: 0; }
+
+.filters { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 8px); z-index: 5; border: 1px solid var(--line); border-radius: var(--r); padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; background: color-mix(in srgb, var(--solid) 86%, transparent); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); box-shadow: var(--shadow); }
+.frow { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: end; }
+.f { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.f label { font-size: var(--fs-cap); color: var(--muted); font-weight: 600; }
+select { font: inherit; font-size: .875rem; color: var(--fg); background-color: var(--solid); border: 1px solid var(--line); border-radius: var(--r2); padding: 8px 10px; max-width: 100%; min-height: 40px; }
+#f-orgao { width: min(100%, 460px); }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: var(--fs-cap); color: var(--muted); }
+.chip { font: inherit; font-size: var(--fs-cap); font-weight: 600; border: 1px solid var(--c1); color: var(--c1-texto); background: var(--c1-soft); border-radius: 999px; padding: 2px 11px; cursor: pointer; }
+.seg { display: inline-flex; gap: 4px; padding: 4px; border: 1px solid var(--line); border-radius: 14px; background: var(--panel); }
+.seg .btn { border: 0; background: transparent; min-height: 34px; padding: 6px 12px; border-radius: 10px; box-shadow: none; backdrop-filter: none; color: var(--muted); }
+.seg .btn[aria-pressed=true] { background: var(--acao); color: #fff; }
+
+.lead { font-size: clamp(1.1rem, 2vw, 1.3rem); line-height: 1.45; max-width: 66ch; text-wrap: pretty; color: var(--fg) !important; }
+.lead b { font-weight: 700; color: var(--c1-texto); }
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; }
+.kpis .card.destaque { border-color: color-mix(in srgb, var(--crit) 55%, var(--line)); background: linear-gradient(160deg, color-mix(in srgb, var(--crit) 12%, transparent), var(--panel)); }
+.big { font-size: clamp(2rem, 4vw, 2.6rem); line-height: 1.05; font-weight: 800; letter-spacing: -.03em; }
+.spark { height: 36px; margin-top: 2px; }
+.spark svg { display: block; overflow: visible; }
+.note { font-size: var(--fs-cap); color: var(--muted); }
+.aj { font-size: var(--fs-cap); color: var(--muted); margin-top: auto; padding-top: 4px; }
+.aj summary { cursor: pointer; color: var(--c1-texto); font-weight: 600; }
+.aj p { margin-top: 6px; }
+.good { color: var(--ok); font-weight: 700; } .bad { color: var(--bad); font-weight: 700; } .neu { color: var(--muted); font-weight: 600; }
+.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; }
+.grid3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; align-items: start; }
+.painel-g { background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); padding: 18px; min-width: 0; backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 10px; }
+.painel-g > .note { font-weight: 600; color: var(--fg); font-size: .9rem; }
+.chart { position: relative; min-height: 60px; min-width: 0; }
+.chart svg { display: block; overflow: visible; }
+.chart text { fill: var(--muted); font-size: var(--fs-cap); font-family: var(--sans); }
+.chart .domain, .chart .tick line { stroke: var(--axis); }
+.chart .grid line { stroke: var(--grid); }
+.chart .grid .domain { display: none; }
+.chart .clk { cursor: pointer; }
+.tip { position: absolute; pointer-events: none; background: var(--pop); border: 1px solid var(--pop-line); box-shadow: var(--shadow); border-radius: var(--r2); padding: 8px 11px; font-size: var(--fs-cap); white-space: nowrap; z-index: 3; }
+.tip strong { display: block; color: var(--fg); }
+.tip span { color: var(--muted); }
+.head-row { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; justify-content: space-between; }
+#t-orgaos { width: 100%; border-collapse: collapse; font-size: .875rem; }
+#t-orgaos th, #t-orgaos td { padding: 10px 14px; text-align: right; border-bottom: 1px solid var(--line); white-space: nowrap; }
+#t-orgaos th:first-child, #t-orgaos td:first-child { text-align: left; white-space: normal; min-width: 15rem; }
+#t-orgaos th { color: var(--muted); font-weight: 600; font-size: var(--fs-cap); }
+#t-orgaos th button { all: unset; cursor: pointer; }
+#t-orgaos th[aria-sort] { color: var(--c1-texto); }
+#t-orgaos th[aria-sort] button::after { content: " ▾"; }
+#t-orgaos th[aria-sort=ascending] button::after { content: " ▴"; }
+#t-orgaos tbody tr:hover td { background: var(--c1-soft); }
+#t-orgaos tbody tr:last-child td { border-bottom: 0; }
+.pill { display: inline-block; padding: 2px 10px; border-radius: 999px; font-weight: 700; }
+.p-ok { background: color-mix(in srgb, var(--ok) 18%, transparent); color: var(--ok); }
+.p-warn { background: color-mix(in srgb, var(--warn) 20%, transparent); color: var(--warn); }
+.p-bad { background: color-mix(in srgb, var(--bad) 20%, transparent); color: var(--bad); }
+.faq { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr)); gap: 12px 16px; align-items: start; }
+.faq details { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 14px 18px; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+.faq details[open] { border-color: var(--c1); }
+.faq summary { cursor: pointer; font-weight: 600; }
+.faq p { margin-top: 8px; color: var(--muted); }
+footer { border-top: 1px solid var(--line); padding-top: 18px; }
+.credit { font-size: var(--fs-cap); color: var(--muted); }
+@media (max-width: 860px) { .hero { grid-template-columns: 1fr; } .hero-visual { justify-self: start; max-width: 320px; } }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .btn { transition: none; } }
+</style>
+<script>
+(function () {
+  try {
+    const t = localStorage.getItem('ouvidometro-tema');
+    if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-theme', t);
+  } catch (e) {}
+})();
+</script>
+<script src="d3.min.js"></script>
+<script src="dados.js"></script>
+</head>
+<body>
+<main class="page">
+
+<div class="barra">
+  <span class="marca-linha"><strong class="marca" id="marca" hidden>Ouvidômetro</strong><span class="selo"><i></i>Fala.BR · CGU · dados até 31/08/2026</span></span>
+  <button class="btn" type="button" id="tema" aria-label="Alternar entre tema claro e escuro">Tema claro</button>
+</div>
+
+<header class="hero" id="hero">
+  <div>
+    <p class="olho">Painel aberto de dados</p>
+    <h1>Ouvidômetro</h1>
+    <p class="pergunta">Os órgãos públicos respondem ao cidadão no prazo que a lei manda?</p>
+    <p class="fato" id="fato">—</p>
+    <p class="hero-nota">Os dados vêm do arquivo público de manifestações de ouvidoria da CGU. O prazo é o do Decreto 9.492/2018: 30 dias, prorrogáveis uma vez por mais 30.</p>
+  </div>
+  <figure class="hero-visual">
+    <div class="pontos" id="pontos" role="img" aria-label="Cem pontos representando as manifestações com prazo vencido"></div>
+    <figcaption id="pontos-leg">—</figcaption>
+  </figure>
+</header>
+
+<nav class="tabs" role="tablist" aria-label="Guias do Ouvidômetro">
+  <button class="tabbtn" type="button" role="tab" id="tab-sobre" aria-controls="guia-sobre" aria-selected="true" data-guia="sobre">O que é o Ouvidômetro</button>
+  <button class="tabbtn" type="button" role="tab" id="tab-painel" aria-controls="guia-painel" aria-selected="false" data-guia="painel">Painel</button>
+</nav>
+
+<div class="guia" id="guia-sobre" role="tabpanel" aria-labelledby="tab-sobre">
+<section class="sec" id="contexto">
+  <h2>Antes dos números</h2>
+  <div class="ctx">
+    <article class="card">
+      <h3>O que é o Ouvidômetro</h3>
+      <p>Um painel independente que mede como os órgãos públicos respondem às manifestações dos cidadãos: se cumprem o prazo da lei, quanto tempo levam, o que fica pendente e como o cidadão avalia a resposta. A pergunta de fundo é a de um gestor de ouvidoria: onde agir primeiro.</p>
+    </article>
+    <article class="card">
+      <h3>De onde vêm os dados</h3>
+      <p>Do arquivo público de manifestações de ouvidoria da Controladoria-Geral da União (CGU), atualizado todo mês. Ele reúne o que foi registrado no Fala.BR, a plataforma de ouvidoria do governo federal, também usada por estados e municípios que aderiram a ela. O arquivo usado aqui foi gerado em 01/09/2026.</p>
+      <p><a href="https://www.gov.br/cgu/pt-br/acesso-a-informacao/dados-abertos/arquivos/ouvidoria" rel="noopener">Página de dados abertos da CGU</a></p>
+    </article>
+    <article class="card">
+      <h3>O que a base registra</h3>
+      <p>Cada linha é uma manifestação, sem identificar o cidadão. De janeiro de 2015 a agosto de 2026 são <b id="b-total">—</b> manifestações, <b id="b-orgaos">—</b> órgãos e <b id="b-assuntos">—</b> assuntos.</p>
+      <p class="note">Campos usados no painel (destacados) e campos que ficaram de fora:</p>
+      <div class="fields" aria-label="Campos da base">
+        <span class="tag on">data de registro</span><span class="tag on">data de prazo</span><span class="tag on">data de resposta</span><span class="tag on">dias para resolução</span><span class="tag on">tipo</span><span class="tag on">órgão</span><span class="tag on">esfera</span><span class="tag on">UF do órgão</span><span class="tag on">assunto</span><span class="tag on">demanda atendida</span><span class="tag on">satisfação</span><span class="tag">dias de atraso</span><span class="tag">situação</span><span class="tag">serviço</span><span class="tag">município da manifestação</span><span class="tag">faixa etária</span><span class="tag">raça/cor</span><span class="tag">gênero</span>
+      </div>
+    </article>
+  </div>
+  <div class="card">
+    <h3>Perguntas que este painel responde</h3>
+    <ol class="qs">
+      <li>O prazo da lei é cumprido, e isso melhorou?</li>
+      <li>Quanto tempo o cidadão espera pela resposta?</li>
+      <li>O que está pendente com o prazo vencido?</li>
+      <li>Em que esfera, tipo, UF e assunto o prazo mais estoura?</li>
+      <li>Quais órgãos precisam de atenção primeiro?</li>
+      <li>A demanda foi atendida, e o atraso pesa na satisfação?</li>
+    </ol>
+  </div>
+</section>
+
+<section class="sec" id="lei">
+  <h2>O que a lei exige e como o painel mede</h2>
+  <p>As regras vêm da Lei 13.460/2017, que trata dos direitos do usuário de serviços públicos, e do Decreto 9.492/2018, que a regulamenta no governo federal. Cada regra abaixo aponta para o indicador que a confere.</p>
+  <div class="tbl-wrap">
+    <table class="leis">
+      <thead><tr><th>Regra</th><th>O que diz</th><th>Como aparece no painel</th></tr></thead>
+      <tbody>
+        <tr><td>Prazo de resposta<br><span class="note">Decreto 9.492/2018, art. 18</span></td><td>A ouvidoria deve dar a resposta conclusiva em 30 dias a partir do recebimento.</td><td>Indicador "Respondidas no prazo" e a faixa "até 30 dias" do gráfico de tempo de resposta.</td></tr>
+        <tr><td>Prorrogação<br><span class="note">Decreto 9.492/2018, art. 18</span></td><td>O prazo pode ser prorrogado uma única vez, por mais 30 dias, com justificativa. O teto fica em 60 dias.</td><td>Indicador "Prazo prorrogado" e as faixas "31 a 60 dias" e "mais de 60 dias".</td></tr>
+        <tr><td>Pedido de complementação<br><span class="note">Decreto 9.492/2018, art. 18, §§ 2º a 5º</span></td><td>Se faltar informação, a ouvidoria pede complemento ao cidadão. O prazo fica suspenso até a resposta dele. Sem resposta em 30 dias, a manifestação é arquivada.</td><td>Explica por que algumas respostas passam de 60 dias sem estourar o prazo: a data de prazo da base já desconta a suspensão.</td></tr>
+        <tr><td>Tipos de manifestação<br><span class="note">Decreto 9.492/2018, art. 3º</span></td><td>Reclamação, denúncia, elogio, sugestão e solicitação de providências têm definição própria.</td><td>Filtro e gráfico "Por tipo de manifestação".</td></tr>
+        <tr><td>Comunicação anônima<br><span class="note">Decreto 9.492/2018, art. 23, § 2º</span></td><td>Relatos de irregularidade, mesmo anônimos, seguem para o órgão competente.</td><td>Tipo "Comunicação", que não tem data de prazo na base e fica fora da conta de prazo.</td></tr>
+        <tr><td>Uso do sistema<br><span class="note">Decreto 9.492/2018, art. 16</span></td><td>Os órgãos federais devem usar o e-Ouv, hoje Fala.BR.</td><td>Explica o salto de volume a partir de 2018 no gráfico mensal.</td></tr>
+        <tr><td>Vigência por porte<br><span class="note">Lei 13.460/2017</span></td><td>A lei passou a valer em etapas: 360 dias após a publicação para União, estados e municípios com mais de 500 mil habitantes, 540 dias para municípios de 100 a 500 mil e 720 dias para os menores.</td><td>Marcas de 2018 e 2019 no gráfico mensal e o filtro de esfera.</td></tr>
+        <tr><td>Satisfação do usuário<br><span class="note">Lei 13.460/2017</span></td><td>Os órgãos devem medir todo ano a satisfação dos usuários com os serviços.</td><td>Indicadores "Demanda atendida" e "Satisfação" e a seção final.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="sec" id="duvidas">
+  <h2>Dúvidas frequentes</h2>
+  <div class="faq">
+    <details><summary>Qual é o prazo que o órgão tem para responder?</summary><p>30 dias a partir do recebimento, prorrogáveis uma única vez por mais 30, com justificativa. A regra está no art. 18 do Decreto 9.492/2018 e vem da Lei 13.460/2017.</p></details>
+    <details><summary>Por que há respostas com mais de 60 dias que contam como "no prazo"?</summary><p>Quando a ouvidoria pede complemento ao cidadão, o prazo fica suspenso até ele responder (art. 18, § 4º, do Decreto 9.492/2018). A data de prazo da base já considera essa suspensão, e é ela que o painel usa.</p></details>
+    <details><summary>Por que a Comunicação fica fora da conta de prazo?</summary><p>Comunicação é o relato de irregularidade sem identificação do autor. Na base, esse tipo quase nunca tem data de prazo, porque não há cidadão identificado a quem responder. Sem data de prazo, não dá para dizer se houve atraso.</p></details>
+    <details><summary>O que é o tipo "Simplifique"?</summary><p>É o pedido de simplificação de um serviço público, registrado em formulário próprio no Fala.BR. O volume é pequeno perto dos outros tipos.</p></details>
+    <details><summary>Por que o volume salta em 2018 e de novo em 2020?</summary><p>Em 2018 a Lei 13.460/2017 passou a valer para União, estados e grandes municípios, e o Decreto 9.492/2018 tornou o sistema obrigatório para os órgãos federais. O salto de 2020 coincide com a pandemia e com a entrada de mais órgãos, mas a base sozinha não permite separar as duas causas.</p></details>
+    <details><summary>Por que há prefeituras e estados numa base federal?</summary><p>O Fala.BR é oferecido também a estados e municípios, que podem aderir a ele como sistema de ouvidoria. A base traz só os que aderiram, e não todos os órgãos do país. Use o filtro de esfera para separar.</p></details>
+    <details><summary>Posso comparar um órgão com outro?</summary><p>Com cuidado. Órgãos recebem assuntos de dificuldades diferentes. Por isso a tabela usa a proporção no prazo, e não a contagem de atrasos, exige um volume mínimo e compara cada órgão com o resultado geral do filtro escolhido.</p></details>
+    <details><summary>Por que julho e agosto de 2026 não têm proporção no prazo?</summary><p>O arquivo vai até 31/08/2026. A maior parte das manifestações desses meses ainda estava dentro do prazo nessa data, então a conta ficaria distorcida para cima ou para baixo.</p></details>
+    <details><summary>Por que o painel não usa o campo "dias de atraso" da base?</summary><p>Ele só vem preenchido para manifestações ainda sem resposta. Para as respondidas, o atraso foi calculado comparando a data de resposta com a data de prazo.</p></details>
+    <details><summary>Por que não há análise por idade, raça ou gênero?</summary><p>Esses campos são opcionais e ficam vazios em mais de 80% das manifestações recentes. Qualquer conclusão sobre perfil seria frágil.</p></details>
+    <details><summary>De onde vem a referência de 90% no prazo?</summary><p>É a meta de 2025 do Índice de Resolubilidade da Ouvidoria Setorial da Controladoria e Ouvidoria Geral do Ceará. Não é meta legal nem federal. Está aqui só como régua de comparação.</p></details>
+    <details><summary>Como reproduzir estes números?</summary><p>O repositório traz os scripts que baixam o arquivo da CGU e geram os dados do painel. O passo a passo está no README.</p></details>
+  </div>
+</section>
+
+<p><button class="btn ir" type="button" data-guia="painel">Abrir o painel</button></p>
+</div>
+
+<div class="guia" id="guia-painel" role="tabpanel" aria-labelledby="tab-painel" hidden>
+<section class="filters" id="filtros" aria-label="Filtros">
+  <div class="frow">
+    <div class="f"><label for="f-ini">De</label><select id="f-ini"></select></div>
+    <div class="f"><label for="f-fim">Até</label><select id="f-fim"></select></div>
+    <div class="f"><label for="f-esfera">Esfera</label><select id="f-esfera"></select></div>
+    <div class="f"><label for="f-tipo">Tipo</label><select id="f-tipo"></select></div>
+    <div class="f"><label for="f-uf">UF do órgão</label><select id="f-uf"></select></div>
+    <button class="btn" type="button" id="limpar">Limpar filtros</button>
+  </div>
+  <div class="chips" id="chips" aria-live="polite"></div>
+</section>
+
+<section class="sec" id="resumo">
+  <h2>Resumo do período</h2>
+  <p class="lead" id="lead">—</p>
+  <div class="kpis">
+    <article class="card"><h3>Manifestações</h3><div class="big" id="k-n">—</div><div class="spark" id="sp-n"></div><p class="note"><span id="k-n-var">—</span> contra o período anterior de mesma duração.</p>
+      <details class="aj"><summary>Como ler</summary><p>Total registrado no período e nos filtros. Volume maior não significa serviço pior: ele também cresce quando mais órgãos passam a usar a plataforma.</p></details></article>
+    <article class="card"><h3>Respondidas no prazo</h3><div class="big" id="k-prazo">—</div><div class="spark" id="sp-prazo"></div><p class="note"><span id="k-prazo-var">—</span> contra o período anterior.</p>
+      <details class="aj"><summary>Como ler</summary><p>Entre as manifestações com prazo vencido até 31/08/2026, a parte respondida até a data de prazo. Quem ainda não respondeu conta como fora do prazo. A data de prazo já inclui prorrogação e suspensão (Decreto 9.492/2018, art. 18).</p></details></article>
+    <article class="card"><h3>Tempo médio de resposta</h3><div class="big"><span id="k-tm">—</span> dias</div><div class="spark" id="sp-tm"></div><p class="note"><span id="k-tm-var">—</span> contra o período anterior.</p>
+      <details class="aj"><summary>Como ler</summary><p>Média de dias entre o registro e a resposta, só das já respondidas. A média esconde os casos demorados, por isso veja também o gráfico por faixa de tempo.</p></details></article>
+    <article class="card"><h3>Respondidas em até 30 dias</h3><div class="big" id="k-r30">—</div><p class="note"><span id="k-r10">—</span> saem em até 10 dias.</p>
+      <details class="aj"><summary>Como ler</summary><p>Parte das respostas dadas dentro do prazo inicial de 30 dias, sem depender de prorrogação. Base: manifestações já respondidas.</p></details></article>
+    <article class="card destaque"><h3>Pendências vencidas</h3><div class="big" id="k-pe">—</div><p class="note"><span id="k-pe60">—</span> delas foram registradas há mais de 60 dias.</p>
+      <details class="aj"><summary>Como ler</summary><p>Manifestações do período ainda sem resposta e com o prazo vencido em 31/08/2026. As registradas há mais de 60 dias já passaram do teto de 30 dias mais prorrogação.</p></details></article>
+    <article class="card"><h3>Prazo prorrogado</h3><div class="big" id="k-pr">—</div><p class="note">Manifestações com mais de 45 dias entre o registro e o prazo.</p>
+      <details class="aj"><summary>Como ler</summary><p>A base não tem um campo de prorrogação. O painel estima pela distância entre registro e prazo: o prazo inicial fica em torno de 30 dias, então mais de 45 indica prorrogação ou suspensão por pedido de complemento.</p></details></article>
+    <article class="card"><h3>Demanda atendida</h3><div class="big" id="k-at">—</div><p class="note">Atendida ou parcialmente, segundo <span id="k-at-n">—</span> cidadãos.</p>
+      <details class="aj"><summary>Como ler</summary><p>Resposta do cidadão à pergunta da pesquisa sobre a demanda ter sido atendida. A pesquisa é opcional e poucos respondem, então leia como sinal.</p></details></article>
+    <article class="card"><h3>Satisfação</h3><div class="big" id="k-sat">—</div><p class="note">Satisfeitos ou muito satisfeitos, em <span id="k-sat-n">—</span> respostas (<span id="k-sat-cob">—</span> das manifestações).</p>
+      <details class="aj"><summary>Como ler</summary><p>Notas 4 e 5 na pesquisa de satisfação. Quem ficou insatisfeito tende a responder mais, então o número puxa para baixo. A Lei 13.460/2017 prevê a medição anual da satisfação.</p></details></article>
+  </div>
+</section>
+
+<section class="sec" id="faixas">
+  <h2>Tempo de resposta diante do prazo legal</h2>
+  <p>Das manifestações já respondidas no período, quantas saíram dentro dos 30 dias iniciais, quantas usaram a prorrogação e quantas passaram do teto de 60 dias. Passar de 60 dias nem sempre é descumprimento: o prazo fica suspenso enquanto o cidadão não envia o complemento pedido.</p>
+  <div class="painel-g"><div class="chart" id="g-faixas"></div></div>
+</section>
+
+<section class="sec" id="evolucao">
+  <h2>Evolução mês a mês</h2>
+  <p>A série mostra toda a história com os filtros de esfera, tipo e UF. A faixa destacada é o período selecionado. As marcas indicam quando a Lei 13.460/2017 passou a valer para União, estados e grandes municípios (2018) e para os municípios menores (2019). Julho e agosto de 2026 ficam sem proporção porque o prazo da maior parte ainda não tinha vencido em 31/08/2026.</p>
+  <div class="grid2">
+    <div class="painel-g"><p class="note">Manifestações registradas por mês</p><div class="chart" id="g-volume"></div></div>
+    <div class="painel-g"><p class="note">Respondidas no prazo, em %. A linha tracejada marca 90%, meta usada como referência por ouvidorias públicas.</p><div class="chart" id="g-prazo"></div></div>
+  </div>
+</section>
+
+<section class="sec" id="recortes">
+  <div class="head-row">
+    <h2>Onde o prazo estoura</h2>
+    <div class="seg" role="group" aria-label="Métrica dos gráficos">
+      <button class="btn" type="button" data-metrica="prazo" aria-pressed="true">No prazo (%)</button>
+      <button class="btn" type="button" data-metrica="volume" aria-pressed="false">Volume</button>
+      <button class="btn" type="button" data-metrica="tm" aria-pressed="false">Tempo médio</button>
+    </div>
+  </div>
+  <p>Clique numa barra para filtrar o painel inteiro por ela. Clique de novo para tirar o filtro. A linha tracejada marca o resultado geral do filtro atual. Barras em destaque estão mais de 10 pontos abaixo do geral.</p>
+  <div class="grid3">
+    <div class="painel-g"><p class="note">Por esfera do órgão</p><div class="chart" id="g-esfera"></div></div>
+    <div class="painel-g"><p class="note">Por tipo de manifestação</p><div class="chart" id="g-tipo"></div></div>
+    <div class="painel-g"><p class="note">Por UF do órgão</p><div class="chart" id="g-uf"></div></div>
+  </div>
+</section>
+
+<section class="sec" id="assuntos">
+  <div class="head-row">
+    <h2>Assuntos</h2>
+    <div class="seg" role="group" aria-label="Ordenar assuntos">
+      <button class="btn" type="button" data-assunto="atraso" aria-pressed="true">Mais atrasados</button>
+      <button class="btn" type="button" data-assunto="volume" aria-pressed="false">Mais demandados</button>
+    </div>
+  </div>
+  <p id="assuntos-nota">—</p>
+  <div class="painel-g"><div class="chart" id="g-assuntos"></div></div>
+</section>
+
+<section class="sec" id="orgaos">
+  <h2>Órgãos que precisam de atenção</h2>
+  <p>Órgãos com pelo menos 300 manifestações no período e nos filtros atuais. A cor compara cada órgão com o resultado geral do filtro: verde no nível ou acima, amarelo até 10 pontos abaixo, vermelho mais de 10 pontos abaixo. Clique no título de uma coluna para ordenar, ou escolha um órgão na lista. Um resultado perto de 0% costuma indicar órgão que recebe manifestações pelo Fala.BR, mas não registra a resposta no sistema, o que a base não permite confirmar.</p>
+  <div class="frow">
+    <div class="f"><label for="f-orgao">Órgão</label><select id="f-orgao"></select></div>
+    <button class="btn" type="button" id="todos" aria-pressed="false">Mostrar todos</button>
+  </div>
+  <div class="tbl-wrap">
+    <table id="t-orgaos">
+      <thead><tr>
+        <th data-k="nome"><button type="button">Órgão</button></th>
+        <th data-k="esfera"><button type="button">Esfera</button></th>
+        <th data-k="uf"><button type="button">UF</button></th>
+        <th data-k="n"><button type="button">Manifestações</button></th>
+        <th data-k="prazo" aria-sort="ascending"><button type="button">No prazo</button></th>
+        <th data-k="tm"><button type="button">Tempo médio (dias)</button></th>
+        <th data-k="pe"><button type="button">Pendências vencidas</button></th>
+      </tr></thead>
+      <tbody id="tb-orgaos"></tbody>
+    </table>
+  </div>
+  <p class="note" id="orgaos-nota">—</p>
+</section>
+
+<section class="sec" id="satisfacao">
+  <h2>Resposta no prazo e satisfação</h2>
+  <p>Proporção de satisfeitos ou muito satisfeitos entre quem respondeu à pesquisa, separando quem recebeu a resposta no prazo de quem recebeu fora dele. A pesquisa é opcional e tem peso maior de quem ficou insatisfeito, então leia a diferença entre os grupos, e não o nível.</p>
+  <div class="painel-g"><div class="chart" id="g-sat"></div></div>
+</section>
+</div>
+
+<footer>
+  <p class="credit">Projeto de Diego Arruda · @drasdiegotech · <a href="https://github.com/drasdiego" rel="noopener">github.com/drasdiego</a> · Dados: <a href="https://www.gov.br/cgu/pt-br/acesso-a-informacao/dados-abertos/arquivos/ouvidoria" rel="noopener">CGU, dados abertos de ouvidoria</a> · Este painel não é um produto oficial da CGU.</p>
+</footer>
+
+</main>
+
+<script>
+(function () {
+  const D = window.OUVIDOMETRO;
+  const loc = d3.formatLocale({ decimal: ',', thousands: '.', grouping: [3], currency: ['R$ ', ''] });
+  const fInt = loc.format(',d'), f1 = loc.format(',.1f');
+  const sinal = (v) => (v > 0.05 ? '+' : v < -0.05 ? '−' : '');
+  const F = {
+    int: (v) => (v == null || !isFinite(v) ? '—' : fInt(Math.round(v))),
+    pct: (v) => (v == null || !isFinite(v) ? '—' : f1(v) + '%'),
+    d1: (v) => (v == null || !isFinite(v) ? '—' : f1(v)),
+    pp: (v) => (v == null || !isFinite(v) ? '—' : sinal(v) + f1(Math.abs(v)) + ' p.p.'),
+    sp: (v) => (v == null || !isFinite(v) ? '—' : sinal(v) + f1(Math.abs(v)) + '%'),
+    sd: (v) => (v == null || !isFinite(v) ? '—' : sinal(v) + f1(Math.abs(v)) + ' dias'),
+  };
+  const nomeMes = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
+  const rotMes = (m) => nomeMes[+m.slice(5) - 1] + '/' + m.slice(0, 4);
+
+  const P = D.principal, PC = P.cols, PD = P.dims;
+  const meses = PD.mes;
+  const anos = Array.from(new Set(meses.map((m) => +m.slice(0, 4))));
+  const MED = ['n', 'cp', 'av', 'fo', 'pe', 're', 'sd', 'r10', 'r30', 'r60', 'pe60', 'pr', 'sn', 'sp', 'sa', 'sap', 'sf', 'sfp', 'an', 'ap'];
+  const zero = () => Object.fromEntries(MED.map((k) => [k, 0]));
+  const add = (acc, i) => { for (const k of MED) acc[k] += PC[k][i]; return acc; };
+  const mesAno = meses.map((m) => +m.slice(0, 4));
+  const mesValido = meses.map((m) => m <= '2026-06');
+  const ULT = anos[anos.length - 1];
+  const S = { ini: 2025, fim: ULT, esfera: null, tipo: null, uf: null, metrica: 'prazo', assunto: 'atraso', orgao: '', todos: false, sort: 'prazo', dir: 1 };
+
+  const ix = (dim, v) => PD[dim].indexOf(v);
+  function passa(i, ignorar) {
+    if (ignorar !== 'esfera' && S.esfera != null && PC.esfera[i] !== ix('esfera', S.esfera)) return false;
+    if (ignorar !== 'tipo' && S.tipo != null && PC.tipo[i] !== ix('tipo', S.tipo)) return false;
+    if (ignorar !== 'uf' && S.uf != null && PC.uf[i] !== ix('uf', S.uf)) return false;
+    return true;
+  }
+  function janela() {
+    const idx = meses.map((m, i) => i).filter((i) => mesAno[i] >= S.ini && mesAno[i] <= S.fim);
+    const a = idx[0], b = idx[idx.length - 1], len = b - a + 1;
+    return { a, b, len, pa: a - len, pb: a - 1 };
+  }
+  function soma(a, b, ignorar) {
+    const acc = zero();
+    for (let i = 0; i < P.linhas; i++) {
+      const m = PC.mes[i];
+      if (m < a || m > b || !passa(i, ignorar)) continue;
+      add(acc, i);
+    }
+    return acc;
+  }
+  const taxaPrazo = (s) => (s.av ? 100 * (1 - s.fo / s.av) : null);
+  const tm = (s) => (s.re ? s.sd / s.re : null);
+  const $ = (id) => document.getElementById(id);
+  const txt = (id, t) => { const e = $(id); if (e) e.textContent = t; };
+  const rotAno = (a) => (a === ULT ? a + ' (até ago)' : String(a));
+
+  function opcoes(sel, lista, valor, todos) {
+    sel.replaceChildren(...(todos ? [new Option(todos, '')] : []), ...lista.map((v) => new Option(v.r ?? v, v.v ?? v)));
+    sel.value = valor == null ? '' : String(valor);
+  }
+  function montarFiltros() {
+    opcoes($('f-ini'), anos.map((a) => ({ v: a, r: rotAno(a) })), S.ini);
+    opcoes($('f-fim'), anos.map((a) => ({ v: a, r: rotAno(a) })), S.fim);
+    opcoes($('f-esfera'), PD.esfera, S.esfera, 'Todas');
+    opcoes($('f-tipo'), PD.tipo, S.tipo, 'Todos');
+    opcoes($('f-uf'), PD.uf.filter((u) => u !== 'NI'), S.uf, 'Todas');
+    const chips = $('chips');
+    chips.replaceChildren();
+    const j = janela();
+    const per = document.createElement('span');
+    per.textContent = `Período: ${rotMes(meses[j.a])} a ${rotMes(meses[j.b])}`;
+    chips.appendChild(per);
+    [['esfera', 'Esfera'], ['tipo', 'Tipo'], ['uf', 'UF']].filter(([k]) => S[k] != null).forEach(([k, r]) => {
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'chip';
+      b.textContent = `${r}: ${S[k]} ×`;
+      b.setAttribute('aria-label', `Remover filtro ${r}: ${S[k]}`);
+      b.onclick = () => { S[k] = null; render(); };
+      chips.appendChild(b);
+    });
+  }
+  function ligar() {
+    $('f-ini').onchange = (e) => { S.ini = +e.target.value; if (S.fim < S.ini) S.fim = S.ini; render(); };
+    $('f-fim').onchange = (e) => { S.fim = +e.target.value; if (S.ini > S.fim) S.ini = S.fim; render(); };
+    $('f-esfera').onchange = (e) => { S.esfera = e.target.value || null; render(); };
+    $('f-tipo').onchange = (e) => { S.tipo = e.target.value || null; render(); };
+    $('f-uf').onchange = (e) => { S.uf = e.target.value || null; render(); };
+    $('limpar').onclick = () => { Object.assign(S, { ini: 2025, fim: ULT, esfera: null, tipo: null, uf: null, orgao: '' }); render(); };
+    document.querySelectorAll('[data-metrica]').forEach((b) => b.onclick = () => { S.metrica = b.dataset.metrica; renderRecortes(); });
+    document.querySelectorAll('[data-assunto]').forEach((b) => b.onclick = () => { S.assunto = b.dataset.assunto; renderAssuntos(); });
+    $('f-orgao').onchange = (e) => { S.orgao = e.target.value; renderOrgaos(); };
+    $('todos').onclick = () => { S.todos = !S.todos; renderOrgaos(); };
+    document.querySelectorAll('#t-orgaos th').forEach((th) => th.querySelector('button').onclick = () => {
+      const k = th.dataset.k;
+      if (S.sort === k) S.dir = -S.dir; else { S.sort = k; S.dir = (k === 'nome' || k === 'esfera' || k === 'uf' || k === 'prazo') ? 1 : -1; }
+      renderOrgaos();
+    });
+  }
+
+  function renderResumo() {
+    const j = janela();
+    const s = soma(j.a, j.b);
+    const p = j.pa >= 0 ? soma(j.pa, j.pb) : null;
+    txt('k-n', F.int(s.n));
+    txt('k-prazo', F.pct(taxaPrazo(s)));
+    txt('k-tm', F.d1(tm(s)));
+    txt('k-r30', F.pct(s.re ? 100 * s.r30 / s.re : null));
+    txt('k-r10', F.pct(s.re ? 100 * s.r10 / s.re : null));
+    txt('k-pe', F.int(s.pe));
+    txt('k-pe60', F.int(s.pe60));
+    txt('k-pr', F.pct(s.cp ? 100 * s.pr / s.cp : null));
+    txt('k-at', F.pct(s.an ? 100 * s.ap / s.an : null)); txt('k-at-n', F.int(s.an));
+    txt('k-sat', F.pct(s.sn ? 100 * s.sp / s.sn : null)); txt('k-sat-n', F.int(s.sn)); txt('k-sat-cob', F.pct(s.n ? 100 * s.sn / s.n : null));
+    const setVar = (id, v, fmt, bomSeSobe) => {
+      const e = $(id);
+      e.textContent = v == null ? 'Sem período anterior comparável,' : fmt(v);
+      e.className = v == null || Math.abs(v) < 0.05 || bomSeSobe == null ? 'neu' : ((v > 0) === bomSeSobe ? 'good' : 'bad');
+    };
+    const dN = p && p.n ? 100 * (s.n / p.n - 1) : null;
+    const dP = p && taxaPrazo(p) != null && taxaPrazo(s) != null ? taxaPrazo(s) - taxaPrazo(p) : null;
+    const dT = p && tm(p) != null && tm(s) != null ? tm(s) - tm(p) : null;
+    setVar('k-n-var', dN, F.sp, null);
+    setVar('k-prazo-var', dP, F.pp, true);
+    setVar('k-tm-var', dT, F.sd, false);
+    const lead = $('lead');
+    lead.replaceChildren();
+    const b = (t) => { const x = document.createElement('b'); x.textContent = t; return x; };
+    const t = (x) => document.createTextNode(x);
+    lead.append(t(`De ${rotMes(meses[j.a])} a ${rotMes(meses[j.b])}, `), b(F.pct(taxaPrazo(s))), t(' das manifestações com prazo vencido foram respondidas no prazo'));
+    if (dP != null) lead.append(t(Math.abs(dP) < 0.05 ? ', o mesmo nível do período anterior' : `, ${f1(Math.abs(dP))} p.p. ${dP > 0 ? 'acima' : 'abaixo'} do período anterior`));
+    lead.append(t('. A resposta levou em média '), b(F.d1(tm(s)) + ' dias'), t(', e '), b(F.int(s.pe)), t(' manifestações seguem sem resposta com o prazo vencido.'));
+  }
+
+  function frame(el, h) {
+    const W = Math.max(260, el.clientWidth || 300);
+    el.replaceChildren();
+    const svg = d3.select(el).append('svg').attr('width', W).attr('height', h).attr('viewBox', `0 0 ${W} ${h}`).attr('role', 'img');
+    const tip = d3.select(el).append('div').attr('class', 'tip').attr('hidden', '');
+    return { W, svg, tip };
+  }
+  function showTip(tip, el, event, titulo, linhas) {
+    const [x, y] = d3.pointer(event, el);
+    tip.attr('hidden', null).selectAll('*').remove();
+    tip.append('strong').text(titulo);
+    linhas.forEach((l) => tip.append('span').style('display', 'block').text(l));
+    const w = tip.node().offsetWidth;
+    tip.style('left', Math.min(Math.max(0, x + 12), Math.max(0, el.clientWidth - w)) + 'px').style('top', Math.max(0, y - 56) + 'px');
+  }
+  const margemEsq = (svg, texto) => { const t = svg.append('text').text(texto); const w = t.node().getComputedTextLength() || 40; t.remove(); return Math.ceil(w) + 10; };
+
+  function renderFaixas() {
+    const j = janela();
+    const s = soma(j.a, j.b);
+    const el = $('g-faixas');
+    if (!s.re) { el.replaceChildren(); return; }
+    const partes = [
+      { label: 'Até 30 dias (prazo inicial)', n: s.r30, cor: 'var(--c1)' },
+      { label: '31 a 60 dias (com prorrogação)', n: s.r60 - s.r30, cor: 'var(--c2)' },
+      { label: 'Mais de 60 dias (acima do teto)', n: s.re - s.r60, cor: 'var(--crit)' },
+    ].map((p) => ({ ...p, v: 100 * p.n / s.re }));
+    const H = 96;
+    const { W, svg, tip } = frame(el, H);
+    svg.attr('aria-label', 'Respostas por faixa de tempo diante do prazo legal');
+    const x = d3.scaleLinear().domain([0, 100]).range([0, W]);
+    let acc = 0;
+    partes.forEach((p) => { p.x0 = acc; acc += p.v; });
+    const g = svg.append('g').selectAll('g').data(partes).join('g');
+    g.append('rect').attr('x', (p) => x(p.x0)).attr('y', 8).attr('height', 34).attr('width', (p) => Math.max(1, x(p.v) - 1)).style('fill', (p) => p.cor)
+      .on('pointermove', (ev, p) => showTip(tip, el, ev, p.label, [`${F.pct(p.v)} das respostas`, `${F.int(p.n)} manifestações`]))
+      .on('pointerleave', () => tip.attr('hidden', ''));
+    const leg = svg.append('g').attr('transform', 'translate(0,62)');
+    let lx = 0, ly = 0;
+    partes.forEach((p) => {
+      const item = leg.append('g');
+      item.append('rect').attr('width', 10).attr('height', 10).attr('rx', 2).style('fill', p.cor);
+      const tx = item.append('text').attr('x', 16).attr('y', 9).text(`${p.label}: ${F.pct(p.v)}`);
+      const w = 16 + tx.node().getComputedTextLength() + 22;
+      if (lx + w > W && lx > 0) { lx = 0; ly += 18; }
+      item.attr('transform', `translate(${lx},${ly})`);
+      lx += w;
+    });
+    svg.attr('height', H + ly).attr('viewBox', `0 0 ${W} ${H + ly}`);
+  }
+
+  function renderSerie() {
+    const j = janela();
+    const por = meses.map(() => zero());
+    for (let i = 0; i < P.linhas; i++) { if (passa(i)) add(por[PC.mes[i]], i); }
+    const parse = d3.utcParse('%Y-%m');
+    const rows = meses.map((m, i) => ({ m, d: parse(m), n: por[i].n, p: mesValido[i] ? taxaPrazo(por[i]) : null, tm: tm(por[i]) }));
+    sparks(rows, j);
+    const marcos = [{ d: parse('2018-06'), t: 'lei: 1ª etapa' }, { d: parse('2019-06'), t: 'lei: todos' }];
+    [['g-volume', 'n'], ['g-prazo', 'p']].forEach(([id, key]) => {
+      const el = $(id), H = 250;
+      const { W, svg, tip } = frame(el, H);
+      svg.attr('aria-label', key === 'n' ? 'Manifestações registradas por mês' : 'Proporção respondida no prazo por mês');
+      const top = 22;
+      const yMax = key === 'n' ? d3.max(rows, (r) => r.n) || 1 : 100;
+      const yMin = key === 'n' ? 0 : Math.max(0, Math.floor((d3.min(rows, (r) => r.p) ?? 0) / 10) * 10);
+      const y = d3.scaleLinear().domain([yMin, yMax]).nice().range([H - 24, top]);
+      const yf = key === 'n' ? (v) => (v >= 1000 ? F.int(v / 1000) + ' mil' : F.int(v)) : (v) => F.int(v) + '%';
+      const L = margemEsq(svg, yf(y.domain()[1]));
+      const x = d3.scaleUtc().domain(d3.extent(rows, (r) => r.d)).range([L, W - 8]);
+      const x0 = x(rows[j.a].d) - 3, x1 = x(rows[j.b].d) + 3;
+      svg.append('rect').attr('x', x0).attr('y', top).attr('width', Math.max(2, x1 - x0)).attr('height', H - 24 - top).style('fill', 'var(--c1-soft)').style('opacity', .55);
+      svg.append('g').attr('class', 'grid').attr('transform', `translate(${L},0)`).call(d3.axisLeft(y).ticks(4).tickSize(-(W - L - 8)).tickFormat(''));
+      svg.append('g').attr('transform', `translate(${L},0)`).call(d3.axisLeft(y).ticks(4).tickFormat(yf)).call((g) => g.select('.domain').remove());
+      svg.append('g').attr('transform', `translate(0,${H - 24})`).call(d3.axisBottom(x).ticks(Math.max(2, Math.floor((W - L) / 70))).tickFormat(d3.utcFormat('%Y')));
+      marcos.forEach((mk, k) => {
+        svg.append('line').attr('x1', x(mk.d)).attr('x2', x(mk.d)).attr('y1', top - 6).attr('y2', H - 24).style('stroke', 'var(--ref)').attr('stroke-dasharray', '2 3');
+        svg.append('text').attr('x', x(mk.d) + (k ? 3 : -3)).attr('y', top - 10).attr('text-anchor', k ? 'start' : 'end').text(mk.t);
+      });
+      if (key === 'n') {
+        const bw = Math.max(1, (W - L - 8) / rows.length - .5);
+        svg.append('g').selectAll('rect').data(rows).join('rect').attr('x', (r) => x(r.d) - bw / 2).attr('width', bw).attr('y', (r) => y(r.n)).attr('height', (r) => y(0) - y(r.n)).style('fill', 'var(--c1)');
+      } else {
+        if (90 >= y.domain()[0]) {
+          svg.append('line').attr('x1', L).attr('x2', W - 8).attr('y1', y(90)).attr('y2', y(90)).style('stroke', 'var(--ref)').attr('stroke-dasharray', '5 3');
+          svg.append('text').attr('x', W - 8).attr('y', H - 30).attr('text-anchor', 'end').text('tracejado: referência de 90%');
+        }
+        svg.append('path').datum(rows).attr('fill', 'none').style('stroke', 'var(--c1)').attr('stroke-width', 1.6).attr('d', d3.line().defined((r) => r.p != null).x((r) => x(r.d)).y((r) => y(r.p)));
+      }
+      const guia = svg.append('line').attr('y1', top).attr('y2', H - 24).style('stroke', 'var(--ref)').attr('hidden', '');
+      svg.append('rect').attr('x', L).attr('y', 0).attr('width', W - L - 8).attr('height', H - 24).attr('fill', 'transparent')
+        .on('pointermove', (ev) => {
+          const r = rows[d3.bisector((r) => r.d).center(rows, x.invert(d3.pointer(ev)[0]))];
+          if (!r) return;
+          guia.attr('hidden', null).attr('x1', x(r.d)).attr('x2', x(r.d));
+          showTip(tip, el, ev, rotMes(r.m), [`${F.int(r.n)} manifestações`, r.p == null ? 'prazo ainda em aberto' : `${F.pct(r.p)} no prazo`, `tempo médio ${F.d1(r.tm)} dias`]);
+        })
+        .on('pointerleave', () => { tip.attr('hidden', ''); guia.attr('hidden', ''); });
+    });
+  }
+
+  function sparks(rows, j) {
+    const a = Math.max(0, j.b - 35);
+    [['sp-n', 'n'], ['sp-prazo', 'p'], ['sp-tm', 'tm']].forEach(([id, k]) => {
+      const el = $(id);
+      const pts = rows.slice(a, j.b + 1).filter((r) => r[k] != null && isFinite(r[k]) && (k === 'n' || r.m <= '2026-06'));
+      el.replaceChildren();
+      if (pts.length < 3) return;
+      const W = Math.max(120, el.clientWidth || 200), H = 36;
+      const x = d3.scaleLinear().domain([0, pts.length - 1]).range([2, W - 5]);
+      const y = d3.scaleLinear().domain(d3.extent(pts, (r) => r[k])).range([H - 4, 4]);
+      const svg = d3.select(el).append('svg').attr('width', W).attr('height', H).attr('aria-hidden', 'true');
+      svg.append('path').datum(pts).attr('fill', 'none').style('stroke', 'var(--c1)').attr('stroke-width', 2).attr('stroke-linejoin', 'round').attr('d', d3.line().x((r, i) => x(i)).y((r) => y(r[k])));
+      const u = pts[pts.length - 1];
+      svg.append('circle').attr('cx', x(pts.length - 1)).attr('cy', y(u[k])).attr('r', 3.5).style('fill', 'var(--c2)');
+    });
+  }
+  function hero() {
+    const j = janela();
+    const s = soma(j.a, j.b);
+    const fora = Math.round(100 - taxaPrazo(s));
+    const f = $('fato');
+    f.replaceChildren();
+    const b = (t) => { const x = document.createElement('b'); x.textContent = t; return x; };
+    f.append(b('Resposta curta (fato): '), document.createTextNode(`de ${rotMes(meses[j.a])} a ${rotMes(meses[j.b])}, ${F.pct(taxaPrazo(s))} das manifestações com prazo vencido foram respondidas no prazo. As outras ${F.pct(100 - taxaPrazo(s))} saíram com atraso ou seguem sem resposta, e ${F.int(s.pe)} continuam pendentes.`));
+    const g = $('pontos');
+    g.replaceChildren(...Array.from({ length: 100 }, (_, i) => { const e = document.createElement('i'); if (i >= 100 - fora) e.className = 'f'; return e; }));
+    $('pontos-leg').textContent = `Cada ponto é 1 em cada 100 manifestações com prazo vencido. Os ${fora} pontos em destaque são as que ficaram fora do prazo, de ${rotMes(meses[j.a])} a ${rotMes(meses[j.b])}.`;
+  }
+  function barras(el, rows, opts) {
+    if (!rows.length) { el.replaceChildren(); const p = document.createElement('p'); p.className = 'note'; p.textContent = 'Sem dados suficientes para este filtro.'; el.appendChild(p); return; }
+    const rowH = 28;
+    const H = rows.length * rowH + (opts.ref != null ? 30 : 8);
+    const { W, svg, tip } = frame(el, H);
+    svg.attr('aria-label', opts.aria);
+    const labelW = Math.min(opts.labelW || 170, W * 0.45);
+    const dom = [0, Math.max(d3.max(rows, (r) => r.v) || 1, opts.ref ?? 0) * 1.18];
+    const x = d3.scaleLinear().domain(dom).range([labelW + 8, W - 8]);
+    const g = svg.append('g').selectAll('g').data(rows).join('g').attr('transform', (r, i) => `translate(0,${i * rowH + 4})`).attr('class', opts.onClick ? 'clk' : null);
+    g.append('text').attr('x', labelW).attr('y', rowH / 2).attr('dy', '0.35em').attr('text-anchor', 'end')
+      .style('font-weight', (r) => (r.sel ? 600 : null)).style('fill', (r) => (r.sel ? 'var(--fg)' : null))
+      .text((r) => r.label).each(function () { const t = d3.select(this); let s = t.text(); while (this.getComputedTextLength() > labelW - 4 && s.length > 4) { s = s.slice(0, -2); t.text(s + '…'); } });
+    g.append('rect').attr('x', x(0)).attr('y', 5).attr('height', rowH - 10).attr('width', (r) => Math.max(1, x(r.v) - x(0)))
+      .style('fill', (r) => r.cor || 'var(--c1)').style('opacity', (r) => (opts.algumSel && !r.sel ? .4 : 1));
+    g.append('text').attr('x', (r) => x(r.v) + 4).attr('y', rowH / 2).attr('dy', '0.35em').text((r) => opts.fmt(r.v));
+    g.append('rect').attr('x', 0).attr('y', 0).attr('width', W).attr('height', rowH).attr('fill', 'transparent')
+      .on('pointermove', (ev, r) => showTip(tip, el, ev, r.nome || r.label, r.tip))
+      .on('pointerleave', () => tip.attr('hidden', ''))
+      .on('click', (ev, r) => opts.onClick && opts.onClick(r));
+    if (opts.ref != null) {
+      const rx = x(opts.ref);
+      svg.append('line').attr('x1', rx).attr('x2', rx).attr('y1', 0).attr('y2', rows.length * rowH + 6).style('stroke', 'var(--ref)').attr('stroke-dasharray', '4 3');
+      svg.append('text').attr('x', Math.min(rx, W - 50)).attr('y', rows.length * rowH + 22).attr('text-anchor', 'middle').text('geral ' + opts.fmt(opts.ref));
+    }
+  }
+  const tipPadrao = (s) => [`${F.int(s.n)} manifestações`, `${F.pct(taxaPrazo(s))} no prazo`, `tempo médio ${F.d1(tm(s))} dias`];
+
+  function renderRecortes() {
+    document.querySelectorAll('[data-metrica]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.metrica === S.metrica)));
+    const j = janela();
+    const NI = new Set(['NI', 'Não informada', 'Não informado']);
+    [['g-esfera', 'esfera'], ['g-tipo', 'tipo'], ['g-uf', 'uf']].forEach(([id, dim]) => {
+      const acc = PD[dim].map(() => zero());
+      const geral = zero();
+      for (let i = 0; i < P.linhas; i++) {
+        const m = PC.mes[i];
+        if (m < j.a || m > j.b || !passa(i, dim)) continue;
+        add(acc[PC[dim][i]], i); add(geral, i);
+      }
+      const M = {
+        prazo: { v: taxaPrazo, fmt: F.pct, ref: taxaPrazo(geral), asc: true },
+        volume: { v: (s) => s.n, fmt: F.int, ref: null, asc: false },
+        tm: { v: tm, fmt: F.d1, ref: tm(geral), asc: false },
+      }[S.metrica];
+      const tg = taxaPrazo(geral);
+      const rows = PD[dim].map((label, k) => ({ label, s: acc[k] })).filter((r) => r.s.n >= 50 && !NI.has(r.label)).map((r) => ({
+        label: r.label, v: M.v(r.s), sel: S[dim] === r.label,
+        cor: S.metrica === 'prazo' && taxaPrazo(r.s) != null && tg != null && taxaPrazo(r.s) < tg - 10 ? 'var(--crit)' : null,
+        tip: [...tipPadrao(r.s), `${F.int(r.s.pe)} pendências vencidas`],
+      })).filter((r) => r.v != null && isFinite(r.v)).sort((a, b) => (M.asc ? a.v - b.v : b.v - a.v));
+      barras($(id), rows, {
+        aria: `${S.metrica === 'volume' ? 'Volume' : S.metrica === 'tm' ? 'Tempo médio de resposta' : 'Proporção no prazo'} por ${dim}`,
+        fmt: M.fmt, ref: M.ref, algumSel: S[dim] != null, labelW: dim === 'uf' ? 36 : 170,
+        onClick: (r) => { S[dim] = S[dim] === r.label ? null : r.label; render(); },
+      });
+    });
+  }
+
+  function renderAssuntos() {
+    document.querySelectorAll('[data-assunto]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.assunto === S.assunto)));
+    const A = D.assuntos, C = A.cols;
+    const ie = S.esfera == null ? -1 : ix('esfera', S.esfera), it = S.tipo == null ? -1 : ix('tipo', S.tipo);
+    const acc = new Map();
+    const tot = { n: 0, av: 0, fo: 0, re: 0, sd: 0 };
+    for (let i = 0; i < A.linhas; i++) {
+      if (C.ano[i] < S.ini || C.ano[i] > S.fim) continue;
+      if (ie >= 0 && C.esfera[i] !== ie) continue;
+      if (it >= 0 && C.tipo[i] !== it) continue;
+      const k = C.assunto[i];
+      const s = acc.get(k) || { n: 0, av: 0, fo: 0, re: 0, sd: 0 };
+      for (const m of ['n', 'av', 'fo', 're', 'sd']) { s[m] += C[m][i]; tot[m] += C[m][i]; }
+      acc.set(k, s);
+    }
+    const porAtraso = S.assunto === 'atraso';
+    const tg = taxaPrazo(tot);
+    const rows = Array.from(acc, ([k, s]) => ({ label: A.dims.assunto[k], s })).filter((r) => !/^n[aã]o informado$/i.test(r.label) && r.s.n >= 200).map((r) => ({
+      label: r.label, nome: r.label, v: porAtraso ? taxaPrazo(r.s) : r.s.n,
+      cor: porAtraso && tg != null && taxaPrazo(r.s) < tg - 10 ? 'var(--crit)' : null,
+      tip: tipPadrao(r.s),
+    })).filter((r) => r.v != null && isFinite(r.v)).sort((a, b) => (porAtraso ? a.v - b.v : b.v - a.v)).slice(0, 15);
+    $('assuntos-nota').textContent = (porAtraso ? 'Os 15 assuntos com menor proporção respondida no prazo' : 'Os 15 assuntos com mais manifestações')
+      + ', entre os que tiveram pelo menos 200 manifestações no período e nos filtros de esfera e tipo.' + (S.uf ? ' Este gráfico não aplica o filtro de UF.' : '');
+    barras($('g-assuntos'), rows, { aria: porAtraso ? 'Assuntos com menor proporção no prazo' : 'Assuntos mais demandados', fmt: porAtraso ? F.pct : F.int, ref: porAtraso ? tg : null, labelW: 300 });
+  }
+
+  const semAcento = (s) => s.toLocaleLowerCase('pt-BR').normalize('NFD').replace(/[̀-ͯ]/g, '');
+  function renderOrgaos() {
+    $('todos').setAttribute('aria-pressed', String(S.todos));
+    $('todos').textContent = S.todos ? 'Mostrar só os 20 primeiros' : 'Mostrar todos';
+    const O = D.orgaos, C = O.cols, L = O.lista;
+    const it = S.tipo == null ? -1 : ix('tipo', S.tipo);
+    const acc = new Map();
+    const tot = { av: 0, fo: 0 };
+    for (let i = 0; i < C.o.length; i++) {
+      if (C.ano[i] < S.ini || C.ano[i] > S.fim) continue;
+      if (it >= 0 && C.tipo[i] !== it) continue;
+      const o = L[C.o[i]];
+      if (S.esfera && o.esfera !== S.esfera) continue;
+      if (S.uf && o.uf !== S.uf) continue;
+      const s = acc.get(C.o[i]) || { n: 0, av: 0, fo: 0, pe: 0, re: 0, sd: 0 };
+      for (const m of ['n', 'av', 'fo', 'pe', 're', 'sd']) s[m] += C[m][i];
+      tot.av += C.av[i]; tot.fo += C.fo[i];
+      acc.set(C.o[i], s);
+    }
+    const geral = taxaPrazo(tot);
+    const todosOrg = Array.from(acc, ([k, s]) => ({ ...L[k], n: s.n, prazo: taxaPrazo(s), tm: tm(s), pe: s.pe })).filter((r) => r.n >= 300 && r.prazo != null);
+    const nomes = todosOrg.map((r) => r.nome).sort((a, b) => a.localeCompare(b, 'pt-BR'));
+    if (S.orgao && !nomes.includes(S.orgao)) S.orgao = '';
+    const sel = $('f-orgao');
+    sel.replaceChildren(new Option(`Todos os órgãos (${nomes.length})`, ''), ...nomes.map((n) => new Option(n, n)));
+    sel.value = S.orgao;
+    const rows = todosOrg.filter((r) => !S.orgao || r.nome === S.orgao);
+    const txtK = new Set(['nome', 'esfera', 'uf']);
+    rows.sort((a, b) => (txtK.has(S.sort) ? String(a[S.sort]).localeCompare(String(b[S.sort]), 'pt-BR') : ((a[S.sort] ?? -Infinity) - (b[S.sort] ?? -Infinity))) * S.dir);
+    document.querySelectorAll('#t-orgaos th').forEach((th) => {
+      if (th.dataset.k === S.sort) th.setAttribute('aria-sort', S.dir > 0 ? 'ascending' : 'descending'); else th.removeAttribute('aria-sort');
+    });
+    const vis = S.todos ? rows : rows.slice(0, 20);
+    const tb = $('tb-orgaos');
+    tb.replaceChildren();
+    vis.forEach((r) => {
+      const tr = document.createElement('tr');
+      [r.nome, r.esfera, r.uf, F.int(r.n), null, F.d1(r.tm), F.int(r.pe)].forEach((c, i) => {
+        const td = document.createElement('td');
+        if (i === 4) {
+          const p = document.createElement('span');
+          p.className = 'pill ' + (geral == null ? '' : r.prazo >= geral ? 'p-ok' : r.prazo >= geral - 10 ? 'p-warn' : 'p-bad');
+          p.textContent = F.pct(r.prazo);
+          td.appendChild(p);
+        } else td.textContent = c;
+        tr.appendChild(td);
+      });
+      tb.appendChild(tr);
+    });
+    if (!vis.length) {
+      const tr = document.createElement('tr'), td = document.createElement('td');
+      td.colSpan = 7; td.textContent = 'Nenhum órgão com pelo menos 300 manifestações nestes filtros.';
+      tr.appendChild(td); tb.appendChild(tr);
+    }
+    $('orgaos-nota').textContent = `Mostrando ${vis.length} de ${rows.length} órgãos. Resultado geral do filtro: ${F.pct(geral)} no prazo.`;
+  }
+
+  function renderSat() {
+    const j = janela();
+    const s = soma(j.a, j.b);
+    const nN = s.sa - s.sf, nP = s.sap - s.sfp;
+    const rows = [
+      { label: 'Respondidas no prazo', v: nN ? 100 * nP / nN : null, n: nN, cor: 'var(--c1)' },
+      { label: 'Fora do prazo', v: s.sf ? 100 * s.sfp / s.sf : null, n: s.sf, cor: 'var(--crit)' },
+    ].filter((r) => r.v != null).map((r) => ({ ...r, nome: r.label, tip: [`${F.pct(r.v)} satisfeitos ou muito satisfeitos`, `${F.int(r.n)} respostas à pesquisa`] }));
+    barras($('g-sat'), rows, { aria: 'Satisfação por resposta no prazo ou fora do prazo', fmt: F.pct, labelW: 180 });
+  }
+
+  function render() {
+    montarFiltros();
+    renderResumo();
+    renderFaixas();
+    renderSerie();
+    renderRecortes();
+    renderAssuntos();
+    renderOrgaos();
+    renderSat();
+  }
+
+  txt('b-total', F.int(D.base.manifestacoes));
+  txt('b-orgaos', F.int(D.base.orgaos));
+  txt('b-assuntos', F.int(D.base.assuntos));
+  ligar();
+  hero();
+  render();
+  function temaAtual() { return document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark'; }
+  function pintarTema() { $('tema').textContent = temaAtual() === 'dark' ? 'Tema claro' : 'Tema escuro'; }
+  $('tema').onclick = () => {
+    const novo = temaAtual() === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', novo);
+    try { localStorage.setItem('ouvidometro-tema', novo); } catch (e) {}
+    pintarTema();
+  };
+  pintarTema();
+  function guia(nome, rolar) {
+    const alvo = nome === 'painel' ? 'painel' : 'sobre';
+    ['sobre', 'painel'].forEach((g) => {
+      $('guia-' + g).hidden = g !== alvo;
+      $('tab-' + g).setAttribute('aria-selected', String(g === alvo));
+    });
+    $('hero').hidden = alvo === 'painel';
+    $('marca').hidden = alvo !== 'painel';
+    document.querySelector('.page').classList.toggle('modo-painel', alvo === 'painel');
+    if (alvo === 'painel') render();
+    if (location.hash.slice(1) !== alvo) history.replaceState(null, '', '#' + alvo);
+    if (rolar) window.scrollTo({ top: 0 });
+  }
+  document.querySelectorAll('[data-guia]').forEach((b) => b.onclick = () => guia(b.dataset.guia, b.classList.contains('ir')));
+  window.addEventListener('hashchange', () => guia(location.hash.slice(1)));
+  guia(location.hash.slice(1));
+  let t, largura = window.innerWidth;
+  window.addEventListener('resize', () => {
+    if (window.innerWidth === largura) return;
+    largura = window.innerWidth;
+    clearTimeout(t);
+    t = setTimeout(() => { if (!$('guia-painel').hidden) { renderFaixas(); renderSerie(); renderRecortes(); renderAssuntos(); renderSat(); } }, 150);
+  });
+  window.__ov = { S, soma, janela, taxaPrazo, tm, render };
+})();
+</script>
+</body>
+</html>
