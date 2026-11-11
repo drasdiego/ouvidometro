@@ -87,6 +87,8 @@ h1 { font-size: clamp(2.6rem, 8vw, 5rem); line-height: 1.02; font-weight: 800; l
 .pontos { display: grid; grid-template-columns: repeat(10, 1fr); gap: 7px; }
 .pontos i { aspect-ratio: 1; border-radius: 50%; background: color-mix(in srgb, var(--c1) 62%, transparent); }
 .pontos i.f { background: var(--crit); }
+.pontos i { animation: surgir .5s ease both; }
+@keyframes surgir { from { opacity: 0; transform: scale(.4); } }
 .hero-visual figcaption { margin-top: 14px; font-size: var(--fs-cap); color: var(--muted); }
 
 .tabs { display: inline-flex; gap: 4px; padding: 4px; border: 1px solid var(--line); border-radius: 14px; background: var(--panel); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); align-self: flex-start; }
@@ -109,7 +111,7 @@ h1 { font-size: clamp(2.6rem, 8vw, 5rem); line-height: 1.02; font-weight: 800; l
 .filters { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 8px); z-index: 5; border: 1px solid var(--line); border-radius: var(--r); padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; background: color-mix(in srgb, var(--solid) 86%, transparent); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); box-shadow: var(--shadow); }
 .frow { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: end; }
 .f { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
-.f label { font-size: var(--fs-cap); color: var(--muted); font-weight: 600; }
+.f label, .f-rot { font-size: var(--fs-cap); color: var(--muted); font-weight: 600; }
 select { font: inherit; font-size: .875rem; color: var(--fg); background-color: var(--solid); border: 1px solid var(--line); border-radius: var(--r2); padding: 8px 10px; max-width: 100%; min-height: 40px; }
 #f-orgao { width: min(100%, 460px); }
 .chips { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: var(--fs-cap); color: var(--muted); }
@@ -166,8 +168,29 @@ select { font: inherit; font-size: .875rem; color: var(--fg); background-color: 
 .faq p { margin-top: 8px; color: var(--muted); }
 footer { border-top: 1px solid var(--line); padding-top: 18px; }
 .credit { font-size: var(--fs-cap); color: var(--muted); }
+.anos-rapidos { flex-wrap: wrap; }
+.anos-rapidos .btn { min-width: 56px; white-space: nowrap; }
+.kpis .card { position: relative; overflow: hidden; }
+.kpis .card::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 2px; background: linear-gradient(90deg, var(--c1), var(--c2)); }
+.kpis .card.destaque::before { background: linear-gradient(90deg, var(--crit), var(--c1)); }
+.big { text-shadow: 0 0 28px color-mix(in srgb, var(--c1) 45%, transparent); }
+:root[data-theme="light"] .big { text-shadow: none; }
+.painel-g { position: relative; }
+.painel-g::before { content: ""; position: absolute; top: 0; left: 18px; right: 18px; height: 1px; background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--c2) 70%, transparent), transparent); }
+.painel-g > .note { color: var(--c1-texto); }
+.chart .linha { filter: url(#brilho); }
+.chart .barra { filter: url(#brilho-suave); }
+.chart .centro-v { fill: var(--fg); font-size: 1.9rem; font-weight: 800; letter-spacing: -.03em; }
+.faixas-g { display: flex; flex-wrap: wrap; align-items: center; gap: 18px 40px; }
+.faixas-g svg { flex: none; overflow: visible; }
+.leg-faixas { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; min-width: 0; flex: 1 1 260px; max-width: 480px; }
+.leg-faixas li { display: grid; grid-template-columns: 12px 1fr auto; column-gap: 10px; align-items: baseline; }
+.leg-faixas i { width: 12px; height: 12px; border-radius: 3px; align-self: center; }
+.leg-faixas span { color: var(--muted); font-size: .9rem; }
+.leg-faixas b { font-size: 1.25rem; font-weight: 800; }
+.leg-faixas small { grid-column: 2 / 4; color: var(--muted); font-size: var(--fs-cap); }
 @media (max-width: 860px) { .hero { grid-template-columns: 1fr; } .hero-visual { justify-self: start; max-width: 320px; } }
-@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .btn { transition: none; } }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .btn { transition: none; } .pontos i { animation: none; } }
 </style>
 <script>
 (function () {
@@ -181,6 +204,15 @@ footer { border-top: 1px solid var(--line); padding-top: 18px; }
 <script src="dados.js"></script>
 </head>
 <body>
+<svg width="0" height="0" style="position: absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <filter id="brilho" x="-10%" y="-40%" width="120%" height="180%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <filter id="brilho-suave" x="-10%" y="-60%" width="120%" height="220%"><feGaussianBlur stdDeviation="2.4" result="b"/><feComponentTransfer in="b" result="c"><feFuncA type="linear" slope=".55"/></feComponentTransfer><feMerge><feMergeNode in="c"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <linearGradient id="grad-h" x1="0" x2="1" y1="0" y2="0"><stop offset="0" style="stop-color: var(--c1)"/><stop offset="1" style="stop-color: var(--c2)"/></linearGradient>
+    <linearGradient id="grad-v" x1="0" x2="0" y1="1" y2="0"><stop offset="0" style="stop-color: var(--c1)"/><stop offset="1" style="stop-color: var(--c2)"/></linearGradient>
+    <linearGradient id="grad-area" x1="0" x2="0" y1="0" y2="1"><stop offset="0" style="stop-color: var(--c1); stop-opacity: .38"/><stop offset="1" style="stop-color: var(--c1); stop-opacity: 0"/></linearGradient>
+  </defs>
+</svg>
 <main class="page">
 
 <div class="barra">
@@ -291,6 +323,7 @@ footer { border-top: 1px solid var(--line); padding-top: 18px; }
     <div class="f"><label for="f-esfera">Esfera</label><select id="f-esfera"></select></div>
     <div class="f"><label for="f-tipo">Tipo</label><select id="f-tipo"></select></div>
     <div class="f"><label for="f-uf">UF do órgão</label><select id="f-uf"></select></div>
+    <div class="f"><span class="f-rot" id="rot-anos">Atalho de período</span><div class="seg anos-rapidos" role="group" aria-labelledby="rot-anos" id="anos-rapidos"></div></div>
     <button class="btn" type="button" id="limpar">Limpar filtros</button>
   </div>
   <div class="chips" id="chips" aria-live="polite"></div>
@@ -454,6 +487,29 @@ footer { border-top: 1px solid var(--line); padding-top: 18px; }
   const tm = (s) => (s.re ? s.sd / s.re : null);
   const $ = (id) => document.getElementById(id);
   const txt = (id, t) => { const e = $(id); if (e) e.textContent = t; };
+  const reduzir = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let animar = true;
+  const dur = () => (animar && !reduzir.matches ? 700 : 0);
+  const tr = (sel, atraso) => (dur() ? sel.transition().duration(dur()).delay(atraso || 0).ease(d3.easeCubicOut) : sel);
+  function anima(id, v, fmt) {
+    const e = $(id);
+    if (!e) return;
+    const ok = v != null && isFinite(v);
+    const ant = e.dataset.v ? +e.dataset.v : 0;
+    e.dataset.v = ok ? String(v) : '';
+    const sel = d3.select(e).interrupt();
+    if (!ok || !dur()) { e.textContent = fmt(ok ? v : null); return; }
+    const i = d3.interpolateNumber(ant, v);
+    sel.transition().duration(dur()).ease(d3.easeCubicOut).tween('text', () => (t) => { e.textContent = fmt(i(t)); });
+  }
+  function desenhar(path) {
+    const n = path.node();
+    if (!dur() || !n || !n.getTotalLength) return;
+    const L = n.getTotalLength();
+    path.attr('stroke-dasharray', `${L} ${L}`).attr('stroke-dashoffset', L)
+      .transition().duration(dur() * 1.6).ease(d3.easeCubicInOut).attr('stroke-dashoffset', 0)
+      .on('end', function () { d3.select(this).attr('stroke-dasharray', null).attr('stroke-dashoffset', null); });
+  }
   const rotAno = (a) => (a === ULT ? a + ' (até ago)' : String(a));
 
   function opcoes(sel, lista, valor, todos) {
@@ -466,6 +522,16 @@ footer { border-top: 1px solid var(--line); padding-top: 18px; }
     opcoes($('f-esfera'), PD.esfera, S.esfera, 'Todas');
     opcoes($('f-tipo'), PD.tipo, S.tipo, 'Todos');
     opcoes($('f-uf'), PD.uf.filter((u) => u !== 'NI'), S.uf, 'Todas');
+    const ar = $('anos-rapidos');
+    const foco = ar.contains(document.activeElement) ? Array.from(ar.children).indexOf(document.activeElement) : -1;
+    ar.replaceChildren(...[...anos.slice(-4).map((a) => ({ r: String(a), i: a, f: a })), { r: 'Desde ' + anos[0], i: anos[0], f: ULT }].map((o) => {
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'btn'; b.textContent = o.r;
+      b.setAttribute('aria-pressed', String(S.ini === o.i && S.fim === o.f));
+      b.onclick = () => { S.ini = o.i; S.fim = o.f; render(); };
+      return b;
+    }));
+    if (foco >= 0 && ar.children[foco]) ar.children[foco].focus();
     const chips = $('chips');
     chips.replaceChildren();
     const j = janela();
@@ -503,16 +569,16 @@ footer { border-top: 1px solid var(--line); padding-top: 18px; }
     const j = janela();
     const s = soma(j.a, j.b);
     const p = j.pa >= 0 ? soma(j.pa, j.pb) : null;
-    txt('k-n', F.int(s.n));
-    txt('k-prazo', F.pct(taxaPrazo(s)));
-    txt('k-tm', F.d1(tm(s)));
-    txt('k-r30', F.pct(s.re ? 100 * s.r30 / s.re : null));
+    anima('k-n', s.n, F.int);
+    anima('k-prazo', taxaPrazo(s), F.pct);
+    anima('k-tm', tm(s), F.d1);
+    anima('k-r30', s.re ? 100 * s.r30 / s.re : null, F.pct);
     txt('k-r10', F.pct(s.re ? 100 * s.r10 / s.re : null));
-    txt('k-pe', F.int(s.pe));
+    anima('k-pe', s.pe, F.int);
     txt('k-pe60', F.int(s.pe60));
-    txt('k-pr', F.pct(s.cp ? 100 * s.pr / s.cp : null));
-    txt('k-at', F.pct(s.an ? 100 * s.ap / s.an : null)); txt('k-at-n', F.int(s.an));
-    txt('k-sat', F.pct(s.sn ? 100 * s.sp / s.sn : null)); txt('k-sat-n', F.int(s.sn)); txt('k-sat-cob', F.pct(s.n ? 100 * s.sn / s.n : null));
+    anima('k-pr', s.cp ? 100 * s.pr / s.cp : null, F.pct);
+    anima('k-at', s.an ? 100 * s.ap / s.an : null, F.pct); txt('k-at-n', F.int(s.an));
+    anima('k-sat', s.sn ? 100 * s.sp / s.sn : null, F.pct); txt('k-sat-n', F.int(s.sn)); txt('k-sat-cob', F.pct(s.n ? 100 * s.sn / s.n : null));
     const setVar = (id, v, fmt, bomSeSobe) => {
       const e = $(id);
       e.textContent = v == null ? 'Sem período anterior comparável,' : fmt(v);
@@ -554,34 +620,38 @@ footer { border-top: 1px solid var(--line); padding-top: 18px; }
     const j = janela();
     const s = soma(j.a, j.b);
     const el = $('g-faixas');
-    if (!s.re) { el.replaceChildren(); return; }
+    el.replaceChildren();
+    if (!s.re) return;
     const partes = [
       { label: 'Até 30 dias (prazo inicial)', n: s.r30, cor: 'var(--c1)' },
       { label: '31 a 60 dias (com prorrogação)', n: s.r60 - s.r30, cor: 'var(--c2)' },
       { label: 'Mais de 60 dias (acima do teto)', n: s.re - s.r60, cor: 'var(--crit)' },
     ].map((p) => ({ ...p, v: 100 * p.n / s.re }));
-    const H = 96;
-    const { W, svg, tip } = frame(el, H);
-    svg.attr('aria-label', 'Respostas por faixa de tempo diante do prazo legal');
-    const x = d3.scaleLinear().domain([0, 100]).range([0, W]);
-    let acc = 0;
-    partes.forEach((p) => { p.x0 = acc; acc += p.v; });
-    const g = svg.append('g').selectAll('g').data(partes).join('g');
-    g.append('rect').attr('x', (p) => x(p.x0)).attr('y', 8).attr('height', 34).attr('width', (p) => Math.max(1, x(p.v) - 1)).style('fill', (p) => p.cor)
-      .on('pointermove', (ev, p) => showTip(tip, el, ev, p.label, [`${F.pct(p.v)} das respostas`, `${F.int(p.n)} manifestações`]))
+    const D = 200, R = D / 2;
+    const box = d3.select(el).append('div').attr('class', 'faixas-g');
+    const svg = box.append('svg').attr('width', D).attr('height', D).attr('viewBox', `${-R} ${-R} ${D} ${D}`).attr('role', 'img')
+      .attr('aria-label', 'Respostas por faixa de tempo diante do prazo legal: ' + partes.map((p) => `${p.label}, ${F.pct(p.v)}`).join('; '));
+    const tip = d3.select(el).append('div').attr('class', 'tip').attr('hidden', '');
+    const arco = d3.arc().innerRadius(R * 0.68).outerRadius(R - 4).cornerRadius(4);
+    const fatias = svg.append('g').selectAll('path').data(d3.pie().sort(null).value((p) => p.n).padAngle(0.014)(partes)).join('path')
+      .attr('class', 'barra').style('fill', (a) => a.data.cor)
+      .on('pointermove', (ev, a) => showTip(tip, el, ev, a.data.label, [`${F.pct(a.data.v)} das respostas`, `${F.int(a.data.n)} manifestações`]))
       .on('pointerleave', () => tip.attr('hidden', ''));
-    const leg = svg.append('g').attr('transform', 'translate(0,62)');
-    let lx = 0, ly = 0;
+    if (dur()) {
+      fatias.attr('d', (a) => arco({ ...a, endAngle: a.startAngle }))
+        .transition().duration(dur()).delay((a, i) => i * 160).ease(d3.easeCubicOut)
+        .attrTween('d', (a) => { const f = d3.interpolate(a.startAngle, a.endAngle); return (t) => arco({ ...a, endAngle: f(t) }); });
+    } else fatias.attr('d', arco);
+    svg.append('text').attr('class', 'centro-v').attr('text-anchor', 'middle').attr('y', 6).text(F.pct(partes[0].v));
+    svg.append('text').attr('text-anchor', 'middle').attr('y', 30).text('em até 30 dias');
+    const leg = box.append('ul').attr('class', 'leg-faixas');
     partes.forEach((p) => {
-      const item = leg.append('g');
-      item.append('rect').attr('width', 10).attr('height', 10).attr('rx', 2).style('fill', p.cor);
-      const tx = item.append('text').attr('x', 16).attr('y', 9).text(`${p.label}: ${F.pct(p.v)}`);
-      const w = 16 + tx.node().getComputedTextLength() + 22;
-      if (lx + w > W && lx > 0) { lx = 0; ly += 18; }
-      item.attr('transform', `translate(${lx},${ly})`);
-      lx += w;
+      const li = leg.append('li');
+      li.append('i').style('background', p.cor);
+      li.append('span').text(p.label);
+      li.append('b').text(F.pct(p.v));
+      li.append('small').text(F.int(p.n) + ' manifestações');
     });
-    svg.attr('height', H + ly).attr('viewBox', `0 0 ${W} ${H + ly}`);
   }
 
   function renderSerie() {
@@ -614,13 +684,20 @@ footer { border-top: 1px solid var(--line); padding-top: 18px; }
       });
       if (key === 'n') {
         const bw = Math.max(1, (W - L - 8) / rows.length - .5);
-        svg.append('g').selectAll('rect').data(rows).join('rect').attr('x', (r) => x(r.d) - bw / 2).attr('width', bw).attr('y', (r) => y(r.n)).attr('height', (r) => y(0) - y(r.n)).style('fill', 'var(--c1)');
+        const dentro = (i) => i >= j.a && i <= j.b;
+        const bv = svg.append('g').selectAll('rect').data(rows).join('rect').attr('x', (r) => x(r.d) - bw / 2).attr('width', bw).attr('rx', Math.min(2, bw / 2))
+          .style('fill', (r, i) => (dentro(i) ? 'url(#grad-v)' : 'var(--c1)')).style('opacity', (r, i) => (dentro(i) ? 1 : .45))
+          .attr('y', y(0)).attr('height', 0);
+        tr(bv, (r, i) => i * 3).attr('y', (r) => y(r.n)).attr('height', (r) => y(0) - y(r.n));
       } else {
         if (90 >= y.domain()[0]) {
           svg.append('line').attr('x1', L).attr('x2', W - 8).attr('y1', y(90)).attr('y2', y(90)).style('stroke', 'var(--ref)').attr('stroke-dasharray', '5 3');
           svg.append('text').attr('x', W - 8).attr('y', H - 30).attr('text-anchor', 'end').text('tracejado: referência de 90%');
         }
-        svg.append('path').datum(rows).attr('fill', 'none').style('stroke', 'var(--c1)').attr('stroke-width', 1.6).attr('d', d3.line().defined((r) => r.p != null).x((r) => x(r.d)).y((r) => y(r.p)));
+        const area = svg.append('path').datum(rows).attr('fill', 'url(#grad-area)').attr('d', d3.area().defined((r) => r.p != null).x((r) => x(r.d)).y0(H - 24).y1((r) => y(r.p)));
+        tr(area.style('opacity', dur() ? 0 : 1), dur() * .8).style('opacity', 1);
+        const linha = svg.append('path').datum(rows).attr('class', 'linha').attr('fill', 'none').style('stroke', 'url(#grad-h)').attr('stroke-width', 2).attr('stroke-linejoin', 'round').attr('d', d3.line().defined((r) => r.p != null).x((r) => x(r.d)).y((r) => y(r.p)));
+        desenhar(linha);
       }
       const guia = svg.append('line').attr('y1', top).attr('y2', H - 24).style('stroke', 'var(--ref)').attr('hidden', '');
       svg.append('rect').attr('x', L).attr('y', 0).attr('width', W - L - 8).attr('height', H - 24).attr('fill', 'transparent')
@@ -645,9 +722,11 @@ footer { border-top: 1px solid var(--line); padding-top: 18px; }
       const x = d3.scaleLinear().domain([0, pts.length - 1]).range([2, W - 5]);
       const y = d3.scaleLinear().domain(d3.extent(pts, (r) => r[k])).range([H - 4, 4]);
       const svg = d3.select(el).append('svg').attr('width', W).attr('height', H).attr('aria-hidden', 'true');
-      svg.append('path').datum(pts).attr('fill', 'none').style('stroke', 'var(--c1)').attr('stroke-width', 2).attr('stroke-linejoin', 'round').attr('d', d3.line().x((r, i) => x(i)).y((r) => y(r[k])));
+      const linha = svg.append('path').datum(pts).attr('class', 'linha').attr('fill', 'none').style('stroke', 'var(--c1)').attr('stroke-width', 2).attr('stroke-linejoin', 'round').attr('d', d3.line().x((r, i) => x(i)).y((r) => y(r[k])));
+      desenhar(linha);
       const u = pts[pts.length - 1];
-      svg.append('circle').attr('cx', x(pts.length - 1)).attr('cy', y(u[k])).attr('r', 3.5).style('fill', 'var(--c2)');
+      const ponto = svg.append('circle').attr('cx', x(pts.length - 1)).attr('cy', y(u[k])).attr('r', 3.5).style('fill', 'var(--c2)');
+      tr(ponto.style('opacity', dur() ? 0 : 1), dur() * 1.4).style('opacity', 1);
     });
   }
   function hero() {
@@ -659,7 +738,7 @@ footer { border-top: 1px solid var(--line); padding-top: 18px; }
     const b = (t) => { const x = document.createElement('b'); x.textContent = t; return x; };
     f.append(b('Resposta curta (fato): '), document.createTextNode(`de ${rotMes(meses[j.a])} a ${rotMes(meses[j.b])}, ${F.pct(taxaPrazo(s))} das manifestações com prazo vencido foram respondidas no prazo. As outras ${F.pct(100 - taxaPrazo(s))} saíram com atraso ou seguem sem resposta, e ${F.int(s.pe)} continuam pendentes.`));
     const g = $('pontos');
-    g.replaceChildren(...Array.from({ length: 100 }, (_, i) => { const e = document.createElement('i'); if (i >= 100 - fora) e.className = 'f'; return e; }));
+    g.replaceChildren(...Array.from({ length: 100 }, (_, i) => { const e = document.createElement('i'); if (i >= 100 - fora) e.className = 'f'; e.style.animationDelay = i * 8 + 'ms'; return e; }));
     $('pontos-leg').textContent = `Cada ponto é 1 em cada 100 manifestações com prazo vencido. Os ${fora} pontos em destaque são as que ficaram fora do prazo, de ${rotMes(meses[j.a])} a ${rotMes(meses[j.b])}.`;
   }
   function barras(el, rows, opts) {
@@ -675,9 +754,11 @@ footer { border-top: 1px solid var(--line); padding-top: 18px; }
     g.append('text').attr('x', labelW).attr('y', rowH / 2).attr('dy', '0.35em').attr('text-anchor', 'end')
       .style('font-weight', (r) => (r.sel ? 600 : null)).style('fill', (r) => (r.sel ? 'var(--fg)' : null))
       .text((r) => r.label).each(function () { const t = d3.select(this); let s = t.text(); while (this.getComputedTextLength() > labelW - 4 && s.length > 4) { s = s.slice(0, -2); t.text(s + '…'); } });
-    g.append('rect').attr('x', x(0)).attr('y', 5).attr('height', rowH - 10).attr('width', (r) => Math.max(1, x(r.v) - x(0)))
-      .style('fill', (r) => r.cor || 'var(--c1)').style('opacity', (r) => (opts.algumSel && !r.sel ? .4 : 1));
-    g.append('text').attr('x', (r) => x(r.v) + 4).attr('y', rowH / 2).attr('dy', '0.35em').text((r) => opts.fmt(r.v));
+    const br = g.append('rect').attr('class', 'barra').attr('x', x(0)).attr('y', 5).attr('height', rowH - 10).attr('rx', 5).attr('width', 0)
+      .style('fill', (r) => r.cor || 'url(#grad-h)').style('opacity', (r) => (opts.algumSel && !r.sel ? .4 : 1));
+    tr(br, (r, i) => i * 35).attr('width', (r) => Math.max(1, x(r.v) - x(0)));
+    const vt = g.append('text').attr('x', (r) => x(r.v) + 4).attr('y', rowH / 2).attr('dy', '0.35em').text((r) => opts.fmt(r.v)).style('opacity', dur() ? 0 : 1);
+    tr(vt, (r, i) => i * 35 + dur() * .6).style('opacity', 1);
     g.append('rect').attr('x', 0).attr('y', 0).attr('width', W).attr('height', rowH).attr('fill', 'transparent')
       .on('pointermove', (ev, r) => showTip(tip, el, ev, r.nome || r.label, r.tip))
       .on('pointerleave', () => tip.attr('hidden', ''))
@@ -832,7 +913,6 @@ footer { border-top: 1px solid var(--line); padding-top: 18px; }
   txt('b-assuntos', F.int(D.base.assuntos));
   ligar();
   hero();
-  render();
   function temaAtual() { return document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark'; }
   function pintarTema() { $('tema').textContent = temaAtual() === 'dark' ? 'Tema claro' : 'Tema escuro'; }
   $('tema').onclick = () => {
@@ -863,7 +943,7 @@ footer { border-top: 1px solid var(--line); padding-top: 18px; }
     if (window.innerWidth === largura) return;
     largura = window.innerWidth;
     clearTimeout(t);
-    t = setTimeout(() => { if (!$('guia-painel').hidden) { renderFaixas(); renderSerie(); renderRecortes(); renderAssuntos(); renderSat(); } }, 150);
+    t = setTimeout(() => { if (!$('guia-painel').hidden) { animar = false; renderFaixas(); renderSerie(); renderRecortes(); renderAssuntos(); renderSat(); animar = true; } }, 150);
   });
   window.__ov = { S, soma, janela, taxaPrazo, tm, render };
 })();
