@@ -2,12 +2,6 @@
 
 [![testes](https://github.com/drasdiego/ouvidometro/actions/workflows/testes.yml/badge.svg)](https://github.com/drasdiego/ouvidometro/actions/workflows/testes.yml)
 
-Painel sobre prazo e atraso nas manifestações de ouvidoria registradas no Fala.BR, com dados abertos da Controladoria-Geral da União (CGU). É um projeto pessoal de Diego Arruda e não é um produto oficial da CGU.
-
-Painel no ar: https://drasdiego.github.io/ouvidometro/
-
-Ele é interativo (filtros de período, esfera, tipo e UF, clique nas barras para filtrar, lista de órgãos) e também abre direto do arquivo `painel/index.html`, sem internet.
-
 ## Principais achados
 
 Recorte principal: manifestações registradas de setembro de 2025 a agosto de 2026, comparadas com as de setembro de 2024 a agosto de 2025. Os números saem dos arquivos em `painel/`, gerados por `analise/gerar_indicadores.py` a partir do arquivo da CGU de 01/09/2026.
@@ -18,6 +12,12 @@ Recorte principal: manifestações registradas de setembro de 2025 a agosto de 2
 
 Ressalva: o período mais recente teve menos tempo para ser respondido, então a comparação de pendências entre os dois períodos não é justa e não foi usada. A definição de cada indicador está em "Definições".
 
+Painel sobre prazo e atraso nas manifestações de ouvidoria registradas no Fala.BR, com dados abertos da Controladoria-Geral da União (CGU). É um projeto pessoal de Diego Arruda e não é um produto oficial da CGU.
+
+Painel no ar: https://drasdiego.github.io/ouvidometro/
+
+Ele é interativo (filtros de período, esfera, tipo e UF, clique nas barras para filtrar, lista de órgãos) e também abre direto do arquivo `painel/index.html`, sem internet.
+
 ## Como reproduzir
 
 Requer Python 3.10 ou mais novo.
@@ -25,17 +25,22 @@ Requer Python 3.10 ou mais novo.
 ```bash
 git clone https://github.com/drasdiego/ouvidometro.git
 cd ouvidometro
+python3 -m venv .venv
+source .venv/bin/activate
 pip install -r requirements.txt
 python analise/preparar_dados.py --baixar
 python analise/gerar_painel.py
 python analise/gerar_indicadores.py
+pytest -v
 open painel/index.html
 ```
 
+- `python3 -m venv .venv` cria um ambiente isolado na pasta do projeto, e `source .venv/bin/activate` o ativa. No Windows, ative com `.venv\Scripts\activate`.
 - `preparar_dados.py` baixa o ZIP da CGU (cerca de 190 MB), converte os CSVs de Latin-1 para UTF-8 e grava um Parquet por ano em `dados/tratados/por_ano/`.
 - `ouvidometro.py` concentra as regras de cálculo: o que conta como no prazo, pendência, prorrogação e os cortes mínimos de volume.
 - `gerar_painel.py` agrega a base com DuckDB por mês, esfera, tipo, UF, órgão e assunto e grava `painel/dados.js`, que alimenta os filtros do painel.
 - `gerar_indicadores.py` grava um resumo dos últimos 12 meses em `painel/indicadores.json` e em CSVs.
+- `pytest -v` roda os 14 testes. Como a base foi baixada no passo anterior, os 2 que conferem a base real também rodam; sem ela, eles são pulados (veja "Testes").
 - `open` é o comando do macOS. No Linux use `xdg-open` e no Windows, `start`.
 
 Os dados brutos e tratados não vão para o repositório (veja `.gitignore`), só os agregados. A CGU atualiza o arquivo todo mês: quem baixar depois terá registros mais novos, e os números do recorte mudam se a data de corte em `analise/ouvidometro.py` for alterada.
