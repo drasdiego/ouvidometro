@@ -16,7 +16,7 @@ Painel sobre prazo e atraso nas manifestações de ouvidoria registradas no Fala
 
 Painel no ar: https://drasdiego.github.io/ouvidometro/
 
-Ele é interativo (filtros de período, esfera, tipo e UF, clique nas barras para filtrar, lista de órgãos) e também abre direto do arquivo `painel/index.html`, sem internet.
+Ele é interativo (filtros de período, com atalhos por ano, esfera, tipo e UF, aplicados a todas as seções; clique nas barras para filtrar; evolução no período escolhido ou na história completa; lista de órgãos) e também abre direto do arquivo `painel/index.html`, sem internet.
 
 ## Como reproduzir
 
@@ -127,7 +127,7 @@ São 15 testes em pytest:
 O desenho partiu de duas fontes: publicações de gestores e analistas em redes profissionais sobre dashboards que são usados e os que ninguém abre, e as falhas mais comuns encontradas em revisões de projetos de dados publicados por outras pessoas. Daí vieram as regras do painel:
 
 - cada seção responde a uma pergunta de decisão, e não só exibe números;
-- cor de alerta para dizer onde olhar primeiro (verde abaixo da média, amarelo até o dobro, vermelho acima do dobro);
+- cor de alerta para dizer onde olhar primeiro: na tabela de órgãos, verde no nível do resultado geral do filtro ou acima, amarelo até 10 pontos abaixo e vermelho mais de 10 pontos abaixo; nos gráficos de barras, rosa para mais de 10 pontos abaixo do geral;
 - média acompanhada da cauda: a mediana mostra o caso típico, o percentil 90 mostra quem espera demais;
 - pendências com idade, e não só a contagem;
 - denominador explícito em toda proporção e data de corte visível;
