@@ -3,22 +3,22 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Ouvidômetro</title>
-<meta name="description" content="Painel interativo sobre prazo legal, tempo de resposta, pendências e satisfação nas manifestações de ouvidoria registradas no Fala.BR, com dados abertos da CGU.">
+<title data-i18n="meta.title">Ouvidômetro</title>
+<meta name="description" content="Painel interativo sobre prazo legal, tempo de resposta, pendências e satisfação nas manifestações de ouvidoria registradas no Fala.BR, com dados abertos da CGU." data-i18n-attr="content=meta.desc">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Ouvidômetro">
-<meta property="og:locale" content="pt_BR">
-<meta property="og:title" content="Ouvidômetro: os órgãos públicos respondem ao cidadão no prazo da lei?">
-<meta property="og:description" content="Painel interativo com 8,7 milhões de manifestações de ouvidoria do Fala.BR, de 2015 a agosto de 2026, confrontadas com o prazo legal de resposta. Dados abertos da CGU. Projeto pessoal de Diego Arruda.">
+<meta property="og:locale" content="pt_BR" data-i18n-attr="content=meta.locale">
+<meta property="og:title" content="Ouvidômetro: os órgãos públicos respondem ao cidadão no prazo da lei?" data-i18n-attr="content=meta.ogtitle">
+<meta property="og:description" content="Painel interativo com 8,7 milhões de manifestações de ouvidoria do Fala.BR, de 2015 a agosto de 2026, confrontadas com o prazo legal de resposta. Dados abertos da CGU. Projeto pessoal de Diego Arruda." data-i18n-attr="content=meta.ogdesc">
 <meta property="og:url" content="https://drasdiego.github.io/ouvidometro/painel/">
 <meta property="og:image" content="https://drasdiego.github.io/ouvidometro/painel/previa.png">
 <meta property="og:image:type" content="image/png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="627">
-<meta property="og:image:alt" content="Ouvidômetro: 88,2% das manifestações com prazo vencido foram respondidas no prazo, de janeiro de 2025 a agosto de 2026.">
+<meta property="og:image:alt" content="Ouvidômetro: 88,2% das manifestações com prazo vencido foram respondidas no prazo, de janeiro de 2025 a agosto de 2026." data-i18n-attr="content=meta.ogalt">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Ouvidômetro: os órgãos públicos respondem ao cidadão no prazo da lei?">
-<meta name="twitter:description" content="Painel interativo com 8,7 milhões de manifestações de ouvidoria do Fala.BR, confrontadas com o prazo legal de resposta. Dados abertos da CGU.">
+<meta name="twitter:title" content="Ouvidômetro: os órgãos públicos respondem ao cidadão no prazo da lei?" data-i18n-attr="content=meta.ogtitle">
+<meta name="twitter:description" content="Painel interativo com 8,7 milhões de manifestações de ouvidoria do Fala.BR, confrontadas com o prazo legal de resposta. Dados abertos da CGU." data-i18n-attr="content=meta.twdesc">
 <meta name="twitter:image" content="https://drasdiego.github.io/ouvidometro/painel/previa.png">
 <meta name="author" content="Diego Arruda">
 <link rel="canonical" href="https://drasdiego.github.io/ouvidometro/painel/">
@@ -67,6 +67,12 @@ h3 { font-size: .9rem; color: var(--muted); font-weight: 600; }
 .btn:hover { background: var(--panel-forte); border-color: var(--c1); }
 .btn[aria-pressed=true] { background: var(--acao); border-color: transparent; color: var(--on-acao); }
 .btn.ir { background: var(--acao); border-color: transparent; color: var(--on-acao); }
+.barra-ctl { display: inline-flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-left: auto; }
+.lang { display: inline-flex; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+.lang button { font: inherit; font-size: 13px; font-weight: 600; min-width: 44px; min-height: 44px; padding: 0 10px; background: transparent; color: var(--muted); border: 0; border-radius: 0; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; }
+.lang button:hover { color: var(--fg); }
+.lang button.on { background: var(--c1-soft); color: var(--c1-texto); }
+.lang button:focus-visible { outline-offset: -3px; }
 .marca-linha { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 12px; }
 .marca { font-size: 1.35rem; font-weight: 800; letter-spacing: -.03em; background: linear-gradient(90deg, var(--fg), var(--c1) 70%, var(--c2)); -webkit-background-clip: text; background-clip: text; color: transparent; }
 .page.modo-painel { gap: 24px; }
@@ -192,6 +198,8 @@ footer { border-top: 1px solid var(--line); padding-top: 18px; }
 </script>
 <script src="d3.min.js"></script>
 <script src="dados.js"></script>
+<script src="i18n.js"></script>
+<script src="textos.js"></script>
 </head>
 <body>
 <svg width="0" height="0" style="position: absolute" aria-hidden="true" focusable="false">
@@ -207,186 +215,192 @@ footer { border-top: 1px solid var(--line); padding-top: 18px; }
 <main class="page">
 
 <div class="barra">
-  <span class="marca-linha"><strong class="marca" id="marca" hidden>Ouvidômetro</strong><span class="selo">Fonte: Fala.BR, CGU · dados até 31/08/2026</span></span>
-  <button class="btn" type="button" id="tema" aria-label="Alternar entre tema claro e escuro">Tema claro</button>
+  <span class="marca-linha"><strong class="marca" id="marca" hidden>Ouvidômetro</strong><span class="selo" data-i18n="selo">Fonte: Fala.BR, CGU · dados até 31/08/2026</span></span>
+  <div class="barra-ctl">
+    <div class="lang" role="group" aria-label="Idioma" data-i18n-attr="aria-label=lang.grupo">
+      <button type="button" lang="pt" aria-label="PT, Português" aria-current="true" class="on">PT</button>
+      <button type="button" lang="en" aria-label="EN, English">EN</button>
+    </div>
+    <button class="btn" type="button" id="tema" aria-label="Alternar entre tema claro e escuro" data-i18n-attr="aria-label=tema.aria">Tema claro</button>
+  </div>
 </div>
 
 <header class="hero" id="hero">
   <div>
-    <p class="olho">Painel aberto de dados</p>
+    <p class="olho" data-i18n="hero.olho">Painel aberto de dados</p>
     <h1>Ouvidômetro</h1>
-    <p class="pergunta">Os órgãos públicos respondem ao cidadão no prazo que a lei manda?</p>
+    <p class="pergunta" data-i18n="hero.pergunta">Os órgãos públicos respondem ao cidadão no prazo que a lei manda?</p>
     <p class="fato" id="fato">—</p>
-    <p class="hero-nota">Os dados vêm do arquivo público de manifestações de ouvidoria da CGU. O prazo é o do Decreto 9.492/2018: 30 dias, prorrogáveis uma vez por mais 30.</p>
+    <p class="hero-nota" data-i18n="hero.nota">Os dados vêm do arquivo público de manifestações de ouvidoria da CGU. O prazo é o do Decreto 9.492/2018: 30 dias, prorrogáveis uma vez por mais 30.</p>
   </div>
   <figure class="hero-visual">
-    <div class="pontos" id="pontos" role="img" aria-label="Cem pontos representando as manifestações com prazo vencido"></div>
+    <div class="pontos" id="pontos" role="img" aria-label="Cem pontos representando as manifestações com prazo vencido" data-i18n-attr="aria-label=hero.pontos.aria"></div>
     <figcaption id="pontos-leg">—</figcaption>
   </figure>
 </header>
 
-<nav class="tabs" role="tablist" aria-label="Guias do Ouvidômetro">
-  <button class="tabbtn" type="button" role="tab" id="tab-sobre" aria-controls="guia-sobre" aria-selected="true" data-guia="sobre">O que é o Ouvidômetro</button>
-  <button class="tabbtn" type="button" role="tab" id="tab-painel" aria-controls="guia-painel" aria-selected="false" data-guia="painel">Painel</button>
+<nav class="tabs" role="tablist" aria-label="Guias do Ouvidômetro" data-i18n-attr="aria-label=tabs.aria">
+  <button class="tabbtn" type="button" role="tab" id="tab-sobre" aria-controls="guia-sobre" aria-selected="true" data-guia="sobre" data-i18n="tab.sobre">O que é o Ouvidômetro</button>
+  <button class="tabbtn" type="button" role="tab" id="tab-painel" aria-controls="guia-painel" aria-selected="false" data-guia="painel" data-i18n="tab.painel">Painel</button>
 </nav>
 
 <div class="guia" id="guia-sobre" role="tabpanel" aria-labelledby="tab-sobre">
 <section class="sec" id="contexto">
-  <h2>Antes dos números</h2>
+  <h2 data-i18n="ctx.h2">Antes dos números</h2>
   <div class="ctx">
     <article class="card">
-      <h3>O que é o Ouvidômetro</h3>
-      <p>Um painel independente que mede como os órgãos públicos respondem às manifestações dos cidadãos: se cumprem o prazo da lei, quanto tempo levam, o que fica pendente e como o cidadão avalia a resposta. A pergunta de fundo é a de um gestor de ouvidoria: onde agir primeiro.</p>
+      <h3 data-i18n="tab.sobre">O que é o Ouvidômetro</h3>
+      <p data-i18n="ctx.sobre.p">Um painel independente que mede como os órgãos públicos respondem às manifestações dos cidadãos: se cumprem o prazo da lei, quanto tempo levam, o que fica pendente e como o cidadão avalia a resposta. A pergunta de fundo é a de um gestor de ouvidoria: onde agir primeiro.</p>
     </article>
     <article class="card">
-      <h3>De onde vêm os dados</h3>
-      <p>Do arquivo público de manifestações de ouvidoria da Controladoria-Geral da União (CGU), atualizado todo mês. Ele reúne o que foi registrado no Fala.BR, a plataforma de ouvidoria do governo federal, também usada por estados e municípios que aderiram a ela. O arquivo usado aqui foi gerado em 01/09/2026.</p>
-      <p><a href="https://www.gov.br/cgu/pt-br/acesso-a-informacao/dados-abertos/arquivos/ouvidoria" rel="noopener">Página de dados abertos da CGU</a></p>
+      <h3 data-i18n="ctx.dados.h3">De onde vêm os dados</h3>
+      <p data-i18n="ctx.dados.p">Do arquivo público de manifestações de ouvidoria da Controladoria-Geral da União (CGU), atualizado todo mês. Ele reúne o que foi registrado no Fala.BR, a plataforma de ouvidoria do governo federal, também usada por estados e municípios que aderiram a ela. O arquivo usado aqui foi gerado em 01/09/2026.</p>
+      <p><a href="https://www.gov.br/cgu/pt-br/acesso-a-informacao/dados-abertos/arquivos/ouvidoria" rel="noopener" data-i18n="ctx.dados.link">Página de dados abertos da CGU</a></p>
     </article>
     <article class="card">
-      <h3>O que a base registra</h3>
-      <p>Cada linha é uma manifestação, sem identificar o cidadão. De janeiro de 2015 a agosto de 2026 são <b id="b-total">—</b> manifestações, <b id="b-orgaos">—</b> órgãos e <b id="b-assuntos">—</b> assuntos.</p>
-      <p class="note">Campos usados no painel (destacados) e campos que ficaram de fora:</p>
-      <div class="fields" aria-label="Campos da base">
-        <span class="tag on">data de registro</span><span class="tag on">data de prazo</span><span class="tag on">data de resposta</span><span class="tag on">dias para resolução</span><span class="tag on">tipo</span><span class="tag on">órgão</span><span class="tag on">esfera</span><span class="tag on">UF do órgão</span><span class="tag on">assunto</span><span class="tag on">demanda atendida</span><span class="tag on">satisfação</span><span class="tag">dias de atraso</span><span class="tag">situação</span><span class="tag">serviço</span><span class="tag">município da manifestação</span><span class="tag">faixa etária</span><span class="tag">raça/cor</span><span class="tag">gênero</span>
+      <h3 data-i18n="ctx.base.h3">O que a base registra</h3>
+      <p id="base-txt">Cada linha é uma manifestação, sem identificar o cidadão. De janeiro de 2015 a agosto de 2026 são <b>—</b> manifestações, <b>—</b> órgãos e <b>—</b> assuntos.</p>
+      <p class="note" data-i18n="ctx.base.nota">Campos usados no painel (destacados) e campos que ficaram de fora:</p>
+      <div class="fields" aria-label="Campos da base" data-i18n-attr="aria-label=ctx.campos.aria">
+        <span class="tag on" data-i18n="tag.dataRegistro">data de registro</span><span class="tag on" data-i18n="tag.dataPrazo">data de prazo</span><span class="tag on" data-i18n="tag.dataResposta">data de resposta</span><span class="tag on" data-i18n="tag.diasResolucao">dias para resolução</span><span class="tag on" data-i18n="tag.tipo">tipo</span><span class="tag on" data-i18n="tag.orgao">órgão</span><span class="tag on" data-i18n="tag.esfera">esfera</span><span class="tag on" data-i18n="tag.uf">UF do órgão</span><span class="tag on" data-i18n="tag.assunto">assunto</span><span class="tag on" data-i18n="tag.demanda">demanda atendida</span><span class="tag on" data-i18n="tag.satisfacao">satisfação</span><span class="tag" data-i18n="tag.diasAtraso">dias de atraso</span><span class="tag" data-i18n="tag.situacao">situação</span><span class="tag" data-i18n="tag.servico">serviço</span><span class="tag" data-i18n="tag.municipio">município da manifestação</span><span class="tag" data-i18n="tag.faixaEtaria">faixa etária</span><span class="tag" data-i18n="tag.raca">raça/cor</span><span class="tag" data-i18n="tag.genero">gênero</span>
       </div>
     </article>
   </div>
   <div class="card">
-    <h3>Perguntas que este painel responde</h3>
+    <h3 data-i18n="ctx.perg.h3">Perguntas que este painel responde</h3>
     <ol class="qs">
-      <li>O prazo da lei é cumprido, e isso melhorou?</li>
-      <li>Quanto tempo o cidadão espera pela resposta?</li>
-      <li>O que está pendente com o prazo vencido?</li>
-      <li>Em que esfera, tipo, UF e assunto o prazo mais estoura?</li>
-      <li>Quais órgãos precisam de atenção primeiro?</li>
-      <li>A demanda foi atendida, e o atraso pesa na satisfação?</li>
+      <li data-i18n="q.1">O prazo da lei é cumprido, e isso melhorou?</li>
+      <li data-i18n="q.2">Quanto tempo o cidadão espera pela resposta?</li>
+      <li data-i18n="q.3">O que está pendente com o prazo vencido?</li>
+      <li data-i18n="q.4">Em que esfera, tipo, UF e assunto o prazo mais estoura?</li>
+      <li data-i18n="q.5">Quais órgãos precisam de atenção primeiro?</li>
+      <li data-i18n="q.6">A demanda foi atendida, e o atraso pesa na satisfação?</li>
     </ol>
   </div>
 </section>
 
 <section class="sec" id="lei">
-  <h2>O que a lei exige e como o painel mede</h2>
-  <p>As regras vêm da Lei 13.460/2017, que trata dos direitos do usuário de serviços públicos, e do Decreto 9.492/2018, que a regulamenta no governo federal. Cada regra abaixo aponta para o indicador que a confere.</p>
+  <h2 data-i18n="lei.h2">O que a lei exige e como o painel mede</h2>
+  <p data-i18n="lei.p">As regras vêm da Lei 13.460/2017, que trata dos direitos do usuário de serviços públicos, e do Decreto 9.492/2018, que a regulamenta no governo federal. Cada regra abaixo aponta para o indicador que a confere.</p>
   <div class="tbl-wrap">
     <table class="leis">
-      <thead><tr><th>Regra</th><th>O que diz</th><th>Como aparece no painel</th></tr></thead>
+      <thead><tr><th data-i18n="lei.th1">Regra</th><th data-i18n="lei.th2">O que diz</th><th data-i18n="lei.th3">Como aparece no painel</th></tr></thead>
       <tbody>
-        <tr><td>Prazo de resposta<br><span class="note">Decreto 9.492/2018, art. 18</span></td><td>A ouvidoria deve dar a resposta conclusiva em 30 dias a partir do recebimento.</td><td>Indicador "Respondidas no prazo" e a faixa "até 30 dias" do gráfico de tempo de resposta.</td></tr>
-        <tr><td>Prorrogação<br><span class="note">Decreto 9.492/2018, art. 18</span></td><td>O prazo pode ser prorrogado uma única vez, por mais 30 dias, com justificativa. O teto fica em 60 dias.</td><td>Indicador "Prazo prorrogado" e as faixas "31 a 60 dias" e "mais de 60 dias".</td></tr>
-        <tr><td>Pedido de complementação<br><span class="note">Decreto 9.492/2018, art. 18, §§ 2º a 5º</span></td><td>Se faltar informação, a ouvidoria pede complemento ao cidadão. O prazo fica suspenso até a resposta dele. Sem resposta em 30 dias, a manifestação é arquivada.</td><td>Explica por que algumas respostas passam de 60 dias sem estourar o prazo: a data de prazo da base já desconta a suspensão.</td></tr>
-        <tr><td>Tipos de manifestação<br><span class="note">Decreto 9.492/2018, art. 3º</span></td><td>Reclamação, denúncia, elogio, sugestão e solicitação de providências têm definição própria.</td><td>Filtro e gráfico "Por tipo de manifestação".</td></tr>
-        <tr><td>Comunicação anônima<br><span class="note">Decreto 9.492/2018, art. 23, § 2º</span></td><td>Relatos de irregularidade, mesmo anônimos, seguem para o órgão competente.</td><td>Tipo "Comunicação". Entra na conta de prazo quando tem data de prazo na base, o que vale para todas as registradas a partir de 2025.</td></tr>
-        <tr><td>Uso do sistema<br><span class="note">Decreto 9.492/2018, art. 16</span></td><td>Os órgãos federais devem usar o e-Ouv, hoje Fala.BR.</td><td>Explica o salto de volume a partir de 2018 no gráfico mensal.</td></tr>
-        <tr><td>Vigência por porte<br><span class="note">Lei 13.460/2017</span></td><td>A lei passou a valer em etapas: 360 dias após a publicação para União, estados e municípios com mais de 500 mil habitantes, 540 dias para municípios de 100 a 500 mil e 720 dias para os menores.</td><td>Marcas de 2018 e 2019 no gráfico mensal e o filtro de esfera.</td></tr>
-        <tr><td>Satisfação do usuário<br><span class="note">Lei 13.460/2017</span></td><td>Os órgãos devem medir todo ano a satisfação dos usuários com os serviços.</td><td>Indicadores "Demanda atendida" e "Satisfação" e a seção final.</td></tr>
+        <tr><td data-i18n-html="lei.1.a">Prazo de resposta<br><span class="note">Decreto 9.492/2018, art. 18</span></td><td data-i18n="lei.1.b">A ouvidoria deve dar a resposta conclusiva em 30 dias a partir do recebimento.</td><td data-i18n="lei.1.c">Indicador "Respondidas no prazo" e a faixa "até 30 dias" do gráfico de tempo de resposta.</td></tr>
+        <tr><td data-i18n-html="lei.2.a">Prorrogação<br><span class="note">Decreto 9.492/2018, art. 18</span></td><td data-i18n="lei.2.b">O prazo pode ser prorrogado uma única vez, por mais 30 dias, com justificativa. O teto fica em 60 dias.</td><td data-i18n="lei.2.c">Indicador "Prazo prorrogado" e as faixas "31 a 60 dias" e "mais de 60 dias".</td></tr>
+        <tr><td data-i18n-html="lei.3.a">Pedido de complementação<br><span class="note">Decreto 9.492/2018, art. 18, §§ 2º a 5º</span></td><td data-i18n="lei.3.b">Se faltar informação, a ouvidoria pede complemento ao cidadão. O prazo fica suspenso até a resposta dele. Sem resposta em 30 dias, a manifestação é arquivada.</td><td data-i18n="lei.3.c">Explica por que algumas respostas passam de 60 dias sem estourar o prazo: a data de prazo da base já desconta a suspensão.</td></tr>
+        <tr><td data-i18n-html="lei.4.a">Tipos de manifestação<br><span class="note">Decreto 9.492/2018, art. 3º</span></td><td data-i18n="lei.4.b">Reclamação, denúncia, elogio, sugestão e solicitação de providências têm definição própria.</td><td data-i18n="lei.4.c">Filtro e gráfico "Por tipo de manifestação".</td></tr>
+        <tr><td data-i18n-html="lei.5.a">Comunicação anônima<br><span class="note">Decreto 9.492/2018, art. 23, § 2º</span></td><td data-i18n="lei.5.b">Relatos de irregularidade, mesmo anônimos, seguem para o órgão competente.</td><td data-i18n="lei.5.c">Tipo "Comunicação". Entra na conta de prazo quando tem data de prazo na base, o que vale para todas as registradas a partir de 2025.</td></tr>
+        <tr><td data-i18n-html="lei.6.a">Uso do sistema<br><span class="note">Decreto 9.492/2018, art. 16</span></td><td data-i18n="lei.6.b">Os órgãos federais devem usar o e-Ouv, hoje Fala.BR.</td><td data-i18n="lei.6.c">Explica o salto de volume a partir de 2018 no gráfico mensal.</td></tr>
+        <tr><td data-i18n-html="lei.7.a">Vigência por porte<br><span class="note">Lei 13.460/2017</span></td><td data-i18n="lei.7.b">A lei passou a valer em etapas: 360 dias após a publicação para União, estados e municípios com mais de 500 mil habitantes, 540 dias para municípios de 100 a 500 mil e 720 dias para os menores.</td><td data-i18n="lei.7.c">Marcas de 2018 e 2019 no gráfico mensal e o filtro de esfera.</td></tr>
+        <tr><td data-i18n-html="lei.8.a">Satisfação do usuário<br><span class="note">Lei 13.460/2017</span></td><td data-i18n="lei.8.b">Os órgãos devem medir todo ano a satisfação dos usuários com os serviços.</td><td data-i18n="lei.8.c">Indicadores "Demanda atendida" e "Satisfação" e a seção final.</td></tr>
       </tbody>
     </table>
   </div>
 </section>
 
 <section class="sec" id="duvidas">
-  <h2>Dúvidas frequentes</h2>
+  <h2 data-i18n="faq.h2">Dúvidas frequentes</h2>
   <div class="faq">
-    <details><summary>Qual é o prazo que o órgão tem para responder?</summary><p>30 dias a partir do recebimento, prorrogáveis uma única vez por mais 30, com justificativa. A regra está no art. 18 do Decreto 9.492/2018 e vem da Lei 13.460/2017.</p></details>
-    <details><summary>Por que há respostas com mais de 60 dias que contam como "no prazo"?</summary><p>Quando a ouvidoria pede complemento ao cidadão, o prazo fica suspenso até ele responder (art. 18, § 4º, do Decreto 9.492/2018). A data de prazo da base já considera essa suspensão, e é ela que o painel usa.</p></details>
-    <details><summary>A Comunicação entra na conta de prazo?</summary><p>Entra quando tem data de prazo. Comunicação é o relato de irregularidade, que pode ser feito sem identificação. Na base, cerca de 7 em cada 10 Comunicações registradas desde 2015 têm data de prazo, e todas as registradas a partir de 2025 têm. As que não têm data de prazo ficam fora da conta, porque sem ela não dá para dizer se houve atraso. Quase todas as manifestações sem data de prazo são desse tipo.</p></details>
-    <details><summary>O que é o tipo "Simplifique"?</summary><p>É o pedido de simplificação de um serviço público, registrado em formulário próprio no Fala.BR. O volume é pequeno perto dos outros tipos.</p></details>
-    <details><summary>Por que o volume salta em 2018 e de novo em 2020?</summary><p>Em 2018 a Lei 13.460/2017 passou a valer para União, estados e grandes municípios, e o Decreto 9.492/2018 tornou o sistema obrigatório para os órgãos federais. O salto de 2020 coincide com a pandemia e com a entrada de mais órgãos, mas a base sozinha não permite separar as duas causas.</p></details>
-    <details><summary>Por que há prefeituras e estados numa base federal?</summary><p>O Fala.BR é oferecido também a estados e municípios, que podem aderir a ele como sistema de ouvidoria. A base traz só os que aderiram, e não todos os órgãos do país. Use o filtro de esfera para separar.</p></details>
-    <details><summary>Posso comparar um órgão com outro?</summary><p>Com cuidado. Órgãos recebem assuntos de dificuldades diferentes. Por isso a tabela usa a proporção no prazo, e não a contagem de atrasos, exige um volume mínimo e compara cada órgão com o resultado geral do filtro escolhido.</p></details>
-    <details><summary>Por que julho e agosto de 2026 não têm proporção no prazo?</summary><p>O arquivo vai até 31/08/2026. A maior parte das manifestações desses meses ainda estava dentro do prazo nessa data, então a conta ficaria distorcida para cima ou para baixo.</p></details>
-    <details><summary>Por que o painel não usa o campo "dias de atraso" da base?</summary><p>Ele só vem preenchido para manifestações ainda sem resposta. Para as respondidas, o atraso foi calculado comparando a data de resposta com a data de prazo.</p></details>
-    <details><summary>Por que não há análise por idade, raça ou gênero?</summary><p>Esses campos são opcionais e ficam vazios em mais de 80% das manifestações recentes. Qualquer conclusão sobre perfil seria frágil.</p></details>
-    <details><summary>De onde vem a referência de 90% no prazo?</summary><p>É a meta de 2025 do Índice de Resolubilidade da Ouvidoria Setorial da Controladoria e Ouvidoria Geral do Ceará. Não é meta legal nem federal. Está aqui só como régua de comparação.</p></details>
-    <details><summary>Como reproduzir estes números?</summary><p>O repositório traz os scripts que baixam o arquivo da CGU e geram os dados do painel. O passo a passo está no README.</p></details>
+    <details><summary data-i18n="faq.1.q">Qual é o prazo que o órgão tem para responder?</summary><p data-i18n="faq.1.a">30 dias a partir do recebimento, prorrogáveis uma única vez por mais 30, com justificativa. A regra está no art. 18 do Decreto 9.492/2018 e vem da Lei 13.460/2017.</p></details>
+    <details><summary data-i18n="faq.2.q">Por que há respostas com mais de 60 dias que contam como "no prazo"?</summary><p data-i18n="faq.2.a">Quando a ouvidoria pede complemento ao cidadão, o prazo fica suspenso até ele responder (art. 18, § 4º, do Decreto 9.492/2018). A data de prazo da base já considera essa suspensão, e é ela que o painel usa.</p></details>
+    <details><summary data-i18n="faq.3.q">A Comunicação entra na conta de prazo?</summary><p data-i18n="faq.3.a">Entra quando tem data de prazo. Comunicação é o relato de irregularidade, que pode ser feito sem identificação. Na base, cerca de 7 em cada 10 Comunicações registradas desde 2015 têm data de prazo, e todas as registradas a partir de 2025 têm. As que não têm data de prazo ficam fora da conta, porque sem ela não dá para dizer se houve atraso. Quase todas as manifestações sem data de prazo são desse tipo.</p></details>
+    <details><summary data-i18n="faq.4.q">O que é o tipo "Simplifique"?</summary><p data-i18n="faq.4.a">É o pedido de simplificação de um serviço público, registrado em formulário próprio no Fala.BR. O volume é pequeno perto dos outros tipos.</p></details>
+    <details><summary data-i18n="faq.5.q">Por que o volume salta em 2018 e de novo em 2020?</summary><p data-i18n="faq.5.a">Em 2018 a Lei 13.460/2017 passou a valer para União, estados e grandes municípios, e o Decreto 9.492/2018 tornou o sistema obrigatório para os órgãos federais. O salto de 2020 coincide com a pandemia e com a entrada de mais órgãos, mas a base sozinha não permite separar as duas causas.</p></details>
+    <details><summary data-i18n="faq.6.q">Por que há prefeituras e estados numa base federal?</summary><p data-i18n="faq.6.a">O Fala.BR é oferecido também a estados e municípios, que podem aderir a ele como sistema de ouvidoria. A base traz só os que aderiram, e não todos os órgãos do país. Use o filtro de esfera para separar.</p></details>
+    <details><summary data-i18n="faq.7.q">Posso comparar um órgão com outro?</summary><p data-i18n="faq.7.a">Com cuidado. Órgãos recebem assuntos de dificuldades diferentes. Por isso a tabela usa a proporção no prazo, e não a contagem de atrasos, exige um volume mínimo e compara cada órgão com o resultado geral do filtro escolhido.</p></details>
+    <details><summary data-i18n="faq.8.q">Por que julho e agosto de 2026 não têm proporção no prazo?</summary><p data-i18n="faq.8.a">O arquivo vai até 31/08/2026. A maior parte das manifestações desses meses ainda estava dentro do prazo nessa data, então a conta ficaria distorcida para cima ou para baixo.</p></details>
+    <details><summary data-i18n="faq.9.q">Por que o painel não usa o campo "dias de atraso" da base?</summary><p data-i18n="faq.9.a">Ele só vem preenchido para manifestações ainda sem resposta. Para as respondidas, o atraso foi calculado comparando a data de resposta com a data de prazo.</p></details>
+    <details><summary data-i18n="faq.10.q">Por que não há análise por idade, raça ou gênero?</summary><p data-i18n="faq.10.a">Esses campos são opcionais e ficam vazios em mais de 80% das manifestações recentes. Qualquer conclusão sobre perfil seria frágil.</p></details>
+    <details><summary data-i18n="faq.11.q">De onde vem a referência de 90% no prazo?</summary><p data-i18n="faq.11.a">É a meta de 2025 do Índice de Resolubilidade da Ouvidoria Setorial da Controladoria e Ouvidoria Geral do Ceará. Não é meta legal nem federal. Está aqui só como régua de comparação.</p></details>
+    <details><summary data-i18n="faq.12.q">Como reproduzir estes números?</summary><p data-i18n="faq.12.a">O repositório traz os scripts que baixam o arquivo da CGU e geram os dados do painel. O passo a passo está no README.</p></details>
   </div>
 </section>
 
-<p><button class="btn ir" type="button" data-guia="painel">Abrir o painel</button></p>
+<p><button class="btn ir" type="button" data-guia="painel" data-i18n="btn.abrirPainel">Abrir o painel</button></p>
 </div>
 
 <div class="guia" id="guia-painel" role="tabpanel" aria-labelledby="tab-painel" hidden>
-<section class="filters" id="filtros" aria-label="Filtros">
+<section class="filters" id="filtros" aria-label="Filtros" data-i18n-attr="aria-label=f.sec.aria">
   <div class="frow">
-    <div class="f"><label for="f-ini">De</label><select id="f-ini"></select></div>
-    <div class="f"><label for="f-fim">Até</label><select id="f-fim"></select></div>
-    <div class="f"><label for="f-esfera">Esfera</label><select id="f-esfera"></select></div>
-    <div class="f"><label for="f-tipo">Tipo</label><select id="f-tipo"></select></div>
-    <div class="f"><label for="f-uf">UF do órgão</label><select id="f-uf"></select></div>
-    <div class="f"><span class="f-rot" id="rot-anos">Atalho de período</span><div class="seg anos-rapidos" role="group" aria-labelledby="rot-anos" id="anos-rapidos"></div></div>
-    <button class="btn" type="button" id="limpar">Limpar filtros</button>
+    <div class="f"><label for="f-ini" data-i18n="f.de">De</label><select id="f-ini"></select></div>
+    <div class="f"><label for="f-fim" data-i18n="f.ate">Até</label><select id="f-fim"></select></div>
+    <div class="f"><label for="f-esfera" data-i18n="f.esfera">Esfera</label><select id="f-esfera"></select></div>
+    <div class="f"><label for="f-tipo" data-i18n="f.tipo">Tipo</label><select id="f-tipo"></select></div>
+    <div class="f"><label for="f-uf" data-i18n="f.uf">UF do órgão</label><select id="f-uf"></select></div>
+    <div class="f"><span class="f-rot" id="rot-anos" data-i18n="f.atalho">Atalho de período</span><div class="seg anos-rapidos" role="group" aria-labelledby="rot-anos" id="anos-rapidos"></div></div>
+    <button class="btn" type="button" id="limpar" data-i18n="f.limpar">Limpar filtros</button>
   </div>
   <div class="chips" id="chips" aria-live="polite"></div>
 </section>
 
 <section class="sec" id="resumo">
-  <h2>Resumo do período</h2>
+  <h2 data-i18n="res.h2">Resumo do período</h2>
   <p class="lead" id="lead">—</p>
   <div class="kpis">
-    <article class="card"><h3>Manifestações</h3><div class="big" id="k-n">—</div><div class="spark" id="sp-n"></div><p class="note"><span id="k-n-var">—</span> contra o período anterior de mesma duração.</p>
-      <details class="aj"><summary>Como ler</summary><p>Total registrado no período e nos filtros. Volume maior não significa serviço pior: ele também cresce quando mais órgãos passam a usar a plataforma.</p></details></article>
-    <article class="card"><h3>Respondidas no prazo</h3><div class="big" id="k-prazo">—</div><div class="spark" id="sp-prazo"></div><p class="note"><span id="k-prazo-var">—</span> contra o período anterior.</p>
-      <details class="aj"><summary>Como ler</summary><p>Entre as manifestações com prazo vencido até 31/08/2026, a parte respondida até a data de prazo. Quem ainda não respondeu conta como fora do prazo. A data de prazo já inclui prorrogação e suspensão (Decreto 9.492/2018, art. 18).</p></details></article>
-    <article class="card"><h3>Tempo médio de resposta</h3><div class="big"><span id="k-tm">—</span> dias</div><div class="spark" id="sp-tm"></div><p class="note"><span id="k-tm-var">—</span> contra o período anterior.</p>
-      <details class="aj"><summary>Como ler</summary><p>Média de dias entre o registro e a resposta, só das já respondidas. A média esconde os casos demorados, por isso veja também o gráfico por faixa de tempo.</p></details></article>
-    <article class="card"><h3>Respondidas em até 30 dias</h3><div class="big" id="k-r30">—</div><p class="note"><span id="k-r10">—</span> saem em até 10 dias.</p>
-      <details class="aj"><summary>Como ler</summary><p>Parte das respostas dadas dentro do prazo inicial de 30 dias, sem depender de prorrogação. Base: manifestações já respondidas.</p></details></article>
-    <article class="card destaque"><h3>Pendências vencidas</h3><div class="big" id="k-pe">—</div><p class="note"><span id="k-pe60">—</span> delas foram registradas há mais de 60 dias.</p>
-      <details class="aj"><summary>Como ler</summary><p>Manifestações do período ainda sem resposta e com o prazo vencido em 31/08/2026. As registradas há mais de 60 dias já passaram do teto de 30 dias mais prorrogação.</p></details></article>
-    <article class="card"><h3>Prazo prorrogado</h3><div class="big" id="k-pr">—</div><p class="note">Manifestações com mais de 45 dias entre o registro e o prazo.</p>
-      <details class="aj"><summary>Como ler</summary><p>A base não tem um campo de prorrogação. O painel estima pela distância entre registro e prazo: o prazo inicial fica em torno de 30 dias, então mais de 45 indica prorrogação ou suspensão por pedido de complemento.</p></details></article>
-    <article class="card"><h3>Demanda atendida</h3><div class="big" id="k-at">—</div><p class="note">Atendida ou parcialmente, segundo <span id="k-at-n">—</span> cidadãos.</p>
-      <details class="aj"><summary>Como ler</summary><p>Resposta do cidadão à pergunta da pesquisa sobre a demanda ter sido atendida. A pesquisa é opcional e poucos respondem, então leia como sinal.</p></details></article>
-    <article class="card"><h3>Satisfação</h3><div class="big" id="k-sat">—</div><p class="note">Satisfeitos ou muito satisfeitos, em <span id="k-sat-n">—</span> respostas (<span id="k-sat-cob">—</span> das manifestações).</p>
-      <details class="aj"><summary>Como ler</summary><p>Notas 4 e 5 na pesquisa de satisfação. Quem ficou insatisfeito tende a responder mais, então o número puxa para baixo. A Lei 13.460/2017 prevê a medição anual da satisfação.</p></details></article>
+    <article class="card"><h3 data-i18n="kpi.n.h3">Manifestações</h3><div class="big" id="k-n">—</div><div class="spark" id="sp-n"></div><p class="note"><span id="k-n-var">—</span><span id="k-n-var-t" data-i18n="kpi.vs.n"> contra o período anterior de mesma duração.</span></p>
+      <details class="aj"><summary data-i18n="kpi.comoLer">Como ler</summary><p data-i18n="kpi.n.aj">Total registrado no período e nos filtros. Volume maior não significa serviço pior: ele também cresce quando mais órgãos passam a usar a plataforma.</p></details></article>
+    <article class="card"><h3 data-i18n="kpi.prazo.h3">Respondidas no prazo</h3><div class="big" id="k-prazo">—</div><div class="spark" id="sp-prazo"></div><p class="note"><span id="k-prazo-var">—</span><span id="k-prazo-var-t" data-i18n="kpi.vs.prazo"> contra o período anterior.</span></p>
+      <details class="aj"><summary data-i18n="kpi.comoLer">Como ler</summary><p data-i18n="kpi.prazo.aj">Entre as manifestações com prazo vencido até 31/08/2026, a parte respondida até a data de prazo. Quem ainda não respondeu conta como fora do prazo. A data de prazo já inclui prorrogação e suspensão (Decreto 9.492/2018, art. 18).</p></details></article>
+    <article class="card"><h3 data-i18n="kpi.tm.h3">Tempo médio de resposta</h3><div class="big"><span id="k-tm">—</span><span data-i18n="u.dias"> dias</span></div><div class="spark" id="sp-tm"></div><p class="note"><span id="k-tm-var">—</span><span id="k-tm-var-t" data-i18n="kpi.vs.tm"> contra o período anterior.</span></p>
+      <details class="aj"><summary data-i18n="kpi.comoLer">Como ler</summary><p data-i18n="kpi.tm.aj">Média de dias entre o registro e a resposta, só das já respondidas. A média esconde os casos demorados, por isso veja também o gráfico por faixa de tempo.</p></details></article>
+    <article class="card"><h3 data-i18n="kpi.r30.h3">Respondidas em até 30 dias</h3><div class="big" id="k-r30">—</div><p class="note" id="k-r10">—</p>
+      <details class="aj"><summary data-i18n="kpi.comoLer">Como ler</summary><p data-i18n="kpi.r30.aj">Parte das respostas dadas dentro do prazo inicial de 30 dias, sem depender de prorrogação. Base: manifestações já respondidas.</p></details></article>
+    <article class="card destaque"><h3 data-i18n="kpi.pe.h3">Pendências vencidas</h3><div class="big" id="k-pe">—</div><p class="note" id="k-pe60">—</p>
+      <details class="aj"><summary data-i18n="kpi.comoLer">Como ler</summary><p data-i18n="kpi.pe.aj">Manifestações do período ainda sem resposta e com o prazo vencido em 31/08/2026. As registradas há mais de 60 dias já passaram do teto de 30 dias mais prorrogação.</p></details></article>
+    <article class="card"><h3 data-i18n="kpi.pr.h3">Prazo prorrogado</h3><div class="big" id="k-pr">—</div><p class="note" data-i18n="kpi.pr.nota">Manifestações com mais de 45 dias entre o registro e o prazo.</p>
+      <details class="aj"><summary data-i18n="kpi.comoLer">Como ler</summary><p data-i18n="kpi.pr.aj">A base não tem um campo de prorrogação. O painel estima pela distância entre registro e prazo: o prazo inicial fica em torno de 30 dias, então mais de 45 indica prorrogação ou suspensão por pedido de complemento.</p></details></article>
+    <article class="card"><h3 data-i18n="kpi.at.h3">Demanda atendida</h3><div class="big" id="k-at">—</div><p class="note" id="k-at-n">—</p>
+      <details class="aj"><summary data-i18n="kpi.comoLer">Como ler</summary><p data-i18n="kpi.at.aj">Resposta do cidadão à pergunta da pesquisa sobre a demanda ter sido atendida. A pesquisa é opcional e poucos respondem, então leia como sinal.</p></details></article>
+    <article class="card"><h3 data-i18n="kpi.sat.h3">Satisfação</h3><div class="big" id="k-sat">—</div><p class="note" id="k-sat-n">—</p>
+      <details class="aj"><summary data-i18n="kpi.comoLer">Como ler</summary><p data-i18n="kpi.sat.aj">Notas 4 e 5 na pesquisa de satisfação. Quem ficou insatisfeito tende a responder mais, então o número puxa para baixo. A Lei 13.460/2017 prevê a medição anual da satisfação.</p></details></article>
   </div>
 </section>
 
 <section class="sec" id="faixas">
-  <h2>Tempo de resposta diante do prazo legal</h2>
-  <p>Das manifestações já respondidas no período, quantas saíram dentro dos 30 dias iniciais, quantas usaram a prorrogação e quantas passaram do teto de 60 dias. Passar de 60 dias nem sempre é descumprimento: o prazo fica suspenso enquanto o cidadão não envia o complemento pedido.</p>
+  <h2 data-i18n="faixas.h2">Tempo de resposta diante do prazo legal</h2>
+  <p data-i18n="faixas.p">Das manifestações já respondidas no período, quantas saíram dentro dos 30 dias iniciais, quantas usaram a prorrogação e quantas passaram do teto de 60 dias. Passar de 60 dias nem sempre é descumprimento: o prazo fica suspenso enquanto o cidadão não envia o complemento pedido.</p>
   <div class="painel-g"><div class="chart" id="g-faixas"></div></div>
 </section>
 
 <section class="sec" id="evolucao">
   <div class="head-row">
-    <h2>Evolução mês a mês</h2>
-    <div class="seg" role="group" aria-label="Alcance dos gráficos de evolução">
-      <button class="btn" type="button" data-hist="0" aria-pressed="true">Período escolhido</button>
-      <button class="btn" type="button" data-hist="1" aria-pressed="false">História completa</button>
+    <h2 data-i18n="evo.h2">Evolução mês a mês</h2>
+    <div class="seg" role="group" aria-label="Alcance dos gráficos de evolução" data-i18n-attr="aria-label=evo.seg.aria">
+      <button class="btn" type="button" data-hist="0" aria-pressed="true" data-i18n="evo.btn0">Período escolhido</button>
+      <button class="btn" type="button" data-hist="1" aria-pressed="false" data-i18n="evo.btn1">História completa</button>
     </div>
   </div>
-  <p>Os gráficos seguem todos os filtros. Em "Período escolhido", mostram só os meses do período. Em "História completa", mostram desde 2015, com os demais filtros aplicados e o período escolhido em destaque. As marcas indicam quando a Lei 13.460/2017 passou a valer para União, estados e grandes municípios (2018) e para os municípios menores (2019), quando essas datas aparecem no gráfico. Julho e agosto de 2026 ficam sem proporção porque o prazo da maior parte ainda não tinha vencido em 31/08/2026.</p>
+  <p data-i18n="evo.p">Os gráficos seguem todos os filtros. Em "Período escolhido", mostram só os meses do período. Em "História completa", mostram desde 2015, com os demais filtros aplicados e o período escolhido em destaque. As marcas indicam quando a Lei 13.460/2017 passou a valer para União, estados e grandes municípios (2018) e para os municípios menores (2019), quando essas datas aparecem no gráfico. Julho e agosto de 2026 ficam sem proporção porque o prazo da maior parte ainda não tinha vencido em 31/08/2026.</p>
   <div class="grid2">
-    <div class="painel-g"><p class="note">Quantas manifestações chegaram em cada mês</p><div class="chart" id="g-volume"></div></div>
-    <div class="painel-g"><p class="note">Respondidas no prazo, em %. A linha tracejada marca 90%, meta usada como referência por ouvidorias públicas.</p><div class="chart" id="g-prazo"></div></div>
+    <div class="painel-g"><p class="note" data-i18n="evo.n1">Quantas manifestações chegaram em cada mês</p><div class="chart" id="g-volume"></div></div>
+    <div class="painel-g"><p class="note" data-i18n="evo.n2">Respondidas no prazo, em %. A linha tracejada marca 90%, meta usada como referência por ouvidorias públicas.</p><div class="chart" id="g-prazo"></div></div>
   </div>
 </section>
 
 <section class="sec" id="recortes">
   <div class="head-row">
-    <h2>Onde o prazo estoura</h2>
-    <div class="seg" role="group" aria-label="Métrica dos gráficos">
-      <button class="btn" type="button" data-metrica="prazo" aria-pressed="true">No prazo (%)</button>
-      <button class="btn" type="button" data-metrica="volume" aria-pressed="false">Volume</button>
-      <button class="btn" type="button" data-metrica="tm" aria-pressed="false">Tempo médio</button>
+    <h2 data-i18n="rec.h2">Onde o prazo estoura</h2>
+    <div class="seg" role="group" aria-label="Métrica dos gráficos" data-i18n-attr="aria-label=rec.seg.aria">
+      <button class="btn" type="button" data-metrica="prazo" aria-pressed="true" data-i18n="rec.btnPrazo">No prazo (%)</button>
+      <button class="btn" type="button" data-metrica="volume" aria-pressed="false" data-i18n="rec.btnVolume">Volume</button>
+      <button class="btn" type="button" data-metrica="tm" aria-pressed="false" data-i18n="rec.btnTm">Tempo médio</button>
     </div>
   </div>
-  <p>Clique numa barra para filtrar o painel inteiro por ela. Clique de novo para tirar o filtro. A linha tracejada marca o resultado geral do filtro atual. Barras em destaque estão mais de 10 pontos abaixo do geral.</p>
+  <p data-i18n="rec.p">Clique numa barra para filtrar o painel inteiro por ela. Clique de novo para tirar o filtro. A linha tracejada marca o resultado geral do filtro atual. Barras em destaque estão mais de 10 pontos abaixo do geral.</p>
   <div class="grid3">
-    <div class="painel-g"><p class="note">Por esfera do órgão</p><div class="chart" id="g-esfera"></div></div>
-    <div class="painel-g"><p class="note">Por tipo de manifestação</p><div class="chart" id="g-tipo"></div></div>
-    <div class="painel-g"><p class="note">Por UF do órgão</p><div class="chart" id="g-uf"></div></div>
+    <div class="painel-g"><p class="note" data-i18n="rec.n.esfera">Por esfera do órgão</p><div class="chart" id="g-esfera"></div></div>
+    <div class="painel-g"><p class="note" data-i18n="rec.n.tipo">Por tipo de manifestação</p><div class="chart" id="g-tipo"></div></div>
+    <div class="painel-g"><p class="note" data-i18n="rec.n.uf">Por UF do órgão</p><div class="chart" id="g-uf"></div></div>
   </div>
 </section>
 
 <section class="sec" id="assuntos">
   <div class="head-row">
-    <h2>Assuntos</h2>
-    <div class="seg" role="group" aria-label="Ordenar assuntos">
-      <button class="btn" type="button" data-assunto="atraso" aria-pressed="true">Mais atrasados</button>
-      <button class="btn" type="button" data-assunto="volume" aria-pressed="false">Mais demandados</button>
+    <h2 data-i18n="ass.h2">Assuntos</h2>
+    <div class="seg" role="group" aria-label="Ordenar assuntos" data-i18n-attr="aria-label=ass.seg.aria">
+      <button class="btn" type="button" data-assunto="atraso" aria-pressed="true" data-i18n="ass.btnAtraso">Mais atrasados</button>
+      <button class="btn" type="button" data-assunto="volume" aria-pressed="false" data-i18n="ass.btnVolume">Mais demandados</button>
     </div>
   </div>
   <p id="assuntos-nota">—</p>
@@ -394,22 +408,22 @@ footer { border-top: 1px solid var(--line); padding-top: 18px; }
 </section>
 
 <section class="sec" id="orgaos">
-  <h2>Órgãos que precisam de atenção</h2>
-  <p>Órgãos com pelo menos 300 manifestações no período e nos filtros atuais. A cor compara cada órgão com o resultado geral do filtro: verde no nível ou acima, amarelo até 10 pontos abaixo, vermelho mais de 10 pontos abaixo. Clique no título de uma coluna para ordenar, ou escolha um órgão na lista. Um resultado perto de 0% costuma indicar órgão que recebe manifestações pelo Fala.BR, mas não registra a resposta no sistema, o que a base não permite confirmar.</p>
+  <h2 data-i18n="org.h2">Órgãos que precisam de atenção</h2>
+  <p data-i18n="org.p">Órgãos com pelo menos 300 manifestações no período e nos filtros atuais. A cor compara cada órgão com o resultado geral do filtro: verde no nível ou acima, amarelo até 10 pontos abaixo, vermelho mais de 10 pontos abaixo. Clique no título de uma coluna para ordenar, ou escolha um órgão na lista. Um resultado perto de 0% costuma indicar órgão que recebe manifestações pelo Fala.BR, mas não registra a resposta no sistema, o que a base não permite confirmar.</p>
   <div class="frow">
-    <div class="f"><label for="f-orgao">Órgão</label><select id="f-orgao"></select></div>
+    <div class="f"><label for="f-orgao" data-i18n="org.label">Órgão</label><select id="f-orgao"></select></div>
     <button class="btn" type="button" id="todos" aria-pressed="false">Mostrar todos</button>
   </div>
   <div class="tbl-wrap">
     <table id="t-orgaos">
       <thead><tr>
-        <th data-k="nome"><button type="button">Órgão</button></th>
-        <th data-k="esfera"><button type="button">Esfera</button></th>
+        <th data-k="nome"><button type="button" data-i18n="org.th.nome">Órgão</button></th>
+        <th data-k="esfera"><button type="button" data-i18n="org.th.esfera">Esfera</button></th>
         <th data-k="uf"><button type="button">UF</button></th>
-        <th data-k="n"><button type="button">Manifestações</button></th>
-        <th data-k="prazo" aria-sort="ascending"><button type="button">No prazo</button></th>
-        <th data-k="tm"><button type="button">Tempo médio (dias)</button></th>
-        <th data-k="pe"><button type="button">Pendências vencidas</button></th>
+        <th data-k="n"><button type="button" data-i18n="org.th.n">Manifestações</button></th>
+        <th data-k="prazo" aria-sort="ascending"><button type="button" data-i18n="org.th.prazo">No prazo</button></th>
+        <th data-k="tm"><button type="button" data-i18n="org.th.tm">Tempo médio (dias)</button></th>
+        <th data-k="pe"><button type="button" data-i18n="org.th.pe">Pendências vencidas</button></th>
       </tr></thead>
       <tbody id="tb-orgaos"></tbody>
     </table>
@@ -418,14 +432,14 @@ footer { border-top: 1px solid var(--line); padding-top: 18px; }
 </section>
 
 <section class="sec" id="satisfacao">
-  <h2>Resposta no prazo e satisfação</h2>
-  <p>Proporção de satisfeitos ou muito satisfeitos entre quem respondeu à pesquisa, separando quem recebeu a resposta no prazo de quem recebeu fora dele. A pesquisa é opcional e tem peso maior de quem ficou insatisfeito, então leia a diferença entre os grupos, e não o nível.</p>
+  <h2 data-i18n="sat.h2">Resposta no prazo e satisfação</h2>
+  <p data-i18n="sat.p">Proporção de satisfeitos ou muito satisfeitos entre quem respondeu à pesquisa, separando quem recebeu a resposta no prazo de quem recebeu fora dele. A pesquisa é opcional e tem peso maior de quem ficou insatisfeito, então leia a diferença entre os grupos, e não o nível.</p>
   <div class="painel-g"><div class="chart" id="g-sat"></div></div>
 </section>
 </div>
 
 <footer>
-  <p class="credit">Projeto pessoal de Diego Arruda · @drasdiegotech · <a href="https://github.com/drasdiego" rel="noopener">github.com/drasdiego</a> · Dados: <a href="https://www.gov.br/cgu/pt-br/acesso-a-informacao/dados-abertos/arquivos/ouvidoria" rel="noopener">CGU, dados abertos de ouvidoria</a> · Este painel não é um produto oficial da CGU nem de qualquer órgão público.</p>
+  <p class="credit" data-i18n-html="footer">Projeto pessoal de Diego Arruda · @drasdiegotech · <a href="https://github.com/drasdiego" rel="noopener">github.com/drasdiego</a> · Dados: <a href="https://www.gov.br/cgu/pt-br/acesso-a-informacao/dados-abertos/arquivos/ouvidoria" rel="noopener">CGU, dados abertos de ouvidoria</a> · Este painel não é um produto oficial da CGU nem de qualquer órgão público.</p>
 </footer>
 
 </main>
@@ -433,19 +447,33 @@ footer { border-top: 1px solid var(--line); padding-top: 18px; }
 <script>
 (function () {
   const D = window.OUVIDOMETRO;
-  const loc = d3.formatLocale({ decimal: ',', thousands: '.', grouping: [3], currency: ['R$ ', ''] });
-  const fInt = loc.format(',d'), f1 = loc.format(',.1f');
+  const I = window.OuvI18n;
+  I.add(window.OUV_TEXTOS);
+  const R = window.OUV_ROTULOS;
+  const tx = I.t;
+  I.iniciar();
+  const LOCAIS = {
+    pt: d3.formatLocale({ decimal: ',', thousands: '.', grouping: [3], currency: ['R$ ', ''] }),
+    en: d3.formatLocale({ decimal: '.', thousands: ',', grouping: [3], currency: ['$', ''] }),
+  };
+  let fInt, f1;
+  function definirLocal() { const l = LOCAIS[I.lang]; fInt = l.format(',d'); f1 = l.format(',.1f'); }
+  definirLocal();
+  const rot = (dim, v) => {
+    if (I.lang !== 'en' || !R[dim]) return v;
+    if (R[dim][v] == null) { I.faltando.push('rotulo:' + dim + ':' + v); return v; }
+    return R[dim][v];
+  };
   const sinal = (v) => (v > 0.05 ? '+' : v < -0.05 ? '−' : '');
   const F = {
     int: (v) => (v == null || !isFinite(v) ? '—' : fInt(Math.round(v))),
     pct: (v) => (v == null || !isFinite(v) ? '—' : f1(v) + '%'),
     d1: (v) => (v == null || !isFinite(v) ? '—' : f1(v)),
-    pp: (v) => (v == null || !isFinite(v) ? '—' : sinal(v) + f1(Math.abs(v)) + ' p.p.'),
+    pp: (v) => (v == null || !isFinite(v) ? '—' : sinal(v) + f1(Math.abs(v)) + tx('u.pp')),
     sp: (v) => (v == null || !isFinite(v) ? '—' : sinal(v) + f1(Math.abs(v)) + '%'),
-    sd: (v) => (v == null || !isFinite(v) ? '—' : sinal(v) + f1(Math.abs(v)) + ' dias'),
+    sd: (v) => (v == null || !isFinite(v) ? '—' : sinal(v) + f1(Math.abs(v)) + tx('u.dias')),
   };
-  const nomeMes = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
-  const rotMes = (m) => nomeMes[+m.slice(5) - 1] + '/' + m.slice(0, 4);
+  const rotMes = (m) => I.mes(m);
 
   const P = D.principal, PC = P.cols, PD = P.dims;
   const meses = PD.mes;
@@ -507,7 +535,7 @@ footer { border-top: 1px solid var(--line); padding-top: 18px; }
       .transition().duration(dur() * 1.6).ease(d3.easeCubicInOut).attr('stroke-dashoffset', 0)
       .on('end', function () { d3.select(this).attr('stroke-dasharray', null).attr('stroke-dashoffset', null); });
   }
-  const rotAno = (a) => (a === ULT ? a + ' (até ago)' : String(a));
+  const rotAno = (a) => (a === ULT ? tx('ano.ate', a) : String(a));
 
   function opcoes(sel, lista, valor, todos) {
     sel.replaceChildren(...(todos ? [new Option(todos, '')] : []), ...lista.map((v) => new Option(v.r ?? v, v.v ?? v)));
@@ -516,12 +544,16 @@ footer { border-top: 1px solid var(--line); padding-top: 18px; }
   function montarFiltros() {
     opcoes($('f-ini'), anos.map((a) => ({ v: a, r: rotAno(a) })), S.ini);
     opcoes($('f-fim'), anos.map((a) => ({ v: a, r: rotAno(a) })), S.fim);
-    opcoes($('f-esfera'), PD.esfera, S.esfera, 'Todas');
-    opcoes($('f-tipo'), PD.tipo, S.tipo, 'Todos');
-    opcoes($('f-uf'), PD.uf.filter((u) => u !== 'NI'), S.uf, 'Todas');
+    const porRot = (dim) => {
+      const l = PD[dim].map((v) => ({ v, r: rot(dim, v) }));
+      return I.lang === 'en' ? l.sort((a, b) => a.r.localeCompare(b.r, 'en')) : l;
+    };
+    opcoes($('f-esfera'), porRot('esfera'), S.esfera, tx('sel.todas'));
+    opcoes($('f-tipo'), porRot('tipo'), S.tipo, tx('sel.todos'));
+    opcoes($('f-uf'), PD.uf.filter((u) => u !== 'NI'), S.uf, tx('sel.todas'));
     const ar = $('anos-rapidos');
     const foco = ar.contains(document.activeElement) ? Array.from(ar.children).indexOf(document.activeElement) : -1;
-    ar.replaceChildren(...[...anos.slice(-4).map((a) => ({ r: String(a), i: a, f: a })), { r: 'Desde ' + anos[0], i: anos[0], f: ULT }].map((o) => {
+    ar.replaceChildren(...[...anos.slice(-4).map((a) => ({ r: String(a), i: a, f: a })), { r: tx('ano.desde', anos[0]), i: anos[0], f: ULT }].map((o) => {
       const b = document.createElement('button');
       b.type = 'button'; b.className = 'btn'; b.textContent = o.r;
       b.setAttribute('aria-pressed', String(S.ini === o.i && S.fim === o.f));
@@ -533,13 +565,13 @@ footer { border-top: 1px solid var(--line); padding-top: 18px; }
     chips.replaceChildren();
     const j = janela();
     const per = document.createElement('span');
-    per.textContent = `Período: ${rotMes(meses[j.a])} a ${rotMes(meses[j.b])}`;
+    per.textContent = tx('chip.periodo', rotMes(meses[j.a]), rotMes(meses[j.b]));
     chips.appendChild(per);
-    [['esfera', 'Esfera'], ['tipo', 'Tipo'], ['uf', 'UF']].filter(([k]) => S[k] != null).forEach(([k, r]) => {
+    [['esfera', tx('rot.esfera')], ['tipo', tx('rot.tipo')], ['uf', tx('rot.uf')]].filter(([k]) => S[k] != null).forEach(([k, r]) => {
       const b = document.createElement('button');
       b.type = 'button'; b.className = 'chip';
-      b.textContent = `${r}: ${S[k]} ×`;
-      b.setAttribute('aria-label', `Remover filtro ${r}: ${S[k]}`);
+      b.textContent = `${r}: ${rot(k, S[k])} ×`;
+      b.setAttribute('aria-label', tx('chip.aria', r, rot(k, S[k])));
       b.onclick = () => { S[k] = null; render(); };
       chips.appendChild(b);
     });
@@ -571,15 +603,16 @@ footer { border-top: 1px solid var(--line); padding-top: 18px; }
     anima('k-prazo', taxaPrazo(s), F.pct);
     anima('k-tm', tm(s), F.d1);
     anima('k-r30', s.re ? 100 * s.r30 / s.re : null, F.pct);
-    txt('k-r10', F.pct(s.re ? 100 * s.r10 / s.re : null));
+    txt('k-r10', tx('kpi.r10', F.pct(s.re ? 100 * s.r10 / s.re : null)));
     anima('k-pe', s.pe, F.int);
-    txt('k-pe60', F.int(s.pe60));
+    txt('k-pe60', tx('kpi.pe60', F.int(s.pe60)));
     anima('k-pr', s.cp ? 100 * s.pr / s.cp : null, F.pct);
-    anima('k-at', s.an ? 100 * s.ap / s.an : null, F.pct); txt('k-at-n', F.int(s.an));
-    anima('k-sat', s.sn ? 100 * s.sp / s.sn : null, F.pct); txt('k-sat-n', F.int(s.sn)); txt('k-sat-cob', F.pct(s.n ? 100 * s.sn / s.n : null));
+    anima('k-at', s.an ? 100 * s.ap / s.an : null, F.pct); txt('k-at-n', tx('kpi.at.n', F.int(s.an)));
+    anima('k-sat', s.sn ? 100 * s.sp / s.sn : null, F.pct); txt('k-sat-n', tx('kpi.sat.n', F.int(s.sn), F.pct(s.n ? 100 * s.sn / s.n : null)));
     const setVar = (id, v, fmt, bomSeSobe) => {
       const e = $(id);
-      e.textContent = v == null ? 'Sem período anterior comparável,' : fmt(v);
+      $(id + '-t').hidden = v == null && tx('var.sem.oculta');
+      e.textContent = v == null ? tx('var.sem') : fmt(v);
       e.className = v == null || Math.abs(v) < 0.05 || bomSeSobe == null ? 'neu' : ((v > 0) === bomSeSobe ? 'good' : 'bad');
     };
     const dN = p && p.n ? 100 * (s.n / p.n - 1) : null;
@@ -588,13 +621,11 @@ footer { border-top: 1px solid var(--line); padding-top: 18px; }
     setVar('k-n-var', dN, F.sp, null);
     setVar('k-prazo-var', dP, F.pp, true);
     setVar('k-tm-var', dT, F.sd, false);
-    const lead = $('lead');
-    lead.replaceChildren();
-    const b = (t) => { const x = document.createElement('b'); x.textContent = t; return x; };
-    const t = (x) => document.createTextNode(x);
-    lead.append(t(`De ${rotMes(meses[j.a])} a ${rotMes(meses[j.b])}, `), b(F.pct(taxaPrazo(s))), t(' das manifestações com prazo vencido foram respondidas no prazo'));
-    if (dP != null) lead.append(t(Math.abs(dP) < 0.05 ? ', o mesmo nível do período anterior' : `, ${f1(Math.abs(dP))} p.p. ${dP > 0 ? 'acima' : 'abaixo'} do período anterior`));
-    lead.append(t('. A resposta levou em média '), b(F.d1(tm(s)) + ' dias'), t(', e '), b(F.int(s.pe)), t(' manifestações seguem sem resposta com o prazo vencido.'));
+    $('lead').innerHTML = tx('lead', {
+      a: rotMes(meses[j.a]), b: rotMes(meses[j.b]), pct: F.pct(taxaPrazo(s)),
+      dp: dP, igual: dP != null && Math.abs(dP) < 0.05, acima: dP > 0, dpAbs: dP == null ? '' : f1(Math.abs(dP)),
+      tm: F.d1(tm(s)), pe: F.int(s.pe),
+    });
   }
 
   function frame(el, h) {
@@ -621,17 +652,17 @@ footer { border-top: 1px solid var(--line); padding-top: 18px; }
     el.replaceChildren();
     if (!s.re) return;
     const partes = [
-      { label: 'Até 30 dias (prazo inicial)', n: s.r30, cor: 'var(--c1)' },
-      { label: '31 a 60 dias (com prorrogação)', n: s.r60 - s.r30, cor: 'var(--c2)' },
-      { label: 'Mais de 60 dias (acima do teto)', n: s.re - s.r60, cor: 'var(--crit)' },
+      { label: tx('faixa.1'), n: s.r30, cor: 'var(--c1)' },
+      { label: tx('faixa.2'), n: s.r60 - s.r30, cor: 'var(--c2)' },
+      { label: tx('faixa.3'), n: s.re - s.r60, cor: 'var(--crit)' },
     ].map((p) => ({ ...p, v: 100 * p.n / s.re }));
     const box = d3.select(el).append('div').attr('class', 'faixas-g');
     const barra = box.append('div').attr('class', 'faixas-barra').attr('role', 'img')
-      .attr('aria-label', 'Respostas por faixa de tempo diante do prazo legal: ' + partes.map((p) => `${p.label}, ${F.pct(p.v)}`).join('; '));
+      .attr('aria-label', tx('faixa.aria') + partes.map((p) => `${p.label}, ${F.pct(p.v)}`).join('; '));
     const tip = d3.select(el).append('div').attr('class', 'tip').attr('hidden', '');
     const segs = barra.selectAll('span').data(partes).join('span').attr('class', 'faixas-seg')
       .style('background', (p) => p.cor)
-      .on('pointermove', (ev, p) => showTip(tip, el, ev, p.label, [`${F.pct(p.v)} das respostas`, `${F.int(p.n)} manifestações`]))
+      .on('pointermove', (ev, p) => showTip(tip, el, ev, p.label, [tx('tip.respostas', F.pct(p.v)), tx('tip.manif', F.int(p.n))]))
       .on('pointerleave', () => tip.attr('hidden', ''));
     if (dur()) {
       segs.style('flex-basis', '0%').transition().duration(dur()).ease(d3.easeCubicOut).style('flex-basis', (p) => p.v + '%');
@@ -642,7 +673,7 @@ footer { border-top: 1px solid var(--line); padding-top: 18px; }
       li.append('i').style('background', p.cor);
       li.append('span').text(p.label);
       li.append('b').text(F.pct(p.v));
-      li.append('small').text(F.int(p.n) + ' manifestações');
+      li.append('small').text(tx('tip.manif', F.int(p.n)));
     });
   }
 
@@ -658,16 +689,16 @@ footer { border-top: 1px solid var(--line); padding-top: 18px; }
     const dIni = todas[j.a].d, dFim = todas[j.b].d;
     const dentro = (r) => r.d >= dIni && r.d <= dFim;
     const curto = rows.length <= 24;
-    const marcos = [{ d: parse('2018-06'), t: 'lei: 1ª etapa' }, { d: parse('2019-06'), t: 'lei: todos' }];
+    const marcos = [{ d: parse('2018-06'), t: tx('marco.1') }, { d: parse('2019-06'), t: tx('marco.2') }];
     [['g-volume', 'n'], ['g-prazo', 'p']].forEach(([id, key]) => {
       const el = $(id), H = 250;
       const { W, svg, tip } = frame(el, H);
-      svg.attr('aria-label', key === 'n' ? 'Manifestações registradas por mês' : 'Proporção respondida no prazo por mês');
+      svg.attr('aria-label', key === 'n' ? tx('serie.aria.n') : tx('serie.aria.p'));
       const top = 22;
       const yMax = key === 'n' ? d3.max(rows, (r) => r.n) || 1 : 100;
       const yMin = key === 'n' ? 0 : Math.max(0, Math.floor((d3.min(rows, (r) => r.p) ?? 0) / 10) * 10);
       const y = d3.scaleLinear().domain([yMin, yMax]).nice().range([H - 24, top]);
-      const yf = key === 'n' ? (v) => (v >= 1000 ? F.int(v / 1000) + ' mil' : F.int(v)) : (v) => F.int(v) + '%';
+      const yf = key === 'n' ? (v) => (v >= 1000 ? F.int(v / 1000) + tx('u.mil') : F.int(v)) : (v) => F.int(v) + '%';
       const L = margemEsq(svg, yf(y.domain()[1]));
       const x = d3.scaleUtc().domain([rows[0].d, d3.utcMonth.offset(rows[rows.length - 1].d, 1)]).range([L, W - 8]);
       const cx = (r) => x(d3.utcDay.offset(r.d, 15));
@@ -695,7 +726,7 @@ footer { border-top: 1px solid var(--line); padding-top: 18px; }
       } else {
         if (90 >= y.domain()[0]) {
           svg.append('line').attr('x1', L).attr('x2', W - 8).attr('y1', y(90)).attr('y2', y(90)).style('stroke', 'var(--ref)').attr('stroke-dasharray', '5 3');
-          svg.append('text').attr('x', W - 8).attr('y', H - 30).attr('text-anchor', 'end').text('tracejado: referência de 90%');
+          svg.append('text').attr('x', W - 8).attr('y', H - 30).attr('text-anchor', 'end').text(tx('ref90'));
         }
         const area = svg.append('path').datum(rows).attr('fill', 'none').attr('d', d3.area().defined((r) => r.p != null).x(cx).y0(H - 24).y1((r) => y(r.p)));
         tr(area.style('opacity', dur() ? 0 : 1), dur() * .8).style('opacity', 1);
@@ -708,7 +739,7 @@ footer { border-top: 1px solid var(--line); padding-top: 18px; }
           const r = rows[d3.bisector((r) => r.d).center(rows, d3.utcDay.offset(x.invert(d3.pointer(ev)[0]), -15))];
           if (!r) return;
           guia.attr('hidden', null).attr('x1', cx(r)).attr('x2', cx(r));
-          showTip(tip, el, ev, rotMes(r.m), [`${F.int(r.n)} manifestações`, r.p == null ? 'prazo ainda em aberto' : `${F.pct(r.p)} no prazo`, `tempo médio ${F.d1(r.tm)} dias`]);
+          showTip(tip, el, ev, rotMes(r.m), [tx('tip.manif', F.int(r.n)), r.p == null ? tx('tip.aberto') : tx('tip.noprazo', F.pct(r.p)), tx('tip.tm', F.d1(r.tm))]);
         })
         .on('pointerleave', () => { tip.attr('hidden', ''); guia.attr('hidden', ''); });
     });
@@ -736,20 +767,24 @@ footer { border-top: 1px solid var(--line); padding-top: 18px; }
       tr(ponto.style('opacity', dur() ? 0 : 1), dur() * 1.4).style('opacity', 1);
     });
   }
-  function hero() {
+  const HERO = (() => {
     const j = janela();
     const s = soma(j.a, j.b);
-    const fora = Math.round(100 - taxaPrazo(s));
-    const f = $('fato');
-    f.replaceChildren();
-    const b = (t) => { const x = document.createElement('b'); x.textContent = t; return x; };
-    f.append(b('Resposta curta (fato): '), document.createTextNode(`de ${rotMes(meses[j.a])} a ${rotMes(meses[j.b])}, ${F.pct(taxaPrazo(s))} das manifestações com prazo vencido foram respondidas no prazo. As outras ${F.pct(100 - taxaPrazo(s))} saíram com atraso ou seguem sem resposta, e ${F.int(s.pe)} continuam pendentes.`));
-    const g = $('pontos');
-    g.replaceChildren(...Array.from({ length: 100 }, (_, i) => { const e = document.createElement('i'); if (i >= 100 - fora) e.className = 'f'; e.style.animationDelay = i * 8 + 'ms'; return e; }));
-    $('pontos-leg').textContent = `Cada ponto é 1 em cada 100 manifestações com prazo vencido. Os ${fora} pontos em destaque são as que ficaram fora do prazo, de ${rotMes(meses[j.a])} a ${rotMes(meses[j.b])}.`;
+    return { a: j.a, b: j.b, taxa: taxaPrazo(s), pe: s.pe, fora: Math.round(100 - taxaPrazo(s)) };
+  })();
+  function heroTexto() {
+    $('fato').innerHTML = tx('hero.fato', { a: rotMes(meses[HERO.a]), b: rotMes(meses[HERO.b]), pct: F.pct(HERO.taxa), resto: F.pct(100 - HERO.taxa), pe: F.int(HERO.pe) });
+    $('pontos-leg').textContent = tx('hero.leg', HERO.fora, rotMes(meses[HERO.a]), rotMes(meses[HERO.b]));
+  }
+  function hero() {
+    $('pontos').replaceChildren(...Array.from({ length: 100 }, (_, i) => { const e = document.createElement('i'); if (i >= 100 - HERO.fora) e.className = 'f'; e.style.animationDelay = i * 8 + 'ms'; return e; }));
+    heroTexto();
+  }
+  function baseTexto() {
+    $('base-txt').innerHTML = tx('base.txt', F.int(D.base.manifestacoes), F.int(D.base.orgaos), F.int(D.base.assuntos));
   }
   function barras(el, rows, opts) {
-    if (!rows.length) { el.replaceChildren(); const p = document.createElement('p'); p.className = 'note'; p.textContent = 'Sem dados suficientes para este filtro.'; el.appendChild(p); return; }
+    if (!rows.length) { el.replaceChildren(); const p = document.createElement('p'); p.className = 'note'; p.textContent = tx('sem.dados'); el.appendChild(p); return; }
     const rowH = 28;
     const H = rows.length * rowH + (opts.ref != null ? 30 : 8);
     const { W, svg, tip } = frame(el, H);
@@ -760,23 +795,23 @@ footer { border-top: 1px solid var(--line); padding-top: 18px; }
     const g = svg.append('g').selectAll('g').data(rows).join('g').attr('transform', (r, i) => `translate(0,${i * rowH + 4})`).attr('class', opts.onClick ? 'clk' : null);
     g.append('text').attr('x', labelW).attr('y', rowH / 2).attr('dy', '0.35em').attr('text-anchor', 'end')
       .style('font-weight', (r) => (r.sel ? 600 : null)).style('fill', (r) => (r.sel ? 'var(--fg)' : null))
-      .text((r) => r.label).each(function () { const t = d3.select(this); let s = t.text(); while (this.getComputedTextLength() > labelW - 4 && s.length > 4) { s = s.slice(0, -2); t.text(s + '…'); } });
+      .text((r) => r.show ?? r.label).each(function () { const t = d3.select(this); let s = t.text(); while (this.getComputedTextLength() > labelW - 4 && s.length > 4) { s = s.slice(0, -2); t.text(s + '…'); } });
     const br = g.append('rect').attr('class', 'barra').attr('x', x(0)).attr('y', 5).attr('height', rowH - 10).attr('rx', 5).attr('width', 0)
       .style('fill', (r) => r.cor || 'url(#grad-roxo)').style('opacity', (r) => (opts.algumSel && !r.sel ? .4 : 1));
     tr(br, (r, i) => i * 35).attr('width', (r) => Math.max(1, x(r.v) - x(0)));
     const vt = g.append('text').attr('x', (r) => x(r.v) + 4).attr('y', rowH / 2).attr('dy', '0.35em').text((r) => opts.fmt(r.v)).style('opacity', dur() ? 0 : 1);
     tr(vt, (r, i) => i * 35 + dur() * .6).style('opacity', 1);
     g.append('rect').attr('x', 0).attr('y', 0).attr('width', W).attr('height', rowH).attr('fill', 'transparent')
-      .on('pointermove', (ev, r) => showTip(tip, el, ev, r.nome || r.label, r.tip))
+      .on('pointermove', (ev, r) => showTip(tip, el, ev, r.show ?? r.label, r.tip))
       .on('pointerleave', () => tip.attr('hidden', ''))
       .on('click', (ev, r) => opts.onClick && opts.onClick(r));
     if (opts.ref != null) {
       const rx = x(opts.ref);
       svg.append('line').attr('x1', rx).attr('x2', rx).attr('y1', 0).attr('y2', rows.length * rowH + 6).style('stroke', 'var(--ref)').attr('stroke-dasharray', '4 3');
-      svg.append('text').attr('x', Math.min(rx, W - 50)).attr('y', rows.length * rowH + 22).attr('text-anchor', 'middle').text('geral ' + opts.fmt(opts.ref));
+      svg.append('text').attr('x', Math.min(rx, W - 50)).attr('y', rows.length * rowH + 22).attr('text-anchor', 'middle').text(tx('geral', opts.fmt(opts.ref)));
     }
   }
-  const tipPadrao = (s) => [`${F.int(s.n)} manifestações`, `${F.pct(taxaPrazo(s))} no prazo`, `tempo médio ${F.d1(tm(s))} dias`];
+  const tipPadrao = (s) => [tx('tip.manif', F.int(s.n)), tx('tip.noprazo', F.pct(taxaPrazo(s))), tx('tip.tm', F.d1(tm(s)))];
 
   function renderRecortes() {
     document.querySelectorAll('[data-metrica]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.metrica === S.metrica)));
@@ -797,12 +832,12 @@ footer { border-top: 1px solid var(--line); padding-top: 18px; }
       }[S.metrica];
       const tg = taxaPrazo(geral);
       const rows = PD[dim].map((label, k) => ({ label, s: acc[k] })).filter((r) => r.s.n >= 50 && !NI.has(r.label)).map((r) => ({
-        label: r.label, v: M.v(r.s), sel: S[dim] === r.label,
+        label: r.label, show: rot(dim, r.label), v: M.v(r.s), sel: S[dim] === r.label,
         cor: S.metrica === 'prazo' && taxaPrazo(r.s) != null && tg != null && taxaPrazo(r.s) < tg - 10 ? 'url(#grad-rosa)' : null,
-        tip: [...tipPadrao(r.s), `${F.int(r.s.pe)} pendências vencidas`],
+        tip: [...tipPadrao(r.s), tx('tip.pend', F.int(r.s.pe))],
       })).filter((r) => r.v != null && isFinite(r.v)).sort((a, b) => (M.asc ? a.v - b.v : b.v - a.v));
       barras($(id), rows, {
-        aria: `${S.metrica === 'volume' ? 'Volume' : S.metrica === 'tm' ? 'Tempo médio de resposta' : 'Proporção no prazo'} por ${dim}`,
+        aria: tx('rec.aria.por', S.metrica === 'volume' ? tx('rec.aria.volume') : S.metrica === 'tm' ? tx('rec.aria.tm') : tx('rec.aria.prazo'), tx('dim.' + dim)),
         fmt: M.fmt, ref: M.ref, algumSel: S[dim] != null, labelW: dim === 'uf' ? 36 : 170,
         onClick: (r) => { S[dim] = S[dim] === r.label ? null : r.label; render(); },
       });
@@ -828,19 +863,18 @@ footer { border-top: 1px solid var(--line); padding-top: 18px; }
     const porAtraso = S.assunto === 'atraso';
     const tg = taxaPrazo(tot);
     const rows = Array.from(acc, ([k, s]) => ({ label: A.dims.assunto[k], s })).filter((r) => !/^n[aã]o informado$/i.test(r.label) && r.s.n >= MIN_ASSUNTO).map((r) => ({
-      label: r.label, nome: r.label, v: porAtraso ? taxaPrazo(r.s) : r.s.n,
+      label: r.label, show: rot('assunto', r.label), v: porAtraso ? taxaPrazo(r.s) : r.s.n,
       cor: porAtraso && tg != null && taxaPrazo(r.s) < tg - 10 ? 'url(#grad-rosa)' : null,
       tip: tipPadrao(r.s),
     })).filter((r) => r.v != null && isFinite(r.v)).sort((a, b) => (porAtraso ? a.v - b.v : b.v - a.v)).slice(0, 15);
-    $('assuntos-nota').textContent = (porAtraso ? 'Os 15 assuntos com menor proporção respondida no prazo' : 'Os 15 assuntos com mais manifestações')
-      + ', entre os que tiveram pelo menos 200 manifestações no período e nos filtros escolhidos.';
-    barras($('g-assuntos'), rows, { aria: porAtraso ? 'Assuntos com menor proporção no prazo' : 'Assuntos mais demandados', fmt: porAtraso ? F.pct : F.int, ref: porAtraso ? tg : null, labelW: 300 });
+    $('assuntos-nota').textContent = tx(porAtraso ? 'ass.nota.atraso' : 'ass.nota.volume') + tx('ass.nota.fim');
+    barras($('g-assuntos'), rows, { aria: tx(porAtraso ? 'ass.aria.atraso' : 'ass.aria.volume'), fmt: porAtraso ? F.pct : F.int, ref: porAtraso ? tg : null, labelW: 300 });
   }
 
   const semAcento = (s) => s.toLocaleLowerCase('pt-BR').normalize('NFD').replace(/[̀-ͯ]/g, '');
   function renderOrgaos() {
     $('todos').setAttribute('aria-pressed', String(S.todos));
-    $('todos').textContent = S.todos ? 'Mostrar só os 20 primeiros' : 'Mostrar todos';
+    $('todos').textContent = tx(S.todos ? 'org.btn.top' : 'org.btn.todos');
     const O = D.orgaos, C = O.cols, L = O.lista;
     const it = S.tipo == null ? -1 : ix('tipo', S.tipo);
     const acc = new Map();
@@ -861,11 +895,13 @@ footer { border-top: 1px solid var(--line); padding-top: 18px; }
     const nomes = todosOrg.map((r) => r.nome).sort((a, b) => a.localeCompare(b, 'pt-BR'));
     if (S.orgao && !nomes.includes(S.orgao)) S.orgao = '';
     const sel = $('f-orgao');
-    sel.replaceChildren(new Option(`Todos os órgãos (${nomes.length})`, ''), ...nomes.map((n) => new Option(n, n)));
+    sel.replaceChildren(new Option(tx('org.todosN', nomes.length), ''), ...nomes.map((n) => new Option(n, n)));
     sel.value = S.orgao;
     const rows = todosOrg.filter((r) => !S.orgao || r.nome === S.orgao);
     const txtK = new Set(['nome', 'esfera', 'uf']);
-    rows.sort((a, b) => (txtK.has(S.sort) ? String(a[S.sort]).localeCompare(String(b[S.sort]), 'pt-BR') : ((a[S.sort] ?? -Infinity) - (b[S.sort] ?? -Infinity))) * S.dir);
+    const valTxt = (r) => (S.sort === 'esfera' ? rot('esfera', r.esfera) : String(r[S.sort]));
+    const locTxt = S.sort === 'esfera' ? I.locale : 'pt-BR';
+    rows.sort((a, b) => (txtK.has(S.sort) ? valTxt(a).localeCompare(valTxt(b), locTxt) : ((a[S.sort] ?? -Infinity) - (b[S.sort] ?? -Infinity))) * S.dir);
     document.querySelectorAll('#t-orgaos th').forEach((th) => {
       if (th.dataset.k === S.sort) th.setAttribute('aria-sort', S.dir > 0 ? 'ascending' : 'descending'); else th.removeAttribute('aria-sort');
     });
@@ -874,7 +910,7 @@ footer { border-top: 1px solid var(--line); padding-top: 18px; }
     tb.replaceChildren();
     vis.forEach((r) => {
       const tr = document.createElement('tr');
-      [r.nome, r.esfera, r.uf, F.int(r.n), null, F.d1(r.tm), F.int(r.pe)].forEach((c, i) => {
+      [r.nome, rot('esfera', r.esfera), r.uf, F.int(r.n), null, F.d1(r.tm), F.int(r.pe)].forEach((c, i) => {
         const td = document.createElement('td');
         if (i === 4) {
           const p = document.createElement('span');
@@ -888,10 +924,10 @@ footer { border-top: 1px solid var(--line); padding-top: 18px; }
     });
     if (!vis.length) {
       const tr = document.createElement('tr'), td = document.createElement('td');
-      td.colSpan = 7; td.textContent = 'Nenhum órgão com pelo menos 300 manifestações nestes filtros.';
+      td.colSpan = 7; td.textContent = tx('org.vazio');
       tr.appendChild(td); tb.appendChild(tr);
     }
-    $('orgaos-nota').textContent = `Mostrando ${vis.length} de ${rows.length} órgãos. Resultado geral do filtro: ${F.pct(geral)} no prazo.`;
+    $('orgaos-nota').textContent = tx('org.nota', vis.length, rows.length, F.pct(geral));
   }
 
   function renderSat() {
@@ -899,10 +935,10 @@ footer { border-top: 1px solid var(--line); padding-top: 18px; }
     const s = soma(j.a, j.b);
     const nN = s.sa - s.sf, nP = s.sap - s.sfp;
     const rows = [
-      { label: 'Respondidas no prazo', v: nN ? 100 * nP / nN : null, n: nN, cor: 'url(#grad-roxo)' },
-      { label: 'Fora do prazo', v: s.sf ? 100 * s.sfp / s.sf : null, n: s.sf, cor: 'url(#grad-rosa)' },
-    ].filter((r) => r.v != null).map((r) => ({ ...r, nome: r.label, tip: [`${F.pct(r.v)} satisfeitos ou muito satisfeitos`, `${F.int(r.n)} respostas à pesquisa`] }));
-    barras($('g-sat'), rows, { aria: 'Satisfação por resposta no prazo ou fora do prazo', fmt: F.pct, labelW: 180 });
+      { label: tx('sat.l1'), v: nN ? 100 * nP / nN : null, n: nN, cor: 'url(#grad-roxo)' },
+      { label: tx('sat.l2'), v: s.sf ? 100 * s.sfp / s.sf : null, n: s.sf, cor: 'url(#grad-rosa)' },
+    ].filter((r) => r.v != null).map((r) => ({ ...r, tip: [tx('sat.tip1', F.pct(r.v)), tx('sat.tip2', F.int(r.n))] }));
+    barras($('g-sat'), rows, { aria: tx('sat.aria'), fmt: F.pct, labelW: 180 });
   }
 
   function render() {
@@ -916,13 +952,11 @@ footer { border-top: 1px solid var(--line); padding-top: 18px; }
     renderSat();
   }
 
-  txt('b-total', F.int(D.base.manifestacoes));
-  txt('b-orgaos', F.int(D.base.orgaos));
-  txt('b-assuntos', F.int(D.base.assuntos));
+  baseTexto();
   ligar();
   hero();
   function temaAtual() { return document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark'; }
-  function pintarTema() { $('tema').textContent = temaAtual() === 'dark' ? 'Tema claro' : 'Tema escuro'; }
+  function pintarTema() { $('tema').textContent = tx(temaAtual() === 'dark' ? 'tema.claro' : 'tema.escuro'); }
   $('tema').onclick = () => {
     const novo = temaAtual() === 'dark' ? 'light' : 'dark';
     document.documentElement.setAttribute('data-theme', novo);
@@ -952,6 +986,13 @@ footer { border-top: 1px solid var(--line); padding-top: 18px; }
     largura = window.innerWidth;
     clearTimeout(t);
     t = setTimeout(() => { if (!$('guia-painel').hidden) { animar = false; renderFaixas(); renderSerie(); renderRecortes(); renderAssuntos(); renderSat(); animar = true; } }, 150);
+  });
+  I.aoMudar(() => {
+    definirLocal();
+    baseTexto();
+    heroTexto();
+    pintarTema();
+    if (!$('guia-painel').hidden) { animar = false; render(); animar = true; }
   });
   window.__ov = { S, soma, janela, taxaPrazo, tm, render };
 })();

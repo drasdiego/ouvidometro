@@ -97,9 +97,16 @@ tests/
 painel/
   index.html            o painel (HTML, CSS e JavaScript)
   dados.js              dados agregados usados pelo painel
+  i18n.js               idioma (PT/EN): escolha, botão, datas e troca sem recarregar
+  textos.js             textos do painel em português e inglês, e rótulos dos dados em inglês
+  GLOSSARY.md           glossário PT-EN usado nas traduções
   d3.min.js             biblioteca de gráficos D3 7.9.0 (licença ISC)
   *.csv                 resumo dos últimos 12 meses
 ```
+
+## Idiomas
+
+O painel existe em português do Brasil e em inglês. O botão PT | EN fica ao lado do botão de tema. A raiz do site continua redirecionando para o painel e repassa o `?lang=`. O idioma vem do parâmetro `?lang=en` ou `?lang=pt` na URL; sem parâmetro, vale a última escolha salva no navegador; sem escolha, português. A troca não recarrega a página e mantém filtros e tema. Os textos ficam em `painel/textos.js` (pares `pt` e `en`) e os termos seguem o `painel/GLOSSARY.md`. Nomes de órgãos vêm da base da CGU e não são traduzidos.
 
 ## Testes
 
