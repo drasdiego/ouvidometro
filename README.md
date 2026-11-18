@@ -4,13 +4,13 @@
 
 ## Principais achados
 
-Recorte principal: manifestações registradas de setembro de 2025 a agosto de 2026, comparadas com as de setembro de 2024 a agosto de 2025. Os números saem dos arquivos em `painel/`, gerados por `analise/gerar_indicadores.py` a partir do arquivo da CGU de 01/09/2026.
+Recorte destes achados: manifestações registradas de setembro de 2025 a agosto de 2026, comparadas com as de setembro de 2024 a agosto de 2025. Os números saem dos arquivos de resumo em `painel/`, gerados por `analise/gerar_indicadores.py` a partir do arquivo da CGU de 01/09/2026. O painel interativo filtra por ano inteiro e abre numa janela diferente, então os números daqui não são os que aparecem ao abrir o painel (veja "De onde vêm os dados").
 
 1. **O volume cresceu 20,1% e o cumprimento do prazo caiu 0,8 ponto.** Foram 1.721.823 manifestações, contra 1.434.183 no período anterior. A parcela respondida no prazo passou de 89,0% para 88,2%. Fonte: `painel/kpis.csv`, colunas `volume` e `pct_no_prazo`.
-2. **Quem recebe resposta espera menos.** A mediana do tempo de resposta caiu de 13 para 9 dias e a média, de 20,1 para 16,2 dias. Uma em cada dez respostas ainda leva mais de 36 dias. Fonte: `painel/kpis.csv`, colunas `mediana_dias`, `tempo_medio_dias` e `p90_dias`.
+2. **Quem recebe resposta espera menos.** A mediana do tempo de resposta caiu de 13 para 9 dias e a média, de 20,1 para 16,2 dias. Uma em cada dez respostas ainda leva mais de 36 dias. Fonte: `painel/kpis.csv`, colunas `mediana_dias`, `tempo_medio_dias` e `p90_dias`. A mediana e o percentil 90 existem só nos arquivos de resumo; no painel, o tempo aparece como média e como divisão das respostas em até 30 dias, de 31 a 60 e mais de 60.
 3. **O atraso se concentra na esfera municipal.** Os órgãos municipais responderam 66,9% no prazo (69,4% no período anterior), contra 90,3% dos federais. Eles recebem 8,6% das manifestações e respondem por 43,9% das 59.426 pendências vencidas em 31/08/2026. Fonte: `painel/esferas.csv`, colunas `volume`, `pct_no_prazo`, `pct_no_prazo_ant` e `pendentes_vencidas`.
 
-Ressalva: o período mais recente teve menos tempo para ser respondido, então a comparação de pendências entre os dois períodos não é justa e não foi usada. A definição de cada indicador está em "Definições".
+Ressalva: o período mais recente teve menos tempo para ser respondido. No recorte de 12 meses, 91,6% das manifestações já tinham resposta, contra 98,6% no período anterior (`painel/kpis.csv`, coluna `pct_respondidas`). Por isso a comparação de pendências entre os dois períodos não foi usada, e a queda do tempo de resposta deve ser lida com essa diferença em mente. A definição de cada indicador está em "Definições".
 
 Painel sobre prazo e atraso nas manifestações de ouvidoria registradas no Fala.BR, com dados abertos da Controladoria-Geral da União (CGU). É um projeto pessoal de Diego Arruda e não é um produto oficial da CGU.
 
@@ -39,11 +39,11 @@ open painel/index.html
 - `preparar_dados.py` baixa o ZIP da CGU (cerca de 190 MB), converte os CSVs de Latin-1 para UTF-8 e grava um Parquet por ano em `dados/tratados/por_ano/`.
 - `ouvidometro.py` concentra as regras de cálculo: o que conta como no prazo, pendência, prorrogação e os cortes mínimos de volume.
 - `gerar_painel.py` agrega a base com DuckDB por mês, esfera, tipo, UF, órgão e assunto e grava `painel/dados.js`, que alimenta os filtros do painel.
-- `gerar_indicadores.py` grava um resumo dos últimos 12 meses em `painel/indicadores.json` e em CSVs.
+- `gerar_indicadores.py` grava o resumo do recorte de 12 meses em `painel/indicadores.json` e em CSVs. A série mensal completa, de 2015 a 2026, fica em `painel/mensal.csv`.
 - `pytest -v` roda os 15 testes. Como a base foi baixada no passo anterior, os 2 que conferem a base real também rodam; sem ela, eles são pulados (veja "Testes").
 - `open` é o comando do macOS. No Linux use `xdg-open` e no Windows, `start`.
 
-Os dados brutos e tratados não vão para o repositório (veja `.gitignore`), só os agregados. A CGU atualiza o arquivo todo mês: quem baixar depois terá registros mais novos, e os números do recorte mudam se a data de corte em `analise/ouvidometro.py` for alterada.
+Os dados brutos e tratados não vão para o repositório (veja `.gitignore`), só os agregados. A CGU atualiza o arquivo todo mês, mas o recorte deste repositório é fixo: `preparar_dados.py` descarta tudo o que foi registrado a partir de `CORTE_EXCLUSIVO`. Para usar uma base mais nova é preciso mudar esse valor e também `CORTE`, `JANELA_12M`, `JANELA_ANTERIOR` e `ARQUIVO_GERADO_EM` em `analise/ouvidometro.py`, além das datas escritas nos textos do painel e nos testes.
 
 ## O que é
 
@@ -81,7 +81,8 @@ Recorte usado:
 
 - de janeiro de 2015 a 31/08/2026, com 8.752.496 manifestações;
 - 2014 ficou de fora: o sistema e-Ouv foi lançado em 08/12/2014 e o arquivo tem só 17 registros naquele ano;
-- o recorte principal do painel são os últimos 12 meses completos (set/2025 a ago/2026), comparados aos 12 anteriores.
+- o recorte dos indicadores deste README e dos CSVs são os últimos 12 meses completos (set/2025 a ago/2026), comparados aos 12 anteriores;
+- o painel interativo é outra coisa: ele filtra por ano inteiro e abre de janeiro de 2025 a agosto de 2026, comparando com o mesmo número de meses imediatamente anteriores. Não dá para escolher set/2025 a ago/2026 nele, porque os dados por órgão e por assunto são agregados por ano.
 
 ## Estrutura
 
@@ -101,7 +102,7 @@ painel/
   textos.js             textos do painel em português e inglês, e rótulos dos dados em inglês
   GLOSSARY.md           glossário PT-EN usado nas traduções
   d3.min.js             biblioteca de gráficos D3 7.9.0 (licença ISC)
-  *.csv                 resumo dos últimos 12 meses
+  *.csv                 resumo do recorte de 12 meses, e a série mensal completa em mensal.csv
 ```
 
 ## Idiomas
@@ -124,9 +125,12 @@ São 15 testes em pytest:
 - **Respondidas no prazo:** o complemento de "fora do prazo", sobre as manifestações com prazo vencido.
 - **Fora do prazo:** respondida depois da data de prazo, ou sem resposta com o prazo vencido em 31/08/2026. Manifestações com prazo ainda não vencido nessa data não entram na conta. A data de prazo do arquivo já inclui as prorrogações.
 - **Sem data de prazo:** fica fora da conta de prazo. Quase todas são do tipo Comunicação, que relata uma irregularidade sem pedir resposta.
-- **Dias até a resposta:** mediana e percentil 90 dos dias entre registro e resposta, só das já respondidas.
-- **Pendências vencidas:** sem resposta e com prazo vencido em 31/08/2026, com a idade contada a partir do prazo.
-- **Órgãos:** agrupados pelo código do órgão. Nomes genéricos (como "Prefeitura Municipal") e nomes repetidos aparecem com cidade e UF. A tabela considera órgãos com pelo menos 300 manifestações no filtro escolhido; os assuntos, pelo menos 200. Os dois cortes são definidos em `analise/ouvidometro.py` e valem também para os CSVs.
+- **Dias até a resposta:** nos CSVs, mediana e percentil 90 do campo "dias para resolução" do arquivo da CGU, só das já respondidas. No painel aparece a média desse mesmo campo.
+- **Tempo médio de resposta:** média dos dias até a resposta, só das já respondidas.
+- **Demanda atendida:** respostas "Sim" ou "Parcialmente Atendida" na pesquisa de satisfação, sobre quem respondeu à pesquisa.
+- **Satisfação:** notas 4 e 5 na pesquisa, sobre quem respondeu à pesquisa.
+- **Pendências vencidas:** sem resposta e com prazo vencido em 31/08/2026. O painel mostra a contagem e, ao lado, quantas foram registradas há mais de 60 dias, contados do registro. A idade mediana dos CSVs é outra medida: conta a partir do prazo.
+- **Órgãos:** agrupados pelo código do órgão. Os órgãos não federais, e os federais cujo nome se repete, aparecem com cidade e UF. A tabela considera órgãos com pelo menos 300 manifestações no filtro escolhido; os assuntos, pelo menos 200. Os dois cortes são definidos em `analise/ouvidometro.py` e valem também para os CSVs.
 - **Prazo prorrogado:** estimado por mais de 45 dias entre registro e prazo, porque a base não tem campo de prorrogação.
 
 ## Como o painel foi pensado
@@ -135,8 +139,8 @@ O desenho partiu de duas fontes: publicações de gestores e analistas em redes 
 
 - cada seção responde a uma pergunta de decisão, e não só exibe números;
 - cor de alerta para dizer onde olhar primeiro: na tabela de órgãos, verde no nível do resultado geral do filtro ou acima, amarelo até 10 pontos abaixo e vermelho mais de 10 pontos abaixo; nos gráficos de barras, rosa para mais de 10 pontos abaixo do geral;
-- média acompanhada da cauda: a mediana mostra o caso típico, o percentil 90 mostra quem espera demais;
-- pendências com idade, e não só a contagem;
+- média acompanhada da cauda: o painel mostra o tempo médio e a divisão das respostas por faixa de tempo, até 30 dias, de 31 a 60 e mais de 60; a mediana e o percentil 90 ficam nos CSVs;
+- pendências com um corte de idade, quantas foram registradas há mais de 60 dias, e não só a contagem;
 - denominador explícito em toda proporção e data de corte visível;
 - ranking por taxa, com volume mínimo, para não punir quem recebe mais manifestações;
 - dados reais e públicos, com o caminho para reproduzir cada número.
